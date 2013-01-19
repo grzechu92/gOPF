@@ -26,7 +26,7 @@
 		 * Queue elements
 		 * @var array
 		 */
-		private $elements = array();
+		public $elements = array();
 		
 		/**
 		 * Adds element to queue on selected position (on the bottom by default)
