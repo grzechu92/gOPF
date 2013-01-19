@@ -89,7 +89,7 @@
 			
 			$this->layers->push(new Element($name, $layer), Queue::TOP);
 			
-			return $return;
+			return $layer;
 		}
 		
 		/**
@@ -143,6 +143,10 @@
 		 */
 		public function createImage($type, $filename = null, $quality = 100) {
 			$this->mergeLayers();
+			
+			if (empty($filename)) {
+				header('Content-Type: '.$type);
+			}
 				
 			switch ($type) {
 				case self::GIF:
@@ -180,6 +184,7 @@
 		public function mergeLayersTo($name) {
 			$layer = $this->getLayer($name);
 			$layer->content = $this->merge();
+			$this->setLayer($name, $layer);
 		}
 		
 		/**
@@ -190,17 +195,17 @@
 		private function merge() {
 			$merged = null;
 			
-			if (!empty($this->layers)) {
+			if (count($this->layers) > 0) {
 				if (!empty($name)) {
-					$merged = $this->layers[$name]->content;
+					$merged = $this->layers->get($name)->content;
+				} else {
+					$merged = $this->generateBlankCanvas();
 				}
 				
 				foreach ($this->layers as $layer) {
+					$layer = $layer->value;
+					
 					if (!empty($layer->content)) {
-						if (empty($merged)) {
-							$merged = $this->generateBlankCanvas();
-						}
-						
 						imagecopy($merged, $layer->content, $layer->position->x, $layer->position->y, 0, 0, $layer->size->width, $layer->size->height);
 					}
 				}
@@ -221,6 +226,8 @@
 			$height = 0;
 			
 			foreach ($this->layers as $layer) {
+				$layer = $layer->value;
+				
 				$w = $layer->size->width+$layer->position->x;
 				$h = $layer->size->height+$layer->position->y;
 				

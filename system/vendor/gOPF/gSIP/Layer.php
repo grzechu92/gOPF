@@ -423,6 +423,18 @@
 		}
 		
 		/**
+		 * Fills entire layer with color
+		 * 
+		 * @param Color $color Layer color
+		 * @return Layer Fluid interface
+		 */
+		public function fill(Color $color) {
+			$this->drawRectangle(new Position(0), $this->size, $color);
+			
+			return $this;
+		}
+		
+		/**
 		 * Allocates color on the layer image
 		 * 
 		 * @param Color $color Color values
