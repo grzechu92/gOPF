@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteRule ^(js|graphics|media|css)/(.+)$  application/web/$1/$2 [L]
+
+RewriteCond %{REQUEST_URI} !(graphics|js|media|css)/
+RewriteRule ^(.*)$ index.php [QSA,L]
