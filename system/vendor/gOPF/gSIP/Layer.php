@@ -49,6 +49,7 @@
 			
 			if (!empty($size)) {
 				$this->content = imagecreatetruecolor($size->width, $size->height);
+				$this->makeTransparent();
 			}
 		}
 		
@@ -138,6 +139,8 @@
 		 */
 		public function resize(Size $targetSize) {
 			$scaled = imagecreatetruecolor($targetSize->width, $targetSize->height);
+			imagealphablending($scaled, false);
+			imagesavealpha($scaled,true);
 			imagecopyresampled($scaled, $this->content, 0, 0, 0, 0, $targetSize->width, $targetSize->height,  $this->size->width,  $this->size->height);
 			
 			$this->content = $scaled;
@@ -185,14 +188,13 @@
 		/**
 		 * Makes specified color transparent
 		 * 
-		 * @param Color $color Color to make transparent
 		 * @return Layer Fluid interface
 		 */
-		public function makeTransparent(Color $color) {
-			$transparent = $this->allocateColor($color);
-			
-			imagefill($this->content, 0, 0, $transparent);
-			imagecolortransparent($this->content, $transparent);
+		public function makeTransparent() {
+			imagesavealpha($this->content, true); 
+			imagealphablending($this->content, false);
+			imagefill($this->content, 0, 0, 0x7FFFFFFFFFF);
+			imagealphablending($this->content,true);
 			
 			return $this;
 		}
@@ -429,7 +431,7 @@
 		 * @return Layer Fluid interface
 		 */
 		public function fill(Color $color) {
-			$this->drawRectangle(new Position(0), $this->size, $color);
+			$this->drawRectangle(new Position(0), $this->size, $color, true);
 			
 			return $this;
 		}

@@ -15,6 +15,8 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class gSIP {
+		const VERSION = '2.0.0';
+		
 		/**
 		 * Move layer to top of the image
 		 * @var int
@@ -61,7 +63,7 @@
 		 * Array with layers
 		 * @var Queue
 		 */
-		private $layers;
+		public $layers; //@todo private
 		
 		/**
 		 * Image resource for merged image
@@ -84,7 +86,7 @@
 		 * @param Position $position Layer position on first layer
 		 * @return Layer New initialized layer
 		 */
-		public function createLayer($name, Size $size = null, Position $position = null) {
+		public function create($name, Size $size = null, Position $position = null) {
 			$layer = new Layer($name, $size, $position);
 			
 			$this->layers->push(new Element($name, $layer), Queue::TOP);
@@ -99,8 +101,8 @@
 		 * @return Layer Requested layer, if exists
 		 * @throws Exception
 		 */
-		public function getLayer($name) {
-			if (!$this->layer->exist($name)) {
+		public function get($name) {
+			if (!$this->layers->exist($name)) {
 				throw new Exception('Selected layer does not exists: '.$name);
 			}
 			
@@ -113,7 +115,7 @@
 		 * @param string $name Layer to remove
 		 * @return gSIP Fluid interface
 		 */
-		public function removeLayer($name) {
+		public function remove($name) {
 			$this->layers->remove($name);
 			
 			return $this;
@@ -126,8 +128,36 @@
 		 * @param Layer $layer Layer object instance
 		 * @return gSIP Fluid interface
 		 */
-		public function setLayer($name, Layer $layer) {
+		public function set($name, Layer $layer) {
 			$this->layers->set(new Element($name, $layer));
+			
+			return $this;
+		}
+		
+		/**
+		 * Insterts layer after selected layer
+		 * 
+		 * @param string $name Selected layer name
+		 * @param Layer $layer Layer to insert
+		 * @return gSIP Fluid interface
+		 */
+		public function after($name, Layer $layer) {
+			$this->remove($layer->name);
+			$this->layers->before($name, new Element($layer->name, $layer));
+			
+			return $this;
+		}
+		
+		/**
+		 * Insterts layer before selected layer
+		 *
+		 * @param string $name Selected layer name
+		 * @param Layer $layer Layer to insert
+		 * @return gSIP Fluid interface
+		 */
+		public function before($name, Layer $layer) {
+			$this->remove($layer->name);
+			$this->layers->after($name, new Element($layer->name, $layer));
 			
 			return $this;
 		}
@@ -141,8 +171,8 @@
 		 * @return gSIP Fluid interface
 		 * @throws Exception
 		 */
-		public function createImage($type, $filename = null, $quality = 100) {
-			$this->mergeLayers();
+		public function export($type, $filename = null, $quality = 100) {
+			$this->merge();
 			
 			if (empty($filename)) {
 				header('Content-Type: '.$type);
@@ -170,39 +200,15 @@
 		}
 		
 		/**
-		 * Merges all layers together
-		 */
-		public function mergeLayers() {
-			$this->merged = $this->merge();
-		}
-		
-		/**
-		 * Merges all layers together and saves it into another layer
-		 * 
-		 * @param string $name Layer name
-		 */
-		public function mergeLayersTo($name) {
-			$layer = $this->getLayer($name);
-			$layer->content = $this->merge();
-			$this->setLayer($name, $layer);
-		}
-		
-		/**
 		 * Merges all layers and returns it
 		 * 
 		 * @throws Exception
 		 */
-		private function merge() {
-			$merged = null;
-			
+		public function merge() {
 			if (count($this->layers) > 0) {
-				if (!empty($name)) {
-					$merged = $this->layers->get($name)->content;
-				} else {
-					$merged = $this->generateBlankCanvas();
-				}
+				$merged = $this->generateBlankCanvas();
 				
-				foreach ($this->layers as $layer) {
+				foreach (array_reverse($this->layers->elements) as $layer) {
 					$layer = $layer->value;
 					
 					if (!empty($layer->content)) {
@@ -210,7 +216,7 @@
 					}
 				}
 				
-				return $merged;
+				$this->merged = $merged;
 			} else {
 				throw new Exception('Ooooops! There is nothing to merge!');
 			}
@@ -239,14 +245,11 @@
 					$height = $h;
 				}
 			}
+						
+			$image = new Layer('', new Size($width, $height));
+			$image->makeTransparent();
 			
-			$image = imagecreatetruecolor($width, $height); 
-			$color = imagecolorallocate($image, 0, 0, 0);
-			
-			imagefill($image, 0, 0, $color);
-			imagecolortransparent($image);
-			
-			return $image;
+			return $image->content;
 		}
 	}
 ?>

@@ -111,7 +111,7 @@
 			if (empty($value)) {
 				$this->push($element);
 			} else {
-				$this->elements[$name] = $element;
+				$this->elements[$element->name] = $element;
 			}
 		}
 		
