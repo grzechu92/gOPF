@@ -196,8 +196,8 @@
 		/**
 		 * Merges all layers to another layer
 		 * 
-		 * @param string $name
-		 * @return Layer
+		 * @param string $name New layer name
+		 * @return Layer Created layer
 		 */
 		public function mergeToLayer($name) {
 			$merged = $this->merge();
