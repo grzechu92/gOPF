@@ -15,7 +15,7 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class gSIP {
-		const VERSION = '2.0.0';
+		const VERSION = '2.1.0';
 		
 		/**
 		 * Move layer to top of the image
@@ -63,13 +63,7 @@
 		 * Array with layers
 		 * @var Queue
 		 */
-		public $layers; //@todo private
-		
-		/**
-		 * Image resource for merged image
-		 * @var resource
-		 */
-		private $merged = null;
+		private $layers;
 		
 		/**
 		 * Initiates gSIP object
@@ -172,7 +166,7 @@
 		 * @throws Exception
 		 */
 		public function export($type, $filename = null, $quality = 100) {
-			$this->merge();
+			$merged = $this->merge();
 			
 			if (empty($filename)) {
 				header('Content-Type: '.$type);
@@ -180,15 +174,15 @@
 				
 			switch ($type) {
 				case self::GIF:
-					imagegif($this->merged, $filename);
+					imagegif($merged, $filename);
 					break;
 			
 				case self::JPEG:
-					imagejpeg($this->merged, $filename, $quality);
+					imagejpeg($merged, $filename, $quality);
 					break;
 			
 				case self::PNG:
-					imagepng($this->merged, $filename, round($quality/10)-1);
+					imagepng($merged, $filename, round($quality/10)-1);
 					break;
 					
 				default:
@@ -200,11 +194,27 @@
 		}
 		
 		/**
-		 * Merges all layers and returns it
+		 * Merges all layers to another layer
 		 * 
+		 * @param string $name
+		 * @return Layer
+		 */
+		public function mergeToLayer($name) {
+			$merged = $this->merge();
+			
+			$layer = new Layer($name, new Size(imagesx($merged), imagesy($merged)));
+			$layer->content = $merged;
+			
+			return $layer;
+		}
+		
+		/**
+		 * Merges all layers
+		 * 
+		 * @return resource Merged image resource
 		 * @throws Exception
 		 */
-		public function merge() {
+		private function merge() {
 			if (count($this->layers) > 0) {
 				$merged = $this->generateBlankCanvas();
 				
@@ -216,7 +226,7 @@
 					}
 				}
 				
-				$this->merged = $merged;
+				return $merged;
 			} else {
 				throw new Exception('Ooooops! There is nothing to merge!');
 			}
