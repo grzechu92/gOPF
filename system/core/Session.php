@@ -265,7 +265,7 @@
 		 * @return string Key
 		 */
 		private function generateProtectKey() {
-			return sha1((isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '').'-'.(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
+			return sha1(Core::$UUID.'-'.(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''));
 		}
 		
 		/**
