@@ -30,23 +30,45 @@
 		
 		/**
 		 * Constructor of error page
+		 * 
 		 * @param \Exception $exception
 		 */
 		public function __construct(\Exception $exception) {
 			ob_end_clean();
 			
 			$this->exception = $exception;
-			
-			$view = \System\Core::instance()->view = new \System\View();
-			$view->setFrame(__SYSTEM_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'error.php');
+			$customPath = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.'error'.DIRECTORY_SEPARATOR;
 			
 			$this->setLog();
 			$this->sendHeader();
-			$this->fillTemplate();
 			
-			if (\System\Core::STAGE == __DEVELOPMENT) {
-				$view->render();
+			if (isset($exception->HTTP) && is_file($customPath.$exception->HTTP.'.php')) {
+				$this->displayCustomErrorPage($customPath.$exception->HTTP.'.php');
+			} else {
+				if (\System\Core::STAGE == __DEVELOPMENT) {
+					$this->displayFrameworkErrorPage();
+				}
 			}
+		}
+		
+		/**
+		 * Displays custom error page
+		 * 
+		 * @param string $path Custom error page file
+		 */
+		private function displayCustomErrorPage($path) {
+			include $path;
+		}
+		
+		/**
+		 * Displays framework error page
+		 */
+		private function displayFrameworkErrorPage() {
+			$view = \System\Core::instance()->view = new \System\View();
+			$view->setFrame(__SYSTEM_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'error.php');
+			
+			$this->fillTemplate();
+			$view->render();
 		}
 		
 		/**
