@@ -41,19 +41,19 @@
 		},
 		
 		prefixer: function(element, property, value) {
-			var prefixes = ['', '-webkit-', '-moz-', '-o-', '-ms-'];
+			var prefixes = ["", "-webkit-", "-moz-", "-o-", "-ms-"];
 			
 			for (var prefix in prefixes) {
 				element.css(prefixes[prefix]+property, value);
 			}
 		}
-	}
+	};
 	
 	jQuery.gOPF = function(method) {
 		if (methods[method]) {
 			return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
 		} else {
-			console.error('[gOPF] unknown method has been called: '+method);
+			console.error("[gOPF] unknown method has been called: "+method);
 		}
 	};
 })(jQuery);
