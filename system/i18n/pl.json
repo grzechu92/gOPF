@@ -4,6 +4,7 @@
 	"DATABASE_ERROR": "Podczas łączenia się z bazą danych: $1",
 	
 	"CONFIG_NOT_FOUND": "Nie odnaleziono wymaganego pliku konfiguracyjnego: $1",
+	"CONFIG_EDIT": "Próba edycji pliku konfiguracyjnego zabezpieczonego przed zapisem!",
 	
 	"TEMPLATE_NOT_FOUND": "Nie odnaleziono pliku z szablonem: $1",
 	

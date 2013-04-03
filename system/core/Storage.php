@@ -26,7 +26,7 @@
 		 * Initiates storage module, loads configuration file
 		 */
 		public function __construct() {
-			self::$config = new Config('storage.ini', Config::SYSTEM);
+			self::$config = Config::factory('storage.ini', Config::SYSTEM);
 		}
 		
 		/**

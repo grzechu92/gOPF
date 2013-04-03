@@ -31,7 +31,7 @@
 		 * Constructor of database module
 		 */
 		public function __construct() {
-			$this->config = new Config('database.ini', Config::APPLICATION);
+			$this->config = Config::factory('database.ini', Config::APPLICATION);
 			
 			if (!$this->config->lazy) {
 				$this->connect();

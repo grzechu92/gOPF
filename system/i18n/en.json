@@ -4,6 +4,7 @@
 	"DATABASE_ERROR": "While connecting to database: $1",
 	
 	"CONFIG_NOT_FOUND": "Requested config file has been not found: $1",
+	"CONFIG_EDIT": "Trying to edit config file without permission!",
 	
 	"TEMPLATE_NOT_FOUND": "Template file has been not found: $1",
 	

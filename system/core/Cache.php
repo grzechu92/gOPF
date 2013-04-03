@@ -77,7 +77,7 @@
 		public function __construct() {
 			self::$instance = $this;
 			
-			$this->config = new Config('cache.ini', Config::SYSTEM);
+			$this->config = Config::factory('cache.ini', Config::SYSTEM);
 			$this->initDrivers();
 		}
 		

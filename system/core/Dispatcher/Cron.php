@@ -42,8 +42,8 @@
 		 * return array Jobs to do
 		 */
 		private function getJobs() {
-			$application = new Config('cron.ini', Config::APPLICATION);
-			$system = new Config('cron.ini', Config::SYSTEM);
+			$application = Config::factory('cron.ini', Config::APPLICATION);
+			$system = Config::factory('cron.ini', Config::SYSTEM);
 				
 			$jobs = array_merge_recursive($application->getArray(), $system->getArray());
 			$toDo = array();
