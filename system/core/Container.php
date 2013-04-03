@@ -68,7 +68,7 @@
 		 * @see Countable::count()
 		 */
 		public function count() {
-			return count($this->elements);
+			return count($this->container);
 		}
 		
 		/**
