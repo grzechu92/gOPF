@@ -2,14 +2,14 @@
  * JavaScript gOPF Plugin for jQuery
  * 
  * Usage:
- * $.gOPF('base64Encode', string);					encodes string with Base64 algorythm
- * $.gOPF('base64Decode', string);					decodes string encoded by Base64 algorythm
- * $.gOPF('toJSON', data);							creates JSON string of data
- * $.gOPF('parseJSON', json);						parses JSON string to data
- * $.gOPF('prefixer', element, property, value);	adds browser prefixes to CSS properties
+ * $.gOPF("encodeBase64", string);					encodes string with Base64 algorythm
+ * $.gOPF("decodeBase64", string);					decodes string encoded by Base64 algorythm
+ * $.gOPF("encodeJSON", data);						creates JSON string of data
+ * $.gOPF("decodeJSON", json);						parses JSON string to data
+ * $.gOPF("prefixer", element, property, value);	adds browser prefixes to CSS properties
  * 
  * Version 1.1
- * jQuery 1.8.2
+ * jQuery 1.9.1
  * 
  * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
