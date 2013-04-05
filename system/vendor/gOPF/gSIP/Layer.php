@@ -63,7 +63,11 @@
 		public function import($path) {
 			$info = getimagesize($path);
 			
-			$this->size = new Size($info[0], $info[1]);
+			try {
+				$this->size = new Size($info[0], $info[1]);
+			} catch (Exception $e) {
+				throw new Exception('Unable to open image file: '.$path);
+			}
 			
 			switch ($info['mime']) {
 				case gSIP::GIF:

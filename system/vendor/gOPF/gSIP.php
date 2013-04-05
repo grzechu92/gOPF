@@ -15,7 +15,7 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class gSIP {
-		const VERSION = '2.1.0';
+		const VERSION = '2.1.1';
 		
 		/**
 		 * Move layer to top of the image
