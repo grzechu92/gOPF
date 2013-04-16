@@ -49,6 +49,7 @@
 		
 		/**
 		 * Returns database engine connection, if not exists, connects it to database
+		 * 
 		 * @return mixed Database engine handler
 		 */
 		public function connection() {
@@ -62,10 +63,8 @@
 		/**
 		 * Loads required database engine
 		 */
-		private function loadEngine() {			
-			$engine = '\\System\\Database\\'.$this->config->engine;
-			$engine = new $engine($this->config->{$this->config->engine});
-			
+		private function loadEngine() {
+			$engine = new $this->config->engine($this->config->connection);
 			$this->connection = $engine->connect();
 			$this->connected = true;
 		}
