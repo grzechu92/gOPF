@@ -169,12 +169,16 @@
 		}
 		
 		/**
-		 * Checks if given string is valid date
+		 * Checks if given string is valid date (format: DD.MM.YYYY or DD/MM/YYYY)
 		 * 
 		 * @param string $string String to check
 		 * @return bool String is valid
 		 */
 		private static function date($string) {
+			if (!preg_match("/^[0-3][0-9](.|\/)[0-3][0-9](.|\/)(?:[0-9][0-9])?[0-9][0-9]$/", $string)) {
+				return false;
+			}
+			
 			list($day, $month, $year) = explode('.', $string);
 			
 			return (bool) checkdate($month, $day, $year);
