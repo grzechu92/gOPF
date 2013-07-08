@@ -1,0 +1,15 @@
+body {background: black;}
+* {margin: 0px; padding: 0px;}
+
+.consoleFont {white-space: pre; font-family: monospace; display: block; font-size: 13px; background: #000000; color: silver;}
+.expand {width: 100%;}
+
+#prompt {font-weight: bold;}
+
+form {display: none;}
+
+table tr {width: 100%; display: block;}
+table {border-spacing: 0px;}
+
+#terminal, #command {background: black; border: 0px; width: 100%;}
+#command:focus {outline: 0px;}

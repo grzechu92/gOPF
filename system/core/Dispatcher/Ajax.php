@@ -16,7 +16,7 @@
 		public function process() {
 			$data = $this->callController(Request::$controller, Request::$action.'Ajax');
 			
-			echo json_encode($data);
+			$this->toJSON($data);
 		}
 	}
 ?>

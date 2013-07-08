@@ -176,5 +176,14 @@
 			
 			return false;
 		}
+		
+		/**
+		 * Prints JSON formatted array
+		 * 
+		 * @param array Array with data
+		 */
+		protected function toJSON($array) {
+			echo json_encode($array);
+		} 
 	}
 ?>
