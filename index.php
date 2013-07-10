@@ -41,16 +41,22 @@
 	mb_internal_encoding('UTF-8');
 	
 	/**
+	 * Filesystem path to root directory
+	 * @var string
+	 */
+	define('__ROOT_PATH', dirname(__FILE__));
+	
+	/**
 	 * Filesystem path to application directory
 	 * @var string
 	 */
-	define('__APPLICATION_PATH', dirname(__FILE__).'/application');
+	define('__APPLICATION_PATH', __ROOT_PATH.DIRECTORY_SEPARATOR.'application');
 	
 	/**
 	 * Filesystem path to system directory
 	 * @var string
 	 */
-	define('__SYSTEM_PATH', dirname(__FILE__).'/system');
+	define('__SYSTEM_PATH', __ROOT_PATH.DIRECTORY_SEPARATOR.'system');
 	
 	/**
 	 * Filesystem path to core directory
