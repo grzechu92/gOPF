@@ -7,6 +7,7 @@
  * $.gOPF("encodeJSON", data);						creates JSON string of data
  * $.gOPF("decodeJSON", json);						parses JSON string to data
  * $.gOPF("prefixer", element, property, value);	adds browser prefixes to CSS properties
+ * $.gOPF("terminal", enabled);						enables console after pressing ~ button
  * 
  * Version 1.1
  * jQuery 1.9.1
@@ -46,6 +47,41 @@
 			for (var prefix in prefixes) {
 				element.css(prefixes[prefix]+property, value);
 			}
+		},
+		
+		console: function(enabled) {
+			if (!enabled) {
+				return;
+			}
+			
+			$(document).keypress(function(e) {
+				if (e.charCode == 126) {
+					if ($("#gOPFterminal").length > 0) {
+						$("#gOPFterminal").remove();
+						$("body").css({marginTop: 0});
+					} else {
+						$("body").css({marginTop: 100});
+						$("body").prepend('<div id="gOPFterminal"></div>');
+						
+						var terminal = $("#gOPFterminal");
+						
+						terminal.css({
+							width: "100%",
+							height: 100,
+							position: "fixed",
+							top: 0,
+							left: 0
+						});
+						
+						terminal.html('<iframe width="100%" height="100%" src="/terminal"></iframe>');
+						
+						terminal.find("iframe").css({
+							margin: 0,
+							border: "none"
+						});
+					}
+				}
+			});
 		}
 	};
 	
