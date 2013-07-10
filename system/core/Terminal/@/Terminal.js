@@ -55,18 +55,20 @@ Terminal = {
 		Terminal.print(data.buffer);
 		
 		if (data.prompt == null) {
-			$("#prompt").html(data.user+"@"+data.host+":"+data.path);			
+			$("#prompt").html(data.user+"@"+data.host+":"+data.path+'# ');			
 		} else {
 			$("#prompt").html(data.prompt);
 		}
 		
-		$("#command").prop("attr", data.type);
+		$("#command").prop("type", data.type);
 		
 		if (data.processing) {
 			$("form").hide();
 		} else {
 			$("form").show();
 		}
+		
+		document.body.scrollTop = document.body.scrollHeight;
 	},
 	
 	print: function(content) {
@@ -86,8 +88,10 @@ $(document).ready(function() {
 	});
 	
 	$("form").submit(function(e) {
-		Terminal.send($("#command").val());
-		Terminal.print($("#prompt").html()+$("#command").val()+"\n");
+		var value = $("#command").val();
+		
+		Terminal.send(value);
+		Terminal.print($("#prompt").html() + (($("#command").prop("type") == "password") ? "" : value)+"\n");
 		
 		$("#command").val("");
 		

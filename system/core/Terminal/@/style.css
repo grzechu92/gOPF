@@ -13,3 +13,4 @@ table {border-spacing: 0px;}
 
 #terminal, #command {background: black; border: 0px; width: 100%;}
 #command:focus {outline: 0px;}
+#command[type=password] {color: transparent;}

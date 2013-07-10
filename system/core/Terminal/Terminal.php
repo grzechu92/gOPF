@@ -28,11 +28,23 @@
 		}
 		
 		private function registerEvents() {
-			$this->addServerEvent('initialize', function($push) {
-				if (!$push->terminal->session->get() instanceof Status) {
+			$this->addClientEvent('initialize', function($push) {
+				$session = $push->terminal->session;
+				
+				if ($session->processing) {
+					return;
+				}
+				
+				if (!$session->get() instanceof Status) {
 					$status = new Status();
 					$status->initialize();
-					$push->terminal->session->set($status);
+					$session->set($status);
+				}
+				
+				if (!$session->logged) {
+					$this->execute('login -initialize', $session);
+				} else {
+					$session->processing = false;
 				}
 			});
 			
@@ -55,20 +67,18 @@
 			$this->addClientEvent('command', function($push) {
 				$session = $push->terminal->session;
 				
-				$session->processing = true;
-				
-				try {
-					$this->execute($push->data->command, $session);
-				} catch (Exception $e) {
-					$session->buffer($e->getMessage());
-				}
-				
-				$session->processing = false;
+				$this->execute($push->data->command, $session);
 			});
 		}
 		
 		private function execute($command, $session) {
 			$parsed = Command::parse($command);
+			$session->processing = true;
+			
+			if (!$session->logged && $parsed->name != 'login') {
+				$this->execute('login -initialize', $session);
+				return;
+			}
 			
 			try {
 				$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
@@ -78,9 +88,15 @@
 					$command->extend($parsed);
 					$command->execute($session);
 				}
+			} catch (Exception $e) {
+				$session->buffer($e->getMessage());
+				$session->processing = false;
 			} catch (\System\Core\Exception $e) {
-				throw new Exception('Unknown command');
+				throw new Exception('Unknown command: '.$parsed->name);
 			}
+			
+			
+			$session->processing = false;
 		}
 	}
 ?>

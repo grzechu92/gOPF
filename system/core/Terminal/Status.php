@@ -14,15 +14,15 @@
 		public $type = self::TEXT;
 		public $initialized = false;
 		public $logged = false;
-		public $processing = false;
+		public $processing = true;
 		
 		public function initialize() {
 			$this->user = $_SERVER['REMOTE_ADDR'];
 			$this->host = $_SERVER['HTTP_HOST'];
 			$this->path = '/';
 			$this->initialized = true;
-			$this->buffer = '';
 			$this->logged = false;
+			$this->processing = true;
 		}
 		
 		public function buffer($content) {
