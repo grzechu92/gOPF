@@ -15,6 +15,7 @@
 		public $initialized = false;
 		public $logged = false;
 		public $processing = true;
+		public $updated;
 		
 		public function initialize() {
 			$this->user = $_SERVER['REMOTE_ADDR'];

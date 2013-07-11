@@ -6,51 +6,58 @@
 	
 	class loginCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
 		public function execute(Session $session) {
+			$status = $session->get();
+			
 			if ($this->getParameter('initialize')) {
-				$this->getLogin($session);
-				return;
+				$status = $this->getLogin($status);
 			}
 			
 			if ($this->getParameter('user')) {
-				$session->user = $this->getParameter('user');
-				$this->getPassword($session);
-				return;
+				$status->user = $this->getParameter('user');
+				$status = $this->getPassword($status);
 			}
 			
 			if ($this->getParameter('password')) {
-				$this->validate($session);
-				return;
+				$status = $this->validate($status);
 			}
+			
+			$session->set($status);
 		}
 		
-		private function getLogin(Session $session) {
-			$session->prompt = 'Login: ';
-			$session->prefix = 'login -user ';
-			$session->type = Status::TEXT;
+		private function getLogin(Status $status) {
+			$status->prompt = 'Login: ';
+			$status->prefix = 'login -user ';
+			$status->type = Status::TEXT;
+			
+			return $status;
 		}
 		
-		private function getPassword(Session $session) {
-			$session->prompt = 'Password: ';
-			$session->prefix = 'login -password ';
-			$session->type = Status::PASSWORD;
+		private function getPassword(Status $status) {
+			$status->prompt = 'Password: ';
+			$status->prefix = 'login -password ';
+			$status->type = Status::PASSWORD;
+			
+			return $status;
 		}
 		
-		private function validate(Session $session) {
+		private function validate(Status $status) {
 			sleep(1);
 			
 			$config = Config::factory('terminal.ini', Config::SYSTEM);
 			
 			$users = $config->getContent()['users'];
 			
-			if (!isset($users[$session->user]) || $users[$session->user] != sha1($this->getParameter('password'))) {
-				$this->getLogin($session);
-				$session->buffer('Access denied!');
+			if (!isset($users[$status->user]) || $users[$status->user] != sha1($this->getParameter('password'))) {
+				$this->getLogin($status);
+				$status->buffer('Access denied!');
 			} else {
-				$session->prefix = null;
-				$session->prompt = null;
-				$session->logged = true;
-				$session->type = Status::TEXT;
+				$status->prefix = null;
+				$status->prompt = null;
+				$status->logged = true;
+				$status->type = Status::TEXT;
 			}
+			
+			return $status;
 		}
 	}
 ?>

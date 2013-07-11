@@ -81,7 +81,12 @@
 			}
 			
 			try {
-				$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
+				if ($parsed->name[0] == '/') {
+					$class = str_replace('/', '\\', $parsed->name).'Command';
+				} else {
+					$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
+				}
+				
 				$command = new $class();
 				
 				if ($command instanceof CommandInterface && $command instanceof Command) {
@@ -90,13 +95,12 @@
 				}
 			} catch (Exception $e) {
 				$session->buffer($e->getMessage());
-				$session->processing = false;
 			} catch (\System\Core\Exception $e) {
-				throw new Exception('Unknown command: '.$parsed->name);
+				$session->buffer('Unknown command: '.$parsed->name);
 			}
 			
-			
 			$session->processing = false;
+			$session->updated = microtime(true);
 		}
 	}
 ?>

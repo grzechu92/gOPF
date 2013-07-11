@@ -44,12 +44,12 @@
 			return sha1(json_encode($this->container[$this->id]));
 		}
 		
-		private function read() {
+		public function read() {
 			$this->storage->read(self::STORAGE);
 			$this->container = $this->storage->get(self::STORAGE);
 		}
 		
-		private function write() {
+		public function write() {
 			$this->storage->set(self::STORAGE, $this->container);
 			$this->storage->write(self::STORAGE);
 		}
