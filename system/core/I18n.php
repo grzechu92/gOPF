@@ -29,7 +29,7 @@
 		
 		/**
 		 * I18n object instance
-		 * @var I18n
+		 * @var \System\I18n
 		 */
 		private static $instance;
 		
@@ -41,7 +41,7 @@
 		
 		/**
 		 * Config of internationalization module
-		 * @var Config
+		 * @var \System\Config
 		 */
 		private $config;
 		
