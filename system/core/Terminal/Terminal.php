@@ -4,11 +4,32 @@
 	use \gOPF\gPAE\Event;
 	use \gOPF\gPAE\Response;
 	use \System\Storage;
-			
+	
+	/**
+	 * Terminal main initialization and router object
+	 *
+	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+	 */
 	class Terminal {
+		/**
+		 * gPAE push engine handler
+		 * @var \gOPF\gPAE
+		 */
 		private $engine;
+		
+		/**
+		 * Terminal session handler
+		 * @var \System\Terminal\Session
+		 */
 		private $session;
 		
+		/**
+		 * Initiates gPAE engine for listening terminal events
+		 * 
+		 * @return \gOPF\gPAE\Response gPAE result
+		 */
 		public function connection() {
 			$this->engine = new gPAE(array(gPAE::INTERVAL => 100));
 			$this->session = new Session();
@@ -19,14 +40,29 @@
 			return $this->engine->run();
 		}
 		
+		/**
+		 * Creates event for client
+		 * 
+		 * @param string $name Event name
+		 * @param \Closure $closure Event body
+		 */
 		private function addClientEvent($name, \Closure $closure) {
 			$this->engine->addClientEvent(new Event($name, $closure));
 		}
 		
+		/**
+		 * Creates event for server 
+		 * 
+		 * @param string $name Event name
+		 * @param \Closure $closure Event body
+		 */
 		private function addServerEvent($name, \Closure $closure) {
 			$this->engine->addServerEvent(new Event($name, $closure));
 		}
 		
+		/**
+		 * Registers terminal events
+		 */
 		private function registerEvents() {
 			$this->addClientEvent('initialize', function($push) {
 				$session = $push->terminal->session;
@@ -71,7 +107,13 @@
 			});
 		}
 		
-		private function execute($command, $session) {
+		/**
+		 * Executes command request
+		 * 
+		 * @param string $command Command content
+		 * @param \System\Terminal\Session $session Terminal session
+		 */
+		private function execute($command, Session $session) {
 			$parsed = Command::parse($command);
 			$session->processing = true;
 			

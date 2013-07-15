@@ -15,13 +15,24 @@
 		}
 		
 		public function __set($name, $value) {
-			$this->container[$this->id]->{$name} = $value;
-			$this->write();
+			$this->read();
+			
+			if ($this->container[$this->id] instanceof Status) {
+				$this->container[$this->id]->{$name} = $value;
+				$this->write();
+			} else {
+				return null;
+			}
 		}
 		
 		public function __get($name) {
 			$this->read();
-			return $this->container[$this->id]->{$name};
+			
+			if ($this->container[$this->id] instanceof Status) {
+				return $this->container[$this->id]->{$name};
+			} else {
+				return null;
+			}
 		}
 		
 		public function set(Status $value) {

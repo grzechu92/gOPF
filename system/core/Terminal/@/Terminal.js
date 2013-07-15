@@ -27,7 +27,7 @@ Terminal = {
 	},
 	
 	send: function(command) {
-		if (!Terminal.processing) {
+		if (!Terminal.status.processing) {
 			var command = (Terminal.status.prefix == null) ? command : Terminal.status.prefix+command;
 			
 			$.gPAE("sendEvent", "command", {command: command});
@@ -88,13 +88,15 @@ $(document).ready(function() {
 	});
 	
 	$("form").submit(function(e) {
-		var value = $("#command").val();
-		
-		Terminal.send(value);
-		Terminal.print($("#prompt").html() + (($("#command").prop("type") == "password") ? "" : value)+"\n");
-		
-		$("#command").val("");
-		
+		if (!Terminal.status.processing) {
+			var value = $("#command").val();
+			
+			Terminal.send(value);
+			Terminal.print($("#prompt").html() + (($("#command").prop("type") == "password") ? "" : value)+"\n");
+			
+			$("#command").val("");
+		}
+			
 		e.preventDefault();
 		return false;
 	});
