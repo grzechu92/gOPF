@@ -1,9 +1,10 @@
 <?php
-	namespace System\Terminal;
+	namespace System;
 	use \gOPF\gPAE;
 	use \gOPF\gPAE\Event;
 	use \gOPF\gPAE\Response;
-	use \System\Storage;
+	use \System\Terminal\Command;
+	use \System\Terminal\Status;
 	
 	/**
 	 * Terminal main initialization and router object
@@ -14,16 +15,22 @@
 	 */
 	class Terminal {
 		/**
-		 * gPAE push engine handler
-		 * @var \gOPF\gPAE
+		 * Terminal instance handler
+		 * @var \System\Terminal\Terminal
 		 */
-		private $engine;
+		public static $instance;
 		
 		/**
 		 * Terminal session handler
 		 * @var \System\Terminal\Session
 		 */
-		private $session;
+		public static $session;
+		
+		/**
+		 * gPAE push engine handler
+		 * @var \gOPF\gPAE
+		 */
+		private $engine;
 		
 		/**
 		 * Initiates gPAE engine for listening terminal events
@@ -31,11 +38,14 @@
 		 * @return \gOPF\gPAE\Response gPAE result
 		 */
 		public function connection() {
-			$this->engine = new gPAE(array(gPAE::INTERVAL => 100));
-			$this->session = new Session();
-			$this->registerEvents();
+			self::$instance = $this;
+			self::$session = new \System\Terminal\Session();
 			
-			$this->engine->terminal = $this;
+			Command::$terminal = self::$instance;
+			Command::$session = self::$session;
+			
+			$this->engine = new gPAE(array(gPAE::INTERVAL => 100));
+			$this->registerEvents();
 			
 			return $this->engine->run();
 		}
@@ -65,7 +75,7 @@
 		 */
 		private function registerEvents() {
 			$this->addClientEvent('initialize', function($push) {
-				$session = $push->terminal->session;
+				$session = Terminal::$session;
 				
 				if ($session->processing) {
 					return;
@@ -78,20 +88,21 @@
 				}
 				
 				if (!$session->logged) {
-					$this->execute('login -initialize', $session);
+					$this->execute('login -initialize');
 				} else {
 					$session->processing = false;
 				}
 			});
 			
 			$this->addServerEvent('stream', function($push) {
-				$session = $push->terminal->session;
+				$session = Terminal::$session;
 				$status = $session->get();
 				
-				if ($session->checksum() != $push->container->session) {
+				if ($session->checksum() != $push->container->session && $status instanceof Status) {
 					$value = clone($status);
 					
 					$status->buffer = '';
+					$status->clear = false;
 					$push->container->session = $session->checksum();
 					
 					$session->set($status);
@@ -101,7 +112,7 @@
 			});
 			
 			$this->addClientEvent('command', function($push) {
-				$session = $push->terminal->session;
+				$session = Terminal::$session;
 				
 				$this->execute($push->data->command, $session);
 			});
@@ -111,9 +122,9 @@
 		 * Executes command request
 		 * 
 		 * @param string $command Command content
-		 * @param \System\Terminal\Session $session Terminal session
 		 */
-		private function execute($command, Session $session) {
+		private function execute($command) {
+			$session = Terminal::$session;
 			$parsed = Command::parse($command);
 			$session->processing = true;
 			
@@ -122,23 +133,15 @@
 				return;
 			}
 			
-			try {
-				if ($parsed->name[0] == '/') {
-					$class = str_replace('/', '\\', $parsed->name).'Command';
-				} else {
-					$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
-				}
-				
-				$command = new $class();
-				
-				if ($command instanceof CommandInterface && $command instanceof Command) {
-					$command->extend($parsed);
-					$command->execute($session);
-				}
-			} catch (Exception $e) {
+			try {				
+				$command = Command::factory($parsed);
+				$command->execute();
+			} catch (\System\Loader\Exception $e) {
+				$session->buffer('Unknown command: '.$parsed->name);				
+			} catch (\System\Terminal\Exception $e) {
 				$session->buffer($e->getMessage());
 			} catch (\System\Core\Exception $e) {
-				$session->buffer('Unknown command: '.$parsed->name);
+				$session->buffer('Error:'."\n".$e->getMessage());
 			}
 			
 			$session->processing = false;

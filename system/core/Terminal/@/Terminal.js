@@ -52,6 +52,10 @@ Terminal = {
 	},
 	
 	update: function(data) {
+		if (data.clear) {
+			Terminal.clear();
+		}
+		
 		Terminal.print(data.buffer);
 		
 		if (data.prompt == null) {
@@ -73,6 +77,10 @@ Terminal = {
 	
 	print: function(content) {
 		$("#console").append(content);
+	},
+	
+	clear: function() {
+		$("#console").html("");
 	}
 }
 

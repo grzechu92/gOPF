@@ -15,6 +15,8 @@
 		public $initialized = false;
 		public $logged = false;
 		public $processing = true;
+		public $clear = false;
+		public $abort = false;
 		public $updated;
 		
 		public function initialize() {
@@ -24,6 +26,8 @@
 			$this->initialized = true;
 			$this->logged = false;
 			$this->processing = true;
+			$this->clear = false;
+			$this->abort = false;
 		}
 		
 		public function buffer($content) {

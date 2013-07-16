@@ -56,7 +56,7 @@
 		 * Creates terminal connection
 		 */
 		private function connection() {
-			$terminal = new \System\Terminal\Terminal();
+			$terminal = new \System\Terminal();
 			
 			$this->toJSON($terminal->connection());
 		}

@@ -1,11 +1,11 @@
 <?php 
 	namespace System\Terminal\Command;
 	use \System\Config;
-	use \System\Terminal\Session;
 	use \System\Terminal\Status;
 	
 	class loginCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
-		public function execute(Session $session) {
+		public function execute() {
+			$session = self::$session;
 			$status = $session->get();
 			
 			if ($this->getParameter('initialize')) {

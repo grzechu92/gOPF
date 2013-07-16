@@ -4,7 +4,8 @@
 	class lsCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
 		private $length;
 		
-		public function execute(\System\Terminal\Session $session) {
+		public function execute() {
+			$session = self::$session;
 			$buffer = '';
 			
 			foreach ($this->getElements($session->path) as $element) {

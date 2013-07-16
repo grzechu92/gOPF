@@ -4,7 +4,9 @@
 	use \System\Terminal\Status;
 	
 	class cdCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
-		public function execute(\System\Terminal\Session $session) {
+		public function execute() {
+			$session = self::$session;
+			
 			if (empty($this->value)) {
 				$session->buffer(__ROOT_PATH.$session->path);
 				return;

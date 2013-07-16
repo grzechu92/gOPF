@@ -2,10 +2,43 @@
 	namespace System\Terminal;
 	
 	class Command {
+		/**
+		 * Terminal instance
+		 * @var \System\Terminal
+		 */
+		public static $terminal;
+		
+		/**
+		 * Terminal session instance
+		 * @var \System\Terminal\Session
+		 */
+		public static $session;
+		
 		public $command;
 		public $name;
 		public $value;
 		public $parameters = array();
+		
+		public static function factory(Command $parsed) {
+			if ($parsed->name[0] == '/') {
+				$class = str_replace('/', '\\', $parsed->name).'Command';
+			} else {
+				$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
+			}
+			
+			$command = new $class();
+			
+			if ($command instanceof CommandInterface && $command instanceof Command) {
+				$command->command = $parsed->command;
+				$command->name = $parsed->name;
+				$command->value = $parsed->value;
+				$command->parameters = $parsed->parameters;
+				
+				return $command;
+			} else {
+				throw new Exception();
+			}
+		}
 		
 		public static function parse($command) {
 			$parsed = new Command();
@@ -40,12 +73,6 @@
 			}
 			
 			return $parsed;
-		}
-		
-		public function extend(Command $command) {
-			foreach ($command as $key=>$value) {
-				$this->{$key} = $value;
-			}
 		}
 		
 		protected function getParameter($name) {
