@@ -90,7 +90,7 @@
 			if (__STAGE == __PRODUCTION || Filesystem::checkFile($path)) {
 				require $path;
 			} else {
-				throw new \System\Core\Exception(\System\I18n::translate('LOADER_UNABLE', array($path)));
+				throw new \System\Loader\Exception(\System\I18n::translate('LOADER_UNABLE', array($path)));
 			}
 		}
 	}

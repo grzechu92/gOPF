@@ -1,5 +1,5 @@
 {
-	"LOADER_UNABLE": "Unable to find file: $1",
+	"LOADER_UNABLE": "Unable to find class: $1",
 
 	"DATABASE_ERROR": "While connecting to database: $1",
 	

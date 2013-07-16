@@ -1,5 +1,5 @@
 {
-	"LOADER_UNABLE": "Nie odnaleziono pliku: $1",
+	"LOADER_UNABLE": "Nie odnaleziono klasy: $1",
 
 	"DATABASE_ERROR": "Podczas łączenia się z bazą danych: $1",
 	
