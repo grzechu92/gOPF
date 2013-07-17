@@ -3,7 +3,17 @@
 	use \System\Config;
 	use \System\Terminal\Status;
 	
+	/**
+	 * Terminal command: login (validates user)
+	 *
+	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+	 */
 	class loginCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+		/**
+		 * @see \System\Terminal\CommandInterface::execute()
+		 */
 		public function execute() {
 			$session = self::$session;
 			$status = $session->pull();
@@ -30,6 +40,12 @@
 			}
 		}
 		
+		/**
+		 * Asks user for username
+		 * 
+		 * @param \System\Terminal\Status $status Current terminal status
+		 * @return \System\Terminal\Status Updated terminal status
+		 */
 		private function getLogin(Status $status) {
 			$status->clear = true;
 			$status->prompt = 'Login: ';
@@ -39,6 +55,12 @@
 			return $status;
 		}
 		
+		/**
+		 * Asks user for password
+		 *
+		 * @param \System\Terminal\Status $status Current terminal status
+		 * @return \System\Terminal\Status Updated terminal status
+		 */
 		private function getPassword(Status $status) {
 			$status->prompt = 'Password: ';
 			$status->prefix = 'login -password ';
@@ -47,6 +69,12 @@
 			return $status;
 		}
 		
+		/**
+		 * Validates user
+		 *
+		 * @param \System\Terminal\Status $status Current terminal status
+		 * @return \System\Terminal\Status Updated terminal status
+		 */
 		private function validate(Status $status) {
 			$config = Config::factory('terminal.ini', Config::SYSTEM);
 			

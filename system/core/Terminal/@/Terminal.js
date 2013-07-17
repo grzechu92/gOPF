@@ -1,3 +1,30 @@
+/**
+ * JavaScript gOPF Terminal Plugin object
+ * 
+ * @/System/Terminal/Terminal.js
+ * 
+ * Usage:
+ * Terminal.init();					Initiates terminal connection
+ * Terminal.send(command);			Allows to pass command to terminal
+ * Terminal.check();				Checks terminal status
+ * Terminal.lock();					Locks terminal
+ * Terminal.unlock();				Unlocks terminal
+ * Terminal.update(data);			Updates terminal data (prompt, output etc.)
+ * Terminal.print(data);			Allows to put data into terminal output
+ * Terminal.clear();				Clears terminal output
+ * 
+ * Requires:
+ * @/System/Terminal/gOPF.js
+ * @/System/Terminal/style.css
+ * 
+ * 
+ * Version 1.0
+ * 
+ * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+
 Terminal = {
 	status: {
 		user: null,

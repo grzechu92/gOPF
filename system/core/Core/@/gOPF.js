@@ -1,6 +1,8 @@
 /**
  * JavaScript gOPF Plugin for jQuery
  * 
+ * @/System/Terminal/gOPF.js
+ * 
  * Usage:
  * $.gOPF("encodeBase64", string);					encodes string with Base64 algorythm
  * $.gOPF("decodeBase64", string);					decodes string encoded by Base64 algorythm
@@ -9,7 +11,10 @@
  * $.gOPF("prefixer", element, property, value);	adds browser prefixes to CSS properties
  * $.gOPF("terminal", enabled);						enables console after pressing ~ button
  * 
- * Version 1.1
+ * Requires:
+ * @/System/Terminal/jQuery.js
+ * 
+ * Version 1.2
  * jQuery 1.9.1
  * 
  * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>

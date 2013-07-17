@@ -1,9 +1,23 @@
 <?php
 	namespace System\Terminal\Command;
 	
+	/**
+	 * Terminal command: ls (lists current directory)
+	 *
+	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+	 */
 	class lsCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
-		private $length;
+		/**
+		 * Max directory or filename length
+		 * @var int
+		 */
+		private $length = 0;
 		
+		/**
+		 * @see \System\Terminal\CommandInterface::execute()
+		 */
 		public function execute() {
 			$session = self::$session;
 			$buffer = '';
@@ -18,6 +32,12 @@
 			$session->buffer($buffer);
 		}
 		
+		/**
+		 * Returns array with directory elements from requested path
+		 * 
+		 * @param string $path Path to read
+		 * @return array Array with directory elements
+		 */
 		public function getElements($path) {
 			$iterator = new \DirectoryIterator(__ROOT_PATH.$path);
 			$files = $dirs = array();

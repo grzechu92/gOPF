@@ -3,7 +3,17 @@
 	use \System\Terminal\Exception;
 	use \System\Terminal\Status;
 	
+	/**
+	 * Terminal command: cd (changes current terminal directory)
+	 *
+	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+	 */
 	class cdCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+		/**
+		 * @see \System\Terminal\CommandInterface::execute()
+		 */
 		public function execute() {
 			$session = self::$session;
 			
@@ -25,6 +35,13 @@
 			$session->push($status);
 		}
 		
+		/**
+		 * Moves relatively path in, relate to current path
+		 * 
+		 * @param \System\Terminal\Status $status Terminal status
+		 * @throws \System\Terminal\Exception
+		 * @return \System\Terminal\Status Updated terminal status
+		 */
 		private function relativeMoveTo(Status $status) {
 			$path = $status->path.$this->value;
 			
@@ -36,6 +53,13 @@
 			}
 		}
 		
+		/**
+		 * Moves absolutely path, in relate to __ROOT_PATH
+		 *
+		 * @param \System\Terminal\Status $status Terminal status
+		 * @throws \System\Terminal\Exception
+		 * @return \System\Terminal\Status Updated terminal status
+		 */
 		private function absoluteMoveTo(Status $status) {
 			if ($this->checkDirectory($this->value)) {
 				$status->path = $this->buildPath($this->value);
@@ -45,6 +69,13 @@
 			}
 		}
 		
+		/**
+		 * Goes up in directories tree, in relate to __ROOT_PATH
+		 *
+		 * @param \System\Terminal\Status $status Terminal status
+		 * @throws \System\Terminal\Exception
+		 * @return \System\Terminal\Status Updated terminal status
+		 */
 		private function moveUp(Status $status) {
 			if ($status->path == DIRECTORY_SEPARATOR) {
 				throw new Exception('You shall not pass!');
@@ -58,10 +89,21 @@
 			return $status;
 		}
 		
+		/**
+		 * Checks if directory exists
+		 * 
+		 * @param string $directory Relative directory path, in relate to __ROOT_PATH
+		 * @return bool Exists?
+		 */
 		private function checkDirectory($directory) {
 			return \System\Filesystem::checkDirectory(__ROOT_PATH.$directory);
 		}
 		
+		/**
+		 * Creates valid path for terminal status
+		 * @param string $path Path to valid
+		 * @return string Valid path
+		 */
 		private function buildPath($path) {
 			if ($path[strlen($path)-1] != DIRECTORY_SEPARATOR) {
 				$path .= DIRECTORY_SEPARATOR;
