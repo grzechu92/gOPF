@@ -22,8 +22,8 @@
 		public function initialize() {
 			$this->user = $_SERVER['REMOTE_ADDR'];
 			$this->host = $_SERVER['HTTP_HOST'];
-			$this->path = '/';
 			$this->initialized = true;
+			$this->path = '/';
 			$this->logged = false;
 			$this->processing = true;
 			$this->clear = false;
@@ -32,6 +32,10 @@
 		
 		public function buffer($content) {
 			$this->buffer .= $content."\n";
+		}
+		
+		public function checksum() {
+			return sha1(json_encode($this));
 		}
 	}
 ?>

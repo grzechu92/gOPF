@@ -76,36 +76,39 @@
 		private function registerEvents() {
 			$this->addClientEvent('initialize', function($push) {
 				$session = Terminal::$session;
+				$status = $session->pull();
 				
-				if ($session->processing) {
+				if ($status instanceof Status && $status->processing && $status->initialized) {
 					return;
 				}
 				
-				if (!$session->get() instanceof Status) {
+				if (!$status instanceof Status) {
 					$status = new Status();
 					$status->initialize();
-					$session->set($status);
 				}
 				
-				if (!$session->logged) {
+				if (!$status->logged) {
+					$session->push($status);
 					$this->execute('login -initialize');
-				} else {
-					$session->processing = false;
 				}
+				
+				$status = $session->pull();
+				$status->processing = false;
+				$session->push($status);
 			});
 			
 			$this->addServerEvent('stream', function($push) {
 				$session = Terminal::$session;
-				$status = $session->get();
+				$status = $session->pull();
 				
-				if ($session->checksum() != $push->container->session && $status instanceof Status) {
+				if ($status instanceof Status && $status->checksum() != $push->container->session) {
 					$value = clone($status);
 					
 					$status->buffer = '';
 					$status->clear = false;
-					$push->container->session = $session->checksum();
 					
-					$session->set($status);
+					$push->container->session = $status->checksum();
+					$session->push($status);
 					
 					return array('value' => $value);
 				}
@@ -114,7 +117,7 @@
 			$this->addClientEvent('command', function($push) {
 				$session = Terminal::$session;
 				
-				$this->execute($push->data->command, $session);
+				$this->execute($push->data->command);
 			});
 		}
 		
@@ -125,11 +128,14 @@
 		 */
 		private function execute($command) {
 			$session = Terminal::$session;
+			$status = $session->pull();
+			
 			$parsed = Command::parse($command);
+			
 			$session->processing = true;
 			
-			if (!$session->logged && $parsed->name != 'login') {
-				$this->execute('login -initialize', $session);
+			if (!$status->logged && $parsed->name != 'login') {
+				$this->execute('login -initialize');
 				return;
 			}
 			

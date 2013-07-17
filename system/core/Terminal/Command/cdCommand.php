@@ -12,7 +12,7 @@
 				return;
 			}
 			
-			$status = $session->get();
+			$status = $session->pull();
 			
 			if ($this->value == '..') {
 				$status = $this->moveUp($status);
@@ -22,7 +22,7 @@
 				$status = $this->relativeMoveTo($status);				
 			}
 			
-			$session->set($status);
+			$session->push($status);
 		}
 		
 		private function relativeMoveTo(Status $status) {

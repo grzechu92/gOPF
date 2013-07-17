@@ -15,52 +15,43 @@
 		}
 		
 		public function __set($name, $value) {
-			$this->read();
-			
-			if ($this->container[$this->id] instanceof Status) {
-				$this->container[$this->id]->{$name} = $value;
-				$this->write();
-			} else {
-				return null;
-			}
+			$status = $this->pull();
+			$status->{$name} = $value;
+			$this->push($status);
 		}
 		
 		public function __get($name) {
-			$this->read();
+			$status = $this->pull();
 			
-			if ($this->container[$this->id] instanceof Status) {
-				return $this->container[$this->id]->{$name};
-			} else {
-				return null;
-			}
+			return $status->{$name}; 
 		}
 		
-		public function set(Status $value) {
+		public function push(Status $value) {
 			$this->container[$this->id] = $value;
 			$this->write();
 		}
 		
-		public function get() {
+		/** 
+		 * @return \System\Terminal\Status
+		 */
+		public function pull() {
 			$this->read();
 			return $this->container[$this->id];
 		}
 		
 		public function buffer($content) {
-			$this->read();
-			$this->container[$this->id]->buffer($content);
-			$this->write();
+			$status = $this->pull();
+			$status->buffer($content);
+			
+			$this->push($status);
 		}
 		
-		public function checksum() {
-			return sha1(json_encode($this->container[$this->id]));
-		}
-		
-		public function read() {
+		private function read() {
 			$this->storage->read(self::STORAGE);
 			$this->container = $this->storage->get(self::STORAGE);
 		}
 		
-		public function write() {
+		private function write() {
 			$this->storage->set(self::STORAGE, $this->container);
 			$this->storage->write(self::STORAGE);
 		}

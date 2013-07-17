@@ -6,7 +6,7 @@
 	class loginCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
 		public function execute() {
 			$session = self::$session;
-			$status = $session->get();
+			$status = $session->pull();
 			
 			if ($this->getParameter('initialize')) {
 				$status = $this->getLogin($status);
@@ -21,10 +21,17 @@
 				$status = $this->validate($status);
 			}
 			
-			$session->set($status);
+			$session->push($status);
+			
+			if ($status->logged) {
+				$command = self::parse('welcome');
+				$command = self::factory($command);
+				$command->execute();
+			}
 		}
 		
 		private function getLogin(Status $status) {
+			$status->clear = true;
 			$status->prompt = 'Login: ';
 			$status->prefix = 'login -user ';
 			$status->type = Status::TEXT;
@@ -41,13 +48,12 @@
 		}
 		
 		private function validate(Status $status) {
-			sleep(1);
-			
 			$config = Config::factory('terminal.ini', Config::SYSTEM);
 			
 			$users = $config->getContent()['users'];
 			
 			if (!isset($users[$status->user]) || $users[$status->user] != sha1($this->getParameter('password'))) {
+				sleep(1);
 				$this->getLogin($status);
 				$status->buffer('Access denied!');
 			} else {
