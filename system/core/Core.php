@@ -13,7 +13,7 @@
 		 * gOPF Core version number
 		 * @var string
 		 */
-		const VERSION = '1.7.0';
+		const VERSION = '1.7.0 RC';
 		
 		/**
 		 * gOPF Core stage (__DEVELOPMENT or __PRODCUTION)
