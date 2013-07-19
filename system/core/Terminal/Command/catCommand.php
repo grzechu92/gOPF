@@ -21,7 +21,7 @@
 			if (!$this->checkFile($path)) {
 				$session->buffer('Requested file doesn\'t exists!');
 			} else {
-				$session->buffer(Filesystem::read(__ROOT_PATH.$session->path.$this->value));
+				$session->buffer(htmlspecialchars(Filesystem::read($path)));
 			}
 		}
 		

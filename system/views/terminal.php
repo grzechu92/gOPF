@@ -19,7 +19,7 @@
 				</td>
 				
 				<td class="expand">
-					<input type="text" id="command" class="consoleFont" autocomplete="off">
+					<input type="text" id="command" class="consoleFont" autocomplete="off" autofocus="autofocus">
 				</td>
 			</tr>
 		</table>

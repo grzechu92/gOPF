@@ -62,6 +62,16 @@ Terminal = {
 		}
 	},
 	
+	complete: function(command) {
+		if (!Terminal.status.processing) {
+			var value = command.val();
+			
+			if (value != "") {
+				$.gPAE("sendEvent", "complete", {command: value, position: command.get(0).selectionStart});
+			}
+		}
+	},
+	
 	check: function(data) {
 		if (Terminal.processing) {
 			Terminal.lock();
@@ -91,6 +101,18 @@ Terminal = {
 			$("#prompt").html(data.prompt);
 		}
 		
+		if (data.command != '') {
+			var command = $("#command");
+			var position = command.get(0).selectionStart;
+			
+			var after = command.val().slice(position);
+			var before = command.val().slice(0, position);
+			
+			console.log(before, data.command, after);
+			
+			$("#command").val(before+data.command+after);
+		}
+		
 		$("#command").prop("type", data.type);
 		
 		if (data.processing) {
@@ -118,10 +140,6 @@ $(document).ready(function() {
 	
 	Terminal.init();
 	
-	$("*").click(function() {
-		$("#command").focus();
-	});
-	
 	$("form").submit(function(e) {
 		if (!Terminal.status.processing) {
 			var value = $("#command").val();
@@ -134,5 +152,25 @@ $(document).ready(function() {
 			
 		e.preventDefault();
 		return false;
+	});
+	
+	$("#command").blur(function(e) {
+		setTimeout(function() { $("#command").focus(); }, 1);
+	});
+	
+	$("body").keydown(function(e) {
+		if (e.keyCode == 9) {
+			Terminal.complete($("#command"));
+			
+			e.preventDefault();
+			return false;
+		}
+		
+		if (e.keyCode == 76 && e.ctrlKey) {
+			Terminal.clear();
+			
+			e.preventDefault();
+			return false;
+		}
 	});
 });

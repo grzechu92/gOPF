@@ -105,6 +105,7 @@
 					$value = clone($status);
 					
 					$status->buffer = '';
+					$status->command = '';
 					$status->clear = false;
 					
 					$push->container->session = $status->checksum();
@@ -118,6 +119,63 @@
 				$session = Terminal::$session;
 				
 				$this->execute($push->data->command);
+			});
+			
+			$this->addClientEvent('complete', function($push) {
+				$session = Terminal::$session;
+				
+				if (!$session->logged) {
+					return;
+				} 
+				
+				$buffer = '';
+				$matched = array();
+				
+				$command = $push->data->command;
+				$position = $push->data->position;
+				
+				$complete = substr($command, 0, $position);
+				$exploded = explode(' ', $complete);
+				$location = $exploded[count($exploded)-1];
+				
+
+				if ($location[0] == DIRECTORY_SEPARATOR) {
+					$path = __ROOT_PATH.DIRECTORY_SEPARATOR;
+					$location = substr($location, 1);
+				} else {
+					$path = __ROOT_PATH.$session->path;
+				}
+				
+				if (strpos($location, DIRECTORY_SEPARATOR) > 0) {
+					$extended = true;
+					$exploded = explode(DIRECTORY_SEPARATOR, $location);
+					
+					$location = array_slice($exploded, -1)[0];
+					$path .= implode(DIRECTORY_SEPARATOR, array_slice($exploded, 0, -1));
+				} else {
+					$extended = false;
+				}
+				
+				foreach (new \DirectoryIterator($path) as $file) {
+					if (strpos($file->getPathname(), $path.($extended ? DIRECTORY_SEPARATOR : '').$location) === 0) {
+						$matched[] = $file->getFilename().($file->isDir() ? DIRECTORY_SEPARATOR : '');
+					}					
+				}
+				
+				switch (count($matched)) {
+					case 0:
+						return;
+						
+					case 1:
+						$session->command = str_replace($location, '', $matched[0]);
+						return;
+				}
+				
+				foreach ($matched as $file) {
+					$buffer .= "\n".$file;
+				}
+				
+				$session->buffer($buffer);
 			});
 		}
 		

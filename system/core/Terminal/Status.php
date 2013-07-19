@@ -100,6 +100,12 @@
 		public $updated;
 		
 		/**
+		 * Prefilled command
+		 * @var string
+		 */
+		public $command = null;
+		
+		/**
 		 * Initializes and setts required status fields
 		 */
 		public function initialize() {
