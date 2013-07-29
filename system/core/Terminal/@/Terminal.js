@@ -108,9 +108,11 @@ Terminal = {
 			var after = command.val().slice(position);
 			var before = command.val().slice(0, position);
 			
-			console.log(before, data.command, after);
+			var command = before+data.command+after;
 			
-			$("#command").val(before+data.command+after);
+			if (command != null) {
+				$("#command").val();
+			}
 		}
 		
 		$("#command").prop("type", data.type);
