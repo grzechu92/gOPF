@@ -14,7 +14,8 @@
  * Terminal.clear();				Clears terminal output
  * 
  * Requires:
- * @/System/Terminal/gOPF.js
+ * @/System/Core/gOPF.js
+ * @/gOPF/gPAE/gPAE.js
  * @/System/Terminal/style.css
  * 
  * 
