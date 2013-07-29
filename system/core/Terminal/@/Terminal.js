@@ -7,6 +7,7 @@
  * Terminal.init();					Initiates terminal connection
  * Terminal.send(command);			Allows to pass command to terminal
  * Terminal.abort();				Abort current command process (if supported)
+ * Terminal.debug();				Prints current terminal session status
  * Terminal.check();				Checks terminal status
  * Terminal.lock();					Locks terminal
  * Terminal.unlock();				Unlocks terminal
@@ -69,6 +70,10 @@ Terminal = {
 	
 	abort: function() {
 		$.gPAE("sendEvent", "abort");
+	},
+	
+	debug: function() {
+		$.gPAE("sendEvent", "debug");
 	},
 	
 	complete: function(command) {
@@ -186,6 +191,13 @@ $(document).ready(function() {
 		
 		if (e.keyCode == 67 && e.ctrlKey) {
 			Terminal.abort();
+			
+			e.preventDefault();
+			return false;
+		}
+		
+		if (e.keyCode == 68 && e.ctrlKey && e.shiftKey) {
+			Terminal.debug();
 			
 			e.preventDefault();
 			return false;

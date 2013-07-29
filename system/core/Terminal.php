@@ -129,6 +129,12 @@
 				}
 			});
 			
+			$this->addClientEvent('debug', function($push) {
+				$session = Terminal::$session;
+				
+				$session->buffer(print_r($session->pull(), true));
+			});
+			
 			$this->addClientEvent('complete', function($push) {
 				$session = Terminal::$session;
 				
