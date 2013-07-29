@@ -121,6 +121,14 @@
 				$this->execute($push->data->command);
 			});
 			
+			$this->addClientEvent('abort', function($path) {
+				$session = Terminal::$session;
+				
+				if ($session->processing) {
+					$session->abort = true;
+				}
+			});
+			
 			$this->addClientEvent('complete', function($push) {
 				$session = Terminal::$session;
 				

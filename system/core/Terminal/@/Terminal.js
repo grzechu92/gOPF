@@ -6,6 +6,7 @@
  * Usage:
  * Terminal.init();					Initiates terminal connection
  * Terminal.send(command);			Allows to pass command to terminal
+ * Terminal.abort();				Abort current command process (if supported)
  * Terminal.check();				Checks terminal status
  * Terminal.lock();					Locks terminal
  * Terminal.unlock();				Unlocks terminal
@@ -37,7 +38,10 @@ Terminal = {
 		prefix: null,
 		initialized: false,
 		logged: false,
-		processing: false
+		processing: false,
+		clear: false,
+		abort: false,
+		command: null
 	},	
 		
 	init: function() {
@@ -61,6 +65,10 @@ Terminal = {
 			$.gPAE("sendEvent", "command", {command: command});
 			Terminal.lock();
 		}
+	},
+	
+	abort: function() {
+		$.gPAE("sendEvent", "abort");
 	},
 	
 	complete: function(command) {
@@ -171,6 +179,13 @@ $(document).ready(function() {
 		
 		if (e.keyCode == 76 && e.ctrlKey) {
 			Terminal.clear();
+			
+			e.preventDefault();
+			return false;
+		}
+		
+		if (e.keyCode == 67 && e.ctrlKey) {
+			Terminal.abort();
 			
 			e.preventDefault();
 			return false;

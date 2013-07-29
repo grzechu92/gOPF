@@ -16,6 +16,11 @@
 			$session = self::$session;
 			
 			for ($i = 1; $i <= $this->value; $i++) {
+				if ($session->abort) {
+					$session->abort = false;
+					break;
+				}
+				
 				sleep(1);
 				$session->buffer($i);
 				
