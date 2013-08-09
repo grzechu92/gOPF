@@ -14,6 +14,7 @@
  * Terminal.update(data);			Updates terminal data (prompt, output etc.)
  * Terminal.print(data);			Allows to put data into terminal output
  * Terminal.clear();				Clears terminal output
+ * Terminal.history(offset);		Shows commands history on required offset (1, -1)
  * 
  * Requires:
  * @/System/Core/gOPF.js
@@ -42,7 +43,8 @@ Terminal = {
 		processing: false,
 		clear: false,
 		abort: false,
-		command: null
+		command: null,
+		complete: null
 	},	
 		
 	init: function() {
@@ -74,6 +76,10 @@ Terminal = {
 	
 	debug: function() {
 		$.gPAE("sendEvent", "debug");
+	},
+	
+	history: function(offset) {
+		$.gPAE("sendEvent", "history", {offset: offset});
 	},
 	
 	complete: function(command) {
@@ -114,19 +120,23 @@ Terminal = {
 		} else {
 			$("#prompt").html(data.prompt);
 		}
-		
-		if (data.command != '') {
+				
+		if (data.complete != '') {
 			var command = $("#command");
 			var position = command.get(0).selectionStart;
 			
 			var after = command.val().slice(position);
 			var before = command.val().slice(0, position);
 			
-			var command = before+data.command+after;
+			var command = before+data.complete+after;
 			
 			if (command != null) {
-				$("#command").val();
+				$("#command").val(command);
 			}
+		}
+		
+		if (data.command != '') {
+			$("#command").val(data.command);
 		}
 		
 		$("#command").prop("type", data.type);
@@ -198,6 +208,20 @@ $(document).ready(function() {
 		
 		if (e.keyCode == 68 && e.ctrlKey && e.shiftKey) {
 			Terminal.debug();
+			
+			e.preventDefault();
+			return false;
+		}
+		
+		if (e.keyCode == 38) {
+			Terminal.history(-1);
+			
+			e.preventDefault();
+			return false;
+		}
+		
+		if (e.keyCode == 40) {
+			Terminal.history(1);
 			
 			e.preventDefault();
 			return false;

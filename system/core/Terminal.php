@@ -106,6 +106,7 @@
 					
 					$status->buffer = '';
 					$status->command = '';
+					$status->complete = '';
 					$status->clear = false;
 					
 					$push->container->session = $status->checksum();
@@ -133,6 +134,18 @@
 				$session = Terminal::$session;
 				
 				$session->buffer(print_r($session->pull(), true));
+			});
+			
+			$this->addClientEvent('history', function($push) {
+				$session = Terminal::$session;
+				
+				if ($push->data->offset == -1) {
+					$command = $session->history()->previous();
+				} else {
+					$command = $session->history()->next();
+				}
+				
+				$session->command = $command;
 			});
 			
 			$this->addClientEvent('complete', function($push) {
@@ -181,7 +194,7 @@
 						return;
 						
 					case 1:
-						$session->command = str_replace($location, '', $matched[0]);
+						$session->complete = str_replace($location, '', $matched[0]);
 						return;
 				}
 				
@@ -212,6 +225,10 @@
 			}
 			
 			try {				
+				if ($status->logged) {
+					$session->history()->push($command);
+				}
+				
 				$command = Command::factory($parsed);
 				$command->execute();
 			} catch (\System\Loader\Exception $e) {
@@ -223,6 +240,7 @@
 			}
 			
 			$session->processing = false;
+			$session->abort = false;
 			$session->updated = microtime(true);
 		}
 	}

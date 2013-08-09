@@ -43,6 +43,13 @@
 		}
 		
 		/**
+		 * Saves terminal session in storage
+		 */
+		public function __destruct() {
+			$this->write();
+		}
+		
+		/**
 		 * Allows to fast pull/set/push action
 		 * 
 		 * @param string $name Variable name
@@ -98,9 +105,22 @@
 		}
 		
 		/**
+		 * Allows access to terminal command history
+		 * 
+		 * @return \System\Terminal\History
+		 */
+		public function history() {
+			if (!isset($this->container['history']) || !$this->container['history'] instanceof History) {
+				$this->container['history'] = new History();
+			}
+			
+			return $this->container['history'];
+		}
+		
+		/**
 		 * Reads current terminal session
 		 */
-		private function read() {
+		public function read() {
 			$this->storage->read(self::STORAGE);
 			$this->container = $this->storage->get(self::STORAGE);
 		}
@@ -108,7 +128,7 @@
 		/**
 		 * Writes current terminal session
 		 */
-		private function write() {
+		public function write() {
 			$this->storage->set(self::STORAGE, $this->container);
 			$this->storage->write(self::STORAGE);
 		}

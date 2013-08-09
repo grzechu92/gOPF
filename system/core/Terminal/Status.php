@@ -106,6 +106,12 @@
 		public $command = null;
 		
 		/**
+		 * Completed command
+		 * @var string
+		 */
+		public $complete = null;
+		
+		/**
 		 * Initializes and setts required status fields
 		 */
 		public function initialize() {
@@ -118,6 +124,8 @@
 			$this->clear = false;
 			$this->abort = false;
 			$this->prompt = null;
+			$this->command = null;
+			$this->complete = null;
 		}
 		
 		/**
