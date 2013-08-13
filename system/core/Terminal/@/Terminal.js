@@ -54,6 +54,10 @@ Terminal = {
 			$.gPAE("sendEvent", "initialize");
 		});
 		
+		$.gPAE("addEvent", "onDisconnect", function() {
+			$.gPAE("connect")
+		});
+		
 		$.gPAE("addEvent", "stream", function(data) {
 			Terminal.status = data.value;
 			Terminal.check(data.value);
@@ -80,6 +84,10 @@ Terminal = {
 	
 	history: function(offset) {
 		$.gPAE("sendEvent", "history", {offset: offset});
+	},
+	
+	reset: function() {
+		$.gPAE("sendEvent", "reset");
 	},
 	
 	complete: function(command) {
@@ -222,6 +230,14 @@ $(document).ready(function() {
 		
 		if (e.keyCode == 40) {
 			Terminal.history(1);
+			
+			e.preventDefault();
+			return false;
+		}
+		
+		if (e.keyCode == 192 && e.shiftKey) {
+			Terminal.reset();
+			Terminal.ini
 			
 			e.preventDefault();
 			return false;

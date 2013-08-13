@@ -117,9 +117,19 @@
 			});
 			
 			$this->addClientEvent('command', function($push) {
+				$this->execute($push->data->command);
+			});
+			
+			$this->addClientEvent('reset', function($push) {
 				$session = Terminal::$session;
 				
-				$this->execute($push->data->command);
+				$status = $session->pull();
+				$status->initialize();
+				
+				$session->push($status);
+				$session->write();
+				
+				$this->execute('login -initialize');
 			});
 			
 			$this->addClientEvent('abort', function($path) {
