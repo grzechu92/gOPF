@@ -112,6 +112,12 @@
 		public $complete = null;
 		
 		/**
+		 * Terminal session storage
+		 * @var array
+		 */
+		public $storage = array();
+		
+		/**
 		 * Initializes and setts required status fields
 		 */
 		public function initialize() {
@@ -126,6 +132,8 @@
 			$this->prompt = null;
 			$this->command = null;
 			$this->complete = null;
+			
+			$this->storage = array();
 		}
 		
 		/**
