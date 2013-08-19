@@ -50,7 +50,8 @@
 				
 				foreach ($this->lines as $element) {
 					$line = $element->value;
-					$content .= $line->build()."\n";
+					
+					$content .= $line->build().($line->common ? "\n" : '');
 				}
 				
 				\System\Filesystem::write($this->path, $content);
