@@ -57,7 +57,6 @@
 		 * @param bool $removes Allow to fill with null
 		 */
 		public function merge(File $file, $removes = false) {
-			var_dump(count($file));
 			if (count($file) > 0) {
 				foreach ($file as $name=>$value) {
 					if ($removes || $value != '') {
