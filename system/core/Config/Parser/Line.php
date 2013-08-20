@@ -10,6 +10,12 @@
 	 */
 	class Line {
 		/**
+		 * If line has this value it will be removed
+		 * @var string
+		 */
+		const REMOVE = '__REMOVE';
+		
+		/**
 		 * Line name
 		 * @var string
 		 */

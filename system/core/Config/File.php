@@ -111,6 +111,25 @@
 		}
 		
 		/**
+		 * Removes selected value
+		 * 
+		 * @param string $offset Value to remove name
+		 */
+		public function remove($offset) {
+			$this->set($offset, Line::REMOVE);
+		}
+		
+		/**
+		 * Removes selected array value
+		 * 
+		 * @param string $array Array name
+		 * @param string $offset Name of value to remove in array
+		 */
+		public function removeFromArray($array, $offset) {
+			$this->setArrayValue($array, $offset, Line::REMOVE);
+		}
+		
+		/**
 		 * Returns raw content of configuration file
 		 * @return array Configuration file content
 		 */

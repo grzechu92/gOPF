@@ -61,13 +61,15 @@
 		 */
 		public function __destruct() {
 			if (!empty($this->elements)) {
-				$content = '';
+				$content = array();
 				
 				foreach ($this->elements as $line) {
 					$line = $line->value;
 					
 					if ($line instanceof Line) {
-						$content .= $line->build()."\n";
+						if ($line->value != Line::REMOVE) {
+							$content[] = $line->build();
+						}
 					}
 					
 					if ($line instanceof Group) {
@@ -76,12 +78,14 @@
 						foreach ($group as $line) {
 							$line = $line->value;
 							
-							$content .= $line->build()."\n";
+							if ($line->value != Line::REMOVE) {
+								$content[] = $line->build();
+							}
 						}
 					}
 				}
 				
-				\System\Filesystem::write($this->path, $content);
+				\System\Filesystem::write($this->path, implode($content, "\n"));
 			}
 		}
 		
