@@ -81,8 +81,6 @@
 					}
 				}
 				
-				echo nl2br($content);
-				
 				\System\Filesystem::write($this->path, $content);
 			}
 		}
