@@ -28,6 +28,18 @@
 		public $common = false;
 		
 		/**
+		 * Is array? (array means array start, for example [test] in config line)
+		 * @var bool
+		 */
+		public $array = false;
+		
+		/**
+		 * Is empty?
+		 * @var bool
+		 */
+		public $empty = false;
+		
+		/**
 		 * Raw line content
 		 * @var string
 		 */
@@ -42,6 +54,16 @@
 			$this->content = $line;
 			$element = explode('=', $line, 2);
 			
+			if (!empty($this->content) && $this->content[0] == '[') {
+				$this->array = true;
+				$this->name = trim(str_replace(['[', ']'], ['', ''], $this->content));
+			}
+			
+			if (empty(trim($this->content))) {
+				$this->content = '';
+				$this->empty = true;
+			}
+			
 			if (count($element) == 2) {
 				$this->init(trim($element[0]), trim($element[1]));
 			}
@@ -55,6 +77,7 @@
 		 */
 		public function init($name, $value) {
 			$this->common = true;
+			$this->empty = false;
 			$this->name = $name;
 			$this->value = $value;
 		}
@@ -67,8 +90,10 @@
 		public function build() {
 			if ($this->common) {
 				return $this->name.' = '.$this->value;
+			} elseif ($this->array) {
+				return '['.$this->name.']';
 			} else {
-				return $this->content;
+				return trim($this->content);
 			}
 		}
 	}

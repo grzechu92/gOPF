@@ -85,8 +85,6 @@
 		 **/
 		public static function merge(File $new, File $old, $removes = false) {
 			$old->merge($new, $removes);
-			
-			var_dump($old);
 		}
 		
 		/**

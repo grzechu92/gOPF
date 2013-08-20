@@ -1,6 +1,8 @@
 <?php
 	namespace System\Config;
 	use \System\Config\Parser\Line;
+	use \System\Config\Parser\Group;
+	use \System\Queue;
 	use \System\Queue\Element;
 	
 	/**
@@ -18,10 +20,10 @@
 		private $path;
 		
 		/**
-		 * Lines from configuration file
+		 * Elements of configuration file
 		 * @var \System\Queue
 		 */
-		private $lines;
+		private $elements;
 		
 		/**
 		 * Initiates parser object
@@ -30,14 +32,27 @@
 		 */
 		public function __construct($path) {
 			$this->path = $path;
-			
-			$this->lines = new \System\Queue();
+			$this->elements = new Queue();
+			$group = false;
 			
 			foreach (file($this->path) as $line) {
 				$line = new Line($line);
-				$name = $line->common ? $line->name : count($this->lines)+1;
+				$name = $line->common ? $line->name : count($this->elements)+1;
 				
-				$this->lines->push(new Element($name, $line));
+				if ($line->array) {
+					$group = $line->name;
+					$this->elements->push(new Element($group, new Group($group)));
+					$this->elements->get($group)->push(new Element($line->name, $line));
+					continue;
+				}
+
+				$element = new Element($name, $line);
+				
+				if ($group) {
+					$content = $this->elements->get($group)->push($element);
+				} else {
+					$this->elements->push($element);
+				}
 			}
 		}
 		
@@ -45,14 +60,28 @@
 		 * Saves change in parsed file
 		 */
 		public function __destruct() {
-			if (!empty($this->lines)) {
+			if (!empty($this->elements)) {
 				$content = '';
 				
-				foreach ($this->lines as $element) {
-					$line = $element->value;
+				foreach ($this->elements as $line) {
+					$line = $line->value;
 					
-					$content .= $line->build().($line->common ? "\n" : '');
+					if ($line instanceof Line) {
+						$content .= $line->build()."\n";
+					}
+					
+					if ($line instanceof Group) {
+						$group = $line;
+												
+						foreach ($group as $line) {
+							$line = $line->value;
+							
+							$content .= $line->build()."\n";
+						}
+					}
 				}
+				
+				echo nl2br($content);
 				
 				\System\Filesystem::write($this->path, $content);
 			}
@@ -61,17 +90,40 @@
 		/**
 		 * Processes lines with file
 		 * 
-		 * @param array $lines Lines with changes
+		 * @param array $values Lines with changes
 		 */
-		public function process(Array $lines) {
-			if (count($lines) > 0) {
-				foreach ($lines as $name=>$value) {					
-					$line = new Line();
-					$line->init($name, $value);
-					
-					$this->lines->set(new Element($name, $line));
+		public function merge(Array $values) {
+			if (count($values) > 0) {
+				foreach ($values as $name=>$value) {
+					if (is_array($value)) {
+						if (!$this->elements->exist($name)) {
+							$element = new Element($name, new Group($name));
+							$this->elements->push($element, Queue::BOTTOM);
+							$this->elements->get($name)->push(new Element($name, new Line('['.$name.']')));
+						}
+						
+						$group = $this->elements->get($name);
+						
+						foreach ($value as $n=>$v) {
+							$line = new Line();
+							$line->init($n, $v);
+							
+							$group->push(new Element($n, $line));
+						}
+					} else {
+						$line = new Line();
+						$line->init($name, $value);
+						
+						$element = new Element($name, $line);
+						
+						if (!$this->elements->exist($name)) {
+							$this->elements->push($element, Queue::TOP);
+						} else {
+							$this->elements->set($element);
+						}
+					}
 				}
-			}
+			}			
 		}
 	}
 ?>

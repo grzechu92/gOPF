@@ -46,7 +46,7 @@
 		public function __destruct() {
 			if ($this->edited) {
 				$parser = new Parser($this->path);
-				$parser->process($this->container);
+				$parser->merge($this->container);
 			}
 		}
 		
@@ -78,6 +78,36 @@
 			} else {
 				throw new Exception(\System\I18n::translate('CONFIG_EDIT'), $this->path);
 			}
+		}
+		
+		/**
+		 * Edites or creates value in config array
+		 * 
+		 * @param string $array Config array name
+		 * @param string $offset Config array variable name
+		 * @param string $value Config array variable value
+		 */
+		public function setArrayValue($array, $offset, $value) {
+			$content = $this->get($array);
+			$content[$offset] = $value;
+			$this->set($array, $content);
+		}
+		
+		/**
+		 * Returns value of requested variable from selected array in config file
+		 * 
+		 * @param string $array Config array name
+		 * @param string $offset Config array variable name
+		 * @return string Config array variable value
+		 */
+		public function getArrayValue($array, $offset) {
+			$content = $this->get($array);
+			
+			if (empty($content) || !isset($content[$array])) {
+				return null;
+			}
+			
+			return $content[$offset];
 		}
 		
 		/**
