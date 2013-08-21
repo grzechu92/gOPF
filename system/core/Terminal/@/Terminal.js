@@ -55,7 +55,7 @@ Terminal = {
 		});
 		
 		$.gPAE("addEvent", "onDisconnect", function() {
-			$.gPAE("connect")
+			$.gPAE("connect");
 		});
 		
 		$.gPAE("addEvent", "stream", function(data) {
@@ -67,9 +67,9 @@ Terminal = {
 	
 	send: function(command) {
 		if (!Terminal.status.processing) {
-			var command = (Terminal.status.prefix == null) ? command : Terminal.status.prefix+command;
+			var command = (Terminal.status.prefix == null) ? command : Terminal.status.prefix + command;
 			
-			$.gPAE("sendEvent", "command", {command: command});
+			$.gPAE("sendEvent", "command", {command: command, secret: !($("#command").prop("type") == "text")});
 			Terminal.lock();
 		}
 	},
@@ -237,7 +237,6 @@ $(document).ready(function() {
 		
 		if (e.keyCode == 192 && e.shiftKey) {
 			Terminal.reset();
-			Terminal.ini
 			
 			e.preventDefault();
 			return false;

@@ -117,7 +117,7 @@
 			});
 			
 			$this->addClientEvent('command', function($push) {
-				$this->execute($push->data->command);
+				$this->execute($push->data->command, !($push->data->secret == 'true'));
 			});
 			
 			$this->addClientEvent('reset', function($push) {
@@ -220,8 +220,9 @@
 		 * Executes command request
 		 * 
 		 * @param string $command Command content
+		 * @param bool $history If command has secret data, don't save it to history
 		 */
-		private function execute($command) {
+		private function execute($command, $history) {
 			$session = Terminal::$session;
 			$status = $session->pull();
 			
@@ -234,8 +235,8 @@
 				return;
 			}
 			
-			try {				
-				if ($status->logged) {
+			try {
+				if ($status->logged && $history) {
 					$session->history()->push($command);
 				}
 				
