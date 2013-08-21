@@ -103,7 +103,7 @@
 		public function getArrayValue($array, $offset) {
 			$content = $this->get($array);
 			
-			if (empty($content) || !isset($content[$array])) {
+			if (empty($content) || !isset($content[$offset])) {
 				return null;
 			}
 			
