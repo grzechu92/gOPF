@@ -78,9 +78,9 @@
 		private function validate(Status $status) {
 			$config = Config::factory('terminal.ini', Config::SYSTEM);
 			
-			$users = $config->getContent()['users'];
+			$user = $config->getArrayValue('users', $status->user);
 			
-			if (!isset($users[$status->user]) || $users[$status->user] != sha1($this->getParameter('password'))) {
+			if (empty($user) || $user != sha1($this->getParameter('password'))) {
 				sleep(1);
 				$this->getLogin($status);
 				$status->buffer('Access denied!');
