@@ -25,7 +25,7 @@
 		
 		/**
 		 * Cache object instance
-		 * @var Cache
+		 * @var \System\Cache
 		 */
 		private static $instance;
 		
@@ -67,7 +67,7 @@
 		
 		/**
 		 * Cache module configuration
-		 * @var Config
+		 * @var \System\Config
 		 */
 		private $config;
 		
@@ -123,6 +123,7 @@
 		
 		/**
 		 * Removes selected cache element
+		 * 
 		 * @param string $name Cached value name
 		 * @param int $type Cache type (Cache::GLOBAL_CACHE or Cache::USER_CACHE)
 		 */

@@ -31,7 +31,7 @@
 		/**
 		 * Adds element to queue on selected position (on the bottom by default)
 		 * 
-		 * @param Element $element Queue element to add
+		 * @param \System\Queue\Element $element Queue element to add
 		 * @param int $position Element position
 		 */
 		public function push(Element $element, $position = self::BOTTOM) {
@@ -50,7 +50,7 @@
 		 * Returns first queue element and removes it by default
 		 * 
 		 * @param bool $remove Remove element (true by default)
-		 * @return Element If element exists, returns it
+		 * @return \System\Queue\Element If element exists, returns it
 		 */
 		public function top($remove = true) {
 			if (empty($this->elements)) {
@@ -70,7 +70,7 @@
 		 * Returns last queue element and removes it by default
 		 *
 		 * @param bool $remove Remove element (true by default)
-		 * @return Element If element exists, returns it
+		 * @return \System\Queue\Element If element exists, returns it
 		 */
 		public function bottom($remove = true) {
 			$last = null;
@@ -103,7 +103,7 @@
 		/**
 		 * Overwrites element in queue, if not exist, adds it to bottom of the queue
 		 * 
-		 * @param Element $element Element to overwrite
+		 * @param \System\Queue\Element $element Element to overwrite
 		 */
 		public function set(Element $element) {
 			$value = $this->get($element->name);
@@ -119,7 +119,7 @@
 		 * Adds new element before selected element
 		 * 
 		 * @param string $name Selected element
-		 * @param Element $element Element to add
+		 * @param \System\Queue\Element $element Element to add
 		 */
 		public function before($name, Element $element) {
 			$offset = $this->getIndex($name);
@@ -131,7 +131,7 @@
 		 * Adds new element after selected element
 		 *
 		 * @param string $name Selected element
-		 * @param Element $element Element to add
+		 * @param \System\Queue\Element $element Element to add
 		 */
 		public function after($name, Element $element) {
 			$offset = $this->getIndex($name)+1;
@@ -196,7 +196,7 @@
 		}
 		
 		/**
-		 * @see Countable::count()
+		 * @see \Countable::count()
 		 */
 		public function count() {
 			return count($this->elements);
@@ -242,7 +242,7 @@
 	    }
 	    
 	    /**
-	     * @see IteratorAggregate::getIterator()
+	     * @see \IteratorAggregate::getIterator()
 	     */
 	    public function getIterator() {
 	    	return new \ArrayIterator($this->elements);

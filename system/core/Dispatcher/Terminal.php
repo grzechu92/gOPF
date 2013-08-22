@@ -11,7 +11,7 @@
 	 */
 	class Terminal extends Context implements ContextInterface {
 		/**
-		 * @see System\Dispatcher.ContextInterface::process()
+		 * @see \System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
 			$config = Config::factory('terminal.ini', Config::SYSTEM);

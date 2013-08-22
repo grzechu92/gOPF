@@ -11,7 +11,7 @@
 	 */
 	class Page extends Context implements ContextInterface {
 		/**
-		 * @see System\Dispatcher.ContextInterface::process()
+		 * @see \System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
 			$view = \System\Core::instance()->view = new \System\View();

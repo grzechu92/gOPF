@@ -68,13 +68,13 @@
 		
 		/**
 		 * Calculated listing begining value
-		 * @var integer
+		 * @var int
 		 */
 		private $begin = 0;
 		
 		/**
 		 * Calculated listing ending value
-		 * @var integer
+		 * @var int
 		 */
 		private $end = 0;
 		

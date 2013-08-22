@@ -12,13 +12,13 @@
 	class Layer {
 		/**
 		 * Layer size
-		 * @var Size
+		 * @var \gOPF\gSIP\Size
 		 */
 		public $size;
 		
 		/**
 		 * Layer position
-		 * @var Position
+		 * @var \gOPF\gSIP\Position
 		 */
 		public $position;
 		
@@ -38,8 +38,8 @@
 		 * Initiates layer object
 		 * 
 		 * @param string $name Layer name
-		 * @param Size $size Layer size
-		 * @param Position $position Layer position
+		 * @param \gOPF\gSIP\Size $size Layer size
+		 * @param \gOPF\gSIP\Position $position Layer position
 		 */
 		public function __construct($name, Size $size = null, Position $position = null) {
 			$this->name = $name;
@@ -57,8 +57,8 @@
 		 * Imports image into layer
 		 * 
 		 * @param string $path Path to image
-		 * @throws Exception
-		 * @return Layer Fluid interface
+		 * @throws \gOPF\gSIP\Exception
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function import($path) {
 			$info = getimagesize($path);
@@ -106,8 +106,8 @@
 		/**
 		 * Moves layer into specified position
 		 * 
-		 * @param Position $position Target position
-		 * @return Layer Fluid interface
+		 * @param \gOPF\gSIP\Position $position Target position
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function move(Position $position) {
 			$this->position = $position;
@@ -118,9 +118,9 @@
 		/**
 		 * Cuts layer for specifiec parameters (size and position) 
 		 * 
-		 * @param Size $size Target size
-		 * @param Position $position Target position
-		 * @return Layer Fluid interface
+		 * @param \gOPF\gSIP\Size $size Target size
+		 * @param \gOPF\gSIP\Position $position Target position
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function crop(Size $size, Position $position = null) {
 			if (empty($position)) {
@@ -138,8 +138,8 @@
 		/**
 		 * Resizes layer into specified size
 		 * 
-		 * @param Size $targetSize Target size values
-		 * @return Layer Fluid interface
+		 * @param \gOPF\gSIP\Size $targetSize Target size values
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function resize(Size $targetSize) {
 			$scaled = imagecreatetruecolor($targetSize->width, $targetSize->height);
@@ -157,7 +157,7 @@
 		 * Scales layer by ratio
 		 * 
 		 * @param float $ratio Scale ratio (1.0 = 100%)
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function scale($ratio) {
 			$this->resize(new Size(round($this->size->width*$ratio), round($this->size->height*$ratio)));
@@ -169,7 +169,7 @@
 		 * Resizes layer to requested height
 		 * 
 		 * @param int $height Height size
-		 * @return Layer Fluid Interface
+		 * @return \gOPF\gSIP\Layer Fluid Interface
 		 */
 		public function resizeToHeight($height) {
 			$this->scale($height/$this->size->height);
@@ -181,7 +181,7 @@
 		 * Resizes layer to requested width
 		 *
 		 * @param int $width Width size
-		 * @return Layer Fluid Interface
+		 * @return \gOPF\gSIP\Layer Fluid Interface
 		 */
 		public function resizeToWidth($width) {
 			$this->scale($width/$this->size->width);
@@ -192,7 +192,7 @@
 		/**
 		 * Makes specified color transparent
 		 * 
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function makeTransparent() {
 			imagesavealpha($this->content, true); 
@@ -206,8 +206,8 @@
 		/**
 		 * Gets color values from point on layer
 		 * 
-		 * @param Position $position Selected pixel coordinates
-		 * @return Color Color object with color values
+		 * @param \gOPF\gSIP\Position $position Selected pixel coordinates
+		 * @return \gOPF\gSIP\Color Color object with color values
 		 */
 		public function getPixel(Position $position) {
 			$data = imagecolorsforindex($this->content, imagecolorat($this->content, $position->x, $position->y));
@@ -218,9 +218,9 @@
 		/**
 		 * Sets selected pixel with specified color values
 		 * 
-		 * @param Position $position Selected pixel coordinates
-		 * @param Color $color Color values
-		 * @return Layer Fluid interface
+		 * @param \gOPF\gSIP\Position $position Selected pixel coordinates
+		 * @param \gOPF\gSIP\Color $color Color values
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function setPixel(Position $position, Color $color) {
 			imagesetpixel($this->content, $position->x, $position->y, $this->allocateColor($color));
@@ -231,11 +231,11 @@
 		/**
 		 * Draws a rectangle on layer
 		 * 
-		 * @param Position $position Left-top corner of rectangle
-		 * @param Size $size Size of rectangle
-		 * @param Color $color Color of rectangle
+		 * @param \gOPF\gSIP\Position $position Left-top corner of rectangle
+		 * @param \gOPF\gSIP\Size $size Size of rectangle
+		 * @param \gOPF\gSIP\Color $color Color of rectangle
 		 * @param bool $fill Fill rectangle
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function drawRectangle(Position $position, Size $size, Color $color, $fill = false) {
 			$function = ($fill) ? 'imagefilledrectangle' : 'imagerectangle';
@@ -248,11 +248,11 @@
 		/**
 		 * Draws a ellipse on layer
 		 * 
-		 * @param Position $position Center position of ellipse
-		 * @param Size $size Width and height od ellipse
-		 * @param Color $color Color of ellipse
+		 * @param \gOPF\gSIP\Position $position Center position of ellipse
+		 * @param \gOPF\gSIP\Size $size Width and height od ellipse
+		 * @param \gOPF\gSIP\Color $color Color of ellipse
 		 * @param bool $fill Fill elipse
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function drawEllipse(Position $position, Size $size, Color $color, $fill = false) {
 			$function = ($fill) ? 'imagefilledellipse' : 'imageellipse';
@@ -265,13 +265,13 @@
 		/**
 		 * Draws a arc on layer
 		 * 
-		 * @param Position $position Center position of arc
-		 * @param Size $size Width and height of arc
+		 * @param \gOPF\gSIP\Position $position Center position of arc
+		 * @param \gOPF\gSIP\Size $size Width and height of arc
 		 * @param int $start Start angle
 		 * @param int $end End angle
-		 * @param Color $color Color of arc
+		 * @param \gOPF\gSIP\Color $color Color of arc
 		 * @param bool $fill Fill arc
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function drawArc(Position $position, Size $size, $start = 0, $end = 360, Color $color, $fill = false) {
 			$color = $this->allocateColor($color);
@@ -288,11 +288,11 @@
 		/**
 		 * Draws a circle on layer
 		 * 
-		 * @param Position $position Center position of circle
+		 * @param \gOPF\gSIP\Position $position Center position of circle
 		 * @param int $radius Circle radius
-		 * @param Color $color Color of circle
+		 * @param \gOPF\gSIP\Color $color Color of circle
 		 * @param bool $fill Fill circle
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function drawCircle(Position $position, $radius, Color $color, $fill = false) {
 			$this->drawArc($position, new Size($radius*2, $radius*2), 0, 360, $color, $fill);
@@ -303,10 +303,10 @@
 		/**
 		 * Draws a line on layer
 		 * 
-		 * @param Position $start Start position
-		 * @param Position $end End position
-		 * @param Color $color Color of line
-		 * @return Layer Fluid interface
+		 * @param \gOPF\gSIP\Position $start Start position
+		 * @param \gOPF\gSIP\Position $end End position
+		 * @param \gOPF\gSIP\Color $color Color of line
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function drawLine(Position $start, Position $end, Color $color) {
 			imageline($this->content, $start->x, $start->y, $end->x, $end->y, $this->allocateColor($color));
@@ -318,9 +318,9 @@
 		 * Puts text on layer
 		 * 
 		 * @param string $text Text to put on layer
-		 * @param Position $position Position of left-top corner
+		 * @param \gOPF\gSIP\Position $position Position of left-top corner
 		 * @param int $size Size of text
-		 * @param Color $color Color of text
+		 * @param \gOPF\gSIP\Color $color Color of text
 		 * @param string $fontFile Path to TTF font file
 		 * @param int $angle Angle of text
 		 */
@@ -339,7 +339,7 @@
 		/**
 		 * Negatives the layer colors
 		 * 
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function negative() {
 			imagefilter($this->content, IMG_FILTER_NEGATE);
@@ -350,7 +350,7 @@
 		/**
 		 * Desaturates the layer
 		 * 
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function desaturate() {
 			imagefilter($this->content, IMG_FILTER_GRAYSCALE);
@@ -362,7 +362,7 @@
 		 * Adjusts brightness of the layer
 		 * 
 		 * @param int $value Brightness level
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function brightness($value) {
 			imagefilter($this->content, IMG_FILTER_BRIGHTNESS, $value);
@@ -374,7 +374,7 @@
 		 * Adjusts contrast of the layer
 		 * 
 		 * @param int $value Contrast level
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function contrast($value) {
 			imagefilter($this->content, IMG_FILTER_CONTRAST, $value);
@@ -385,8 +385,8 @@
 		/**
 		 * Colorizes the layer
 		 * 
-		 * @param Color $color Color values
-		 * @return Layer Fluid interface
+		 * @param \gOPF\gSIP\Color $color Color values
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function colorize(Color $color) {
 			imagefilter($this->content, IMG_FILTER_COLORIZE, $color->red, $color->green, $color->blue, $color->alpha);
@@ -397,7 +397,7 @@
 		/**
 		 * Detects edges on layer
 		 * 
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function detectEdges() {
 			imagefilter($this->content, IMG_FILTER_EDGEDETECT);
@@ -408,7 +408,7 @@
 		/**
 		 * Embosses the layer
 		 * 
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function emboss() {
 			imagefilter($this->content, IMG_FILTER_EMBOSS);
@@ -420,7 +420,7 @@
 		 * Blurs the layer
 		 * 
 		 * @param int $level Blur level
-		 * @return Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function blur($level = 1) {
 			for ($i = 1; $i <= $level; $i++) {
@@ -431,8 +431,8 @@
 		/**
 		 * Fills entire layer with color
 		 * 
-		 * @param Color $color Layer color
-		 * @return Layer Fluid interface
+		 * @param \gOPF\gSIP\Color $color Layer color
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function fill(Color $color) {
 			$this->drawRectangle(new Position(0), $this->size, $color, true);
@@ -443,7 +443,7 @@
 		/**
 		 * Allocates color on the layer image
 		 * 
-		 * @param Color $color Color values
+		 * @param \gOPF\gSIP\Color $color Color values
 		 * @return resource Color allocated ID 
 		 */
 		private function allocateColor(Color $color) {

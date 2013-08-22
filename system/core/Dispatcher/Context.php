@@ -26,7 +26,7 @@
 		private $models = array();
 		
 		/**
-		 * @see System\Dispatcher.ContextInterface::getController()
+		 * @see \System\Dispatcher\ContextInterface::getController()
 		 */
 		public function getController($name) {
 			if (!in_array($name, $this->controllers)) {
@@ -37,7 +37,7 @@
 		}
 		
 		/**
-		 * @see System\Dispatcher.ContextInterface::callController()
+		 * @see \System\Dispatcher\ContextInterface::callController()
 		 */
 		public function callController($name, $action = 'main', $dynamic = false) {
 			$controller = $this->getController($name);
@@ -53,7 +53,7 @@
 		}
 		
 		/**
-		 * @see System\Dispatcher.ContextInterface::getModel()
+		 * @see \System\Dispatcher\ContextInterface::getModel()
 		 */
 		public function getModel($name) {
 			if (!in_array($name, $this->models)) {
@@ -91,7 +91,7 @@
 		 * Checks if controller is static or dynamic
 		 * 
 		 * @param string $name Name of controller
-		 * @throws Exception
+		 * @throws \System\Dispather\Exception
 		 */
 		protected function checkState($name) {
 			$class = '\\Controllers\\'.$name.'Controller';
@@ -105,7 +105,7 @@
 		 * Checks controller existence
 		 *
 		 * @param string $name Name of controller
-		 * @throws \System\Core\Exception
+		 * @throws \System\Dispatcher\Exception
 		 */
 		protected function checkController($name) {
 			if (!Filesystem::checkFile(__APPLICATION_PATH.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$name.'Controller.php')) {
@@ -117,7 +117,7 @@
 		 * Checks model existence
 		 * 
 		 * @param string $name Name of model
-		 * @throws \System\Core\Exception
+		 * @throws \System\Dispatcher\Exception
 		 */
 		protected function checkModel($name) {
 			if (!Filesystem::checkFile(__APPLICATION_PATH.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$name.'Model.php')) {
@@ -130,7 +130,7 @@
 		 * 
 		 * @param \System\Controller $controller Controller to check
 		 * @param string $action Method name
-		 * @throws \System\Core\Exception
+		 * @throws \System\Dispatcher\Exception
 		 */
 		protected function checkAction(\System\Controller $controller, $action = 'main') {
 			if (!is_callable(array($controller, $action.'Action'))) {
@@ -140,6 +140,8 @@
 		
 		/**
 		 * Checks access to requested controller and action
+		 * 
+		 * @throws \System\Dispatcher\Exception
 		 */
 		protected function checkAccess($name, $action) {
 			if (!$this->isAllowed(Request::$controller, Request::$action)) {

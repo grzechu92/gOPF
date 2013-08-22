@@ -11,7 +11,7 @@
 	 */
 	class Ajax extends Context implements ContextInterface {
 		/**
-		 * @see System\Dispatcher.ContextInterface::process()
+		 * @see \System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
 			$data = $this->callController(Request::$controller, Request::$action.'Ajax');

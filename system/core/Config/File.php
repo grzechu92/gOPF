@@ -131,6 +131,7 @@
 		
 		/**
 		 * Returns raw content of configuration file
+		 * 
 		 * @return array Configuration file content
 		 */
 		public function getContent() {

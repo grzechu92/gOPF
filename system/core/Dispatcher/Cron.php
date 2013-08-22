@@ -12,7 +12,7 @@
 	 */
 	class Cron extends Context implements ContextInterface {
 		/**
-		 * @see System\Dispatcher.ContextInterface::process()
+		 * @see System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
 			$jobs = $this->getJobs();
@@ -39,7 +39,7 @@
 		/**
 		 * Returns unique jobs list, which should be done at this time
 		 * 
-		 * return array Jobs to do
+		 * @return array Jobs to do
 		 */
 		private function getJobs() {
 			$application = Config::factory('cron.ini', Config::APPLICATION);

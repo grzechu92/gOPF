@@ -11,7 +11,7 @@
 	class Event {
 		/**
 		 * Code in closure to do in event
-		 * @var Closure
+		 * @var \Closure
 		 */
 		public $closure;
 		

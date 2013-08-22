@@ -10,7 +10,7 @@
 	 */
 	class PDO extends Engine implements EngineInterface {
 		/**
-		 * @see System\Database.EngineInterface::__construct()
+		 * @see \System\Database\EngineInterface::__construct()
 		 */
 		public function connect() {
 			try {

@@ -17,7 +17,7 @@
 		
 		/**
 		 * Height value
-		 * @var height
+		 * @var int
 		 */
 		public $height = 1;
 		
@@ -26,7 +26,7 @@
 		 * 
 		 * @param int $width Width value
 		 * @param int $height Height value
-		 * @throws Exception
+		 * @throws \gOPF\gSIP\Exception
 		 */
 		public function __construct($width, $height = false) {
 			if ($height === false) {

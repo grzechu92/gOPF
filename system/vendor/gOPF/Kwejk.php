@@ -77,6 +77,7 @@
 		 * 
 		 * @param string $username User username
 		 * @param string $password User password
+		 * @throws \gOPF\Kwejk\Exception
 		 */
 		public function login($username, $password) {
 			$content = $this->sendRequest('/login', array(
@@ -144,10 +145,11 @@
 		/**
 		 * Sends image to Kwejk.pl/obrazek
 		 *
-		 * @param Captcha $captcha Captcha to pass while sending image
+		 * @param \gOPF\Kwejk\Captcha $captcha Captcha to pass while sending image
 		 * @param string $file Full path to image file
 		 * @param string $title Image title
 		 * @param string $source Image source
+		 * @throws \gOPF\Kwejk\Exception
 		 */
 		public function sendImage(Captcha $captcha, $file, $title, $source = '') {
 			$content = $this->sendRequest('/dodaj');

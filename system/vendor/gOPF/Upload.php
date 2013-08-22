@@ -51,7 +51,7 @@
 		 * Returns uploaded file data
 		 * 
 		 * @param string $name POST file name
-		 * @return File File data
+		 * @return \gOPF\Upload\File File data
 		 */
 		public function getFile($name) {
 			if (isset($this->files[$name])) {

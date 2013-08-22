@@ -38,7 +38,7 @@
 		}
 		
 		/**
-		 * @see System.Container::set()
+		 * @see \System\Container::set()
 		 */
 		public function set($offset, $value) {
 			$this->container[$offset] = $value;
@@ -47,7 +47,7 @@
 		}
 		
 		/**
-		 * @see System.Container::get()
+		 * @see \System\Container::get()
 		 */
 		public function get($offset) {
 			Session::synchronize();

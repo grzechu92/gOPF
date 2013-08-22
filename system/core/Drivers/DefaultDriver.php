@@ -28,7 +28,7 @@
 		protected $name;
 		
 		/**
-		 * @see System\Drivers.DriverInterface::__construct()
+		 * @see \System\Drivers\DriverInterface::__construct()
 		 */
 		public function __construct($id, $lifetime = 0) {
 			$this->name = $id;
@@ -46,21 +46,21 @@
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::set()
+		 * @see \System\Drivers\DriverInterface::set()
 		 */
 		public function set($content) {
 			$_SESSION = $content;
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::get()
+		 * @see \System\Drivers\DriverInterface::get()
 		 */
 		public function get() {
 			return $_SESSION;
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::remove()
+		 * @see \System\Drivers\DriverInterface::remove()
 		 */
 		public function remove() {
 			if (session_status() == PHP_SESSION_ACTIVE) {
@@ -69,7 +69,7 @@
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::clear()
+		 * @see \System\Drivers\DriverInterface::clear()
 		 */
 		public function clear() {
 			throw new \System\Core\Exception(\System\I18n::translate('UNSUPPORTED_DRIVER_METHOD', array(__CLASS__, 'clear()')));

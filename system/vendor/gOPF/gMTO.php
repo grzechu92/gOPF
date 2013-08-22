@@ -84,7 +84,7 @@
 		/**
 		 * Adds new thread to do
 		 * 
-		 * @param Thread $thread Thread to do
+		 * @param \gOPF\gMTO\Thread $thread Thread to do
 		 */
 		public function add(Thread $thread) {
 			$id = $this->threads[$thread->name] = self::PREFIX.$thread->id;

@@ -28,7 +28,7 @@
 		protected $name;
 		
 		/**
-		 * @see System\Drivers.DriverInterface::__construct()
+		 * @see \System\Drivers\DriverInterface::__construct()
 		 */
 		public function __construct($id, $lifetime = 0) {
 			$this->name = $this->prefix.$id;
@@ -36,28 +36,28 @@
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::set()
+		 * @see \System\Drivers\DriverInterface::set()
 		 */
 		public function set($content) {
 			apc_store($this->name, $content, $this->lifetime);
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::get()
+		 * @see \System\Drivers\DriverInterface::get()
 		 */
 		public function get() {
 			return apc_fetch($this->name);
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::remove()
+		 * @see \System\Drivers\DriverInterface::remove()
 		 */
 		public function remove() {
 			apc_delete($this->name);
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::clear()
+		 * @see \System\Drivers\DriverInterface::clear()
 		 */
 		public function clear() {
 			apc_clear_cache();

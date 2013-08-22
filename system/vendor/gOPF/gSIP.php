@@ -61,7 +61,7 @@
 		
 		/**
 		 * Array with layers
-		 * @var Queue
+		 * @var \System\Queue
 		 */
 		private $layers;
 		
@@ -76,9 +76,9 @@
 		 * Creates new layer
 		 * 
 		 * @param string $name Layer name
-		 * @param Size $size Layer size
-		 * @param Position $position Layer position on first layer
-		 * @return Layer New initialized layer
+		 * @param \gOPF\gSIP\Size $size Layer size
+		 * @param \gOPF\gSIP\Position $position Layer position on first layer
+		 * @return \gOPF\gSIP\Layer New initialized layer
 		 */
 		public function create($name, Size $size = null, Position $position = null) {
 			$layer = new Layer($name, $size, $position);
@@ -92,8 +92,8 @@
 		 * Returns requested layer from registry
 		 * 
 		 * @param string $name Requested layer name
-		 * @return Layer Requested layer, if exists
-		 * @throws Exception
+		 * @return \gOPF\gSIP\Layer Requested layer, if exists
+		 * @throws \gOPF\gSIP\Exception
 		 */
 		public function get($name) {
 			if (!$this->layers->exist($name)) {
@@ -107,7 +107,7 @@
 		 * Removes layer from registry
 		 * 
 		 * @param string $name Layer to remove
-		 * @return gSIP Fluid interface
+		 * @return \gOPF\gSIP Fluid interface
 		 */
 		public function remove($name) {
 			$this->layers->remove($name);
@@ -119,8 +119,8 @@
 		 * Sets layer into registry
 		 * 
 		 * @param string $name Layer name
-		 * @param Layer $layer Layer object instance
-		 * @return gSIP Fluid interface
+		 * @param \gOPF\gSIP\Layer $layer Layer object instance
+		 * @return \gOPF\gSIP Fluid interface
 		 */
 		public function set($name, Layer $layer) {
 			$this->layers->set(new Element($name, $layer));
@@ -132,8 +132,8 @@
 		 * Insterts layer after selected layer
 		 * 
 		 * @param string $name Selected layer name
-		 * @param Layer $layer Layer to insert
-		 * @return gSIP Fluid interface
+		 * @param \gOPF\gSIP\Layer $layer Layer to insert
+		 * @return \gOPF\gSIP Fluid interface
 		 */
 		public function after($name, Layer $layer) {
 			$this->remove($layer->name);
@@ -146,8 +146,8 @@
 		 * Insterts layer before selected layer
 		 *
 		 * @param string $name Selected layer name
-		 * @param Layer $layer Layer to insert
-		 * @return gSIP Fluid interface
+		 * @param \gOPF\gSIP\Layer $layer Layer to insert
+		 * @return \gOPF\gSIP Fluid interface
 		 */
 		public function before($name, Layer $layer) {
 			$this->remove($layer->name);
@@ -162,8 +162,8 @@
 		 * @param string $type Image type (gSIP::GIF, gSIP::PNG, gSIP::JPEG)
 		 * @param string $filename Output path with filename
 		 * @param int $quality Image quality in percents
-		 * @return gSIP Fluid interface
-		 * @throws Exception
+		 * @return \gOPF\gSIP Fluid interface
+		 * @throws \gOPF\gSIP\Exception
 		 */
 		public function export($type, $filename = null, $quality = 100) {
 			$merged = $this->merge();
@@ -197,7 +197,7 @@
 		 * Merges all layers to another layer
 		 * 
 		 * @param string $name New layer name
-		 * @return Layer Created layer
+		 * @return \gOPF\gSIP\Layer Created layer
 		 */
 		public function mergeToLayer($name) {
 			$merged = $this->merge();
@@ -212,7 +212,7 @@
 		 * Merges all layers
 		 * 
 		 * @return resource Merged image resource
-		 * @throws Exception
+		 * @throws \gOPF\gSIP\Exception
 		 */
 		private function merge() {
 			if (count($this->layers) > 0) {

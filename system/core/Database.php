@@ -17,7 +17,7 @@
 		
 		/**
 		 * Configuration of database module
-		 * @var Config
+		 * @var \System\Config
 		 */
 		private $config;
 		

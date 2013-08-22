@@ -12,7 +12,7 @@
 	 */
 	class APCDriver extends APC implements DriverInterface {
 		/**
-		 * @see System\Drivers.APC::prefix
+		 * @see \System\Drivers\APC::$prefix
 		 */
 		protected $prefix = 'gOPF-CACHE-';
 	}

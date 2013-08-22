@@ -23,7 +23,8 @@
 		
 		/**
 		 * Sets variables in user session
-		 * @see System.Container::set()
+		 * 
+		 * @see \System\Container::set()
 		 */
 		public function set($offset, $value) {
 			$session = $this->getSession();
@@ -35,7 +36,8 @@
 		
 		/**
 		 * Gets variables from user session
-		 * @see System.Container::get()
+		 * 
+		 * @see \System\Container::get()
 		 */
 		public function get($offset) {
 			$session = $this->getSession();

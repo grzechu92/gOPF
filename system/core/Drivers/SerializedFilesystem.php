@@ -13,14 +13,14 @@
 	 */
 	class SerializedFilesystem extends Filesystem implements DriverInterface {
 		/**
-		 * @see System\Drivers.DriverInterface::set()
+		 * @see \System\Drivers\DriverInterface::set()
 		 */
 		public function set($content) {
 			Serializer::writeFile($this->filename, str_pad(time()+$this->lifetime, self::PAD_SIZE, 0, STR_PAD_LEFT).serialize($content));
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::get()
+		 * @see \System\Drivers\DriverInterface::get()
 		 */
 		public function get() {
 			try {

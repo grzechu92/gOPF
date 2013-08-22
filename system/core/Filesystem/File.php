@@ -60,7 +60,6 @@
 		 * @param string $path Path to file
 		 * @param int $mode File open mode
 		 * @param bool $lock Lock file while processing
-		 * @throws System\Filesystem\Exception
 		 */
 		public function __construct($path, $mode, $lock = false) {
 			$this->path = $path;
@@ -70,7 +69,7 @@
 		/**
 		 * Removes file handler from memory
 		 * 
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public function __destruct() {
 			if (!fclose($this->handle)) {
@@ -82,7 +81,7 @@
 		 * Locks file to selected mode
 		 * 
 		 * @param int $mode File lock mode (File::LOCK_READING, File::LOCK_WRITING)
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public function lock($mode) {
 			if (!flock($this->handle, $mode)) {
@@ -94,7 +93,7 @@
 		 * Returns content of file
 		 * 
 		 * @return string File content
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public function getContent() {
 			$size = Filesystem::getSize($this->path);
@@ -116,7 +115,7 @@
 		 * Sets file content
 		 * 
 		 * @param string $content Content to set in file
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public function setContent($content) {
 			if (!fwrite($this->handle, $content)) {
@@ -129,7 +128,7 @@
 		 * 
 		 * @param int $mode File open mode (File::READ, File::WRITE, File::APPEND)
 		 * @return mixed File handle
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		private function getFileHandle($mode) {
 			$handle = @fopen($this->path, $mode);

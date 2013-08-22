@@ -16,7 +16,7 @@
 		protected $config = array();
 		
 		/**
-		 * @see System\Database.EngineInterface::__construct()
+		 * @see \System\Database\EngineInterface::__construct()
 		 */
 		public function __construct($config) {
 			$this->config = $config;

@@ -12,7 +12,7 @@
 	class View {
 		/**
 		 * View object instance
-		 * @var View
+		 * @var \System\View
 		 */
 		private static $instance;
 		
@@ -105,6 +105,7 @@
 		
 		/**
 		 * Sets rendering status
+		 * 
 		 * @param bool $status Rendering status
 		 */
 		public static function setRenderStatus($status) {

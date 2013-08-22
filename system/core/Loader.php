@@ -18,19 +18,19 @@
 		
 		/**
 		 * Holds predefined and reserved Controllers namespace name
-		 * @var unknown_type
+		 * @var string
 		 */
 		const CONTROLLERS_NAMESPACE = 'Controllers';
 		
 		/**
 		 * Holds predefined and reserved Models namespace name
-		 * @var unknown_type
+		 * @var string
 		 */
 		const MODELS_NAMESPACE = 'Models';
 		
 		/**
 		 * Holds predefined and reserved applications classes namespace name
-		 * @var unknown_type
+		 * @var string
 		 */
 		const CLASSES_NAMESPACE = 'Application';
 		
@@ -45,6 +45,7 @@
 		 * Loads required class in PSR-0 pattern
 		 * 
 		 * @param string $className Class name to load
+		 * @throws \System\Loader\Exception
 		 */
 		public function loadClass($className) {
 			$className = ltrim($className, '\\');

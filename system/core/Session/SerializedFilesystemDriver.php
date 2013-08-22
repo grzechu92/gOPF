@@ -12,7 +12,7 @@
 	 */
 	class SerializedFilesystemDriver extends SerializedFilesystem implements DriverInterface {
 		/**
-		 * @see System\Drivers.DriverInterface::__construct()
+		 * @see \System\Drivers\DriverInterface::__construct()
 		 */
 		public function __construct($id, $lifetime) {
 			$this->path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'session';

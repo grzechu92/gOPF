@@ -18,7 +18,7 @@
 		
 		/**
 		 * Storage module configuration
-		 * @var Config
+		 * @var \System\Config
 		 */
 		private static $config;
 		

@@ -35,7 +35,7 @@
 		protected $path = __VARIABLE_PATH;
 		
 		/**
-		 * @see System\Drivers.DriverInterface::__construct()
+		 * @see \System\Drivers\DriverInterface::__construct()
 		 */
 		public function __construct($id, $lifetime = 0) {
 			$this->filename = $this->path.DIRECTORY_SEPARATOR.$id;
@@ -43,14 +43,14 @@
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::set()
+		 * @see \System\Drivers\DriverInterface::set()
 		 */
 		public function set($content) {
 			FS::write($this->filename, str_pad((($this->lifetime > 0) ? time()+$this->lifetime : 0), self::PAD_SIZE, 0, STR_PAD_LEFT).serialize($content), true);
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::get()
+		 * @see \System\Drivers\DriverInterface::get()
 		 */
 		public function get() {
 			$content = FS::read($this->filename, true);
@@ -66,14 +66,14 @@
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::remove()
+		 * @see \System\Drivers\DriverInterface::remove()
 		 */
 		public function remove() {
 			FS::remove($this->filename);
 		}
 		
 		/**
-		 * @see System\Drivers.DriverInterface::clear()
+		 * @see \System\Drivers\DriverInterface::clear()
 		 */
 		public function clear() {
 			FS::remove($this->path, true);

@@ -31,7 +31,7 @@
 		
 		/**
 		 * Session configuration data
-		 * @var Config
+		 * @var \System\Config
 		 */
 		private $config;
 		
@@ -225,6 +225,8 @@
 		
 		/**
 		 * Protects session from hijacking
+		 * 
+		 * @throws \System\Core\Exception
 		 */
 		private function protectSession() {
 			if ($this->data['__PROTECTED'] !== $this->generateProtectKey()) {

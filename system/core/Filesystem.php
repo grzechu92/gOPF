@@ -29,7 +29,6 @@
 		 * @param string $path Path to file
 		 * @param string $content File content
 		 * @param bool $lock Lock file while writing
-		 * @throws System\Filesystem\Exception
 		 */
 		public static function write($path, $content, $lock = false) {
 			$file = new File(self::preparePath($path), File::WRITE);
@@ -47,7 +46,6 @@
 		 * @param string $path Path to file
 		 * @param string $content File content
 		 * @param bool $lock Lock file while writing
-		 * @throws System\Filesystem\Exception
 		 */
 		public static function append($path, $content, $lock = false) {
 			$file = new File(self::preparePath($path), File::APPEND);
@@ -65,7 +63,6 @@
 		 * @param string $path Path to file
 		 * @param bool $lock Lock while reading
 		 * @return string Content of file
-		 * @throws System\Filesystem\Exception
 		 */
 		public static function read($path, $lock = false) {
 			$file = new File(self::preparePath($path), File::READ);
@@ -81,7 +78,7 @@
 		 * Makes a new directory
 		 *
 		 * @param string $path Directory name
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public static function mkdir($path) {
 			$path = self::preparePath($path);
@@ -97,7 +94,7 @@
 		 * @param string $path Path to file
 		 * @param int $mode Mode of file
 		 * @param bool $recursive Recursive
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public static function chmod($path, $mode, $recursive = false) {
 			$path = self::preparePath($path);
@@ -122,7 +119,7 @@
 		 *
 		 * @param string $path Path to file or directory
 		 * @param bool $recursive Recursive
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public static function remove($path, $recursive = false) {
 			$path = self::preparePath($path);
@@ -159,7 +156,7 @@
 		 *
 		 * @param string $path Path to file or directory
 		 * @return bool Emptiness
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public static function isEmpty($path) {
 			$path = self::preparePath($path);
@@ -196,7 +193,7 @@
 		 *
 		 * @param string $source Path to source file
 		 * @param string $destination Destination path
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public static function copy($source, $destination) {
 			$source = self::preparePath($source);
@@ -212,7 +209,7 @@
 		 *
 		 * @param string $source Path to source file
 		 * @param string $destination Destination path
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public static function move($source, $destination) {
 			$source = self::preparePath($source);
@@ -230,7 +227,7 @@
 		 *
 		 * @param string $old Path to file with old name
 		 * @param string $new Path to file with new name
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public static function rename($old, $new) {
 			$old = self::preparePath($old);
@@ -245,7 +242,7 @@
 		 * Returns type of selected element (file or directory)
 		 *
 		 * @param string $path Path to element
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 * @return string Type
 		 */
 		public static function getType($path) {
@@ -273,7 +270,7 @@
 		 *
 		 * @param string $path Path to file
 		 * @return int Amount of bytes
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 */
 		public static function getSize($path) {
 			$path = self::preparePath($path);
@@ -310,7 +307,7 @@
 		 * Returns checksum of element
 		 *
 		 * @param string $path Path to element
-		 * @throws System\Filesystem\Exception
+		 * @throws \System\Filesystem\Exception
 		 * @return string Checksum
 		 */
 		public static function checksum($path) {

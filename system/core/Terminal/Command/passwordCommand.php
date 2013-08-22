@@ -4,9 +4,17 @@
 	use \System\Terminal;
 	use \System\Terminal\Status;
 	
+	/**
+	 * Terminal command: password (allows to change user password)
+	 *
+	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+	 */
 	class passwordCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
-		private $users;
-		
+		/**
+		 * @see \System\Terminal\CommandInterface::execute()
+		 */
 		public function execute() {
 			$initialized = false;
 			
@@ -59,10 +67,11 @@
 		}
 		
 		/**
+		 * Changes user password
 		 * 
-		 * @param \System\Terminal\Status $status
-		 * @param string $user
-		 * @return \System\Terminal\Status
+		 * @param \System\Terminal\Status $status Terminal status
+		 * @param string $user User to change password
+		 * @return \System\Terminal\Status Modified terminal status
 		 */
 		private function changeUserPassword(Status $status, $user) {
 			$error = false;

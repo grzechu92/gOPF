@@ -51,7 +51,7 @@
 		
 		/**
 		 * Push session container
-		 * @var \gPAE\Container
+		 * @var \gOPF\gPAE\Container
 		 */
 		public $container;
 		
@@ -135,7 +135,7 @@
 		/**
 		 * Adds server side event
 		 * 
-		 * @param Event $event Event to add
+		 * @param \gOPF\gPAE\Event $event Event to add
 		 */
 		public function addServerEvent(Event $event) {
 			if (!is_array($this->events[self::SERVER])) {
@@ -147,7 +147,7 @@
 		
 		/**
 		 * Adds event from client
-		 * @param Event $event Event to add
+		 * @param \gOPF\gPAE\Event $event Event to add
 		 */
 		public function addClientEvent(Event $event) {
 			if (!is_array($this->events[self::CLIENT])) {
@@ -160,7 +160,7 @@
 		/**
 		 * Runns main functionality
 		 * 
-		 * @return \gPAE\Response Result of request processing
+		 * @return \gOPF\gPAE\Response Result of request processing
 		 */
 		public function run() {
 			$result = null;
@@ -204,7 +204,7 @@
 		/**
 		 * Initiates new connection with server
 		 * 
-		 * @return \gPAE\Response Connection parameters
+		 * @return \gOPF\gPAE\Response Connection parameters
 		 */
 		private function connect() {
 			$this->callEvent('onConnect');
@@ -219,7 +219,7 @@
 		/**
 		 * Holds HTTP request on server side, check that any server event has been called
 		 * 
-		 * @return \gPAE\Response Data from event for client
+		 * @return \gOPF\gPAE\Response Data from event for client
 		 */
 		private function hold() {
 			ignore_user_abort(true);
