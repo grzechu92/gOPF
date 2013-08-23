@@ -2,6 +2,7 @@
 	namespace System\Terminal\Command;
 	use \System\Config;
 	use \System\Terminal\Status;
+	use \System\Terminal\Help;
 	
 	/**
 	 * Terminal command: login (validates user)
@@ -11,6 +12,13 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class loginCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			return new Help(Help::INTERNAL);
+		}
+		
 		/**
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */

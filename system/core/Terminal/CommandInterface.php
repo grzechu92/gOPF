@@ -13,5 +13,12 @@
 		 * Executes command logic
 		 */
 		public function execute();
+		
+		/**
+		 * Displays command help
+		 * 
+		 * @return \System\Terminal\Help Help content
+		 */
+		public function help();
 	}
 ?>

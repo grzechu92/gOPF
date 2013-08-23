@@ -241,7 +241,12 @@
 				}
 				
 				$command = Command::factory($parsed);
-				$command->execute();
+				
+				if (array_key_exists('help', $parsed->parameters)) {
+					$session->buffer($command->help()->build());
+				} else {
+					$command->execute();
+				}
 			} catch (\System\Loader\Exception $e) {
 				$session->buffer('Unknown command: '.$parsed->name);				
 			} catch (\System\Terminal\Exception $e) {

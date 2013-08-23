@@ -10,6 +10,13 @@
 	 */
 	class bufferCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
 		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			return new \System\Terminal\Help('Does nothing special, just fills buffer with random content');
+		}
+		
+		/**
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {

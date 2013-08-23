@@ -10,6 +10,15 @@
 	 */
 	class lsCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
 		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			$help = new \System\Terminal\Help('Prints content of current directory');
+		
+			return $help;
+		}
+		
+		/**
 		 * Max directory or filename length
 		 * @var int
 		 */

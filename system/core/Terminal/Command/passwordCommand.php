@@ -3,6 +3,7 @@
 	use \System\Config;
 	use \System\Terminal;
 	use \System\Terminal\Status;
+	use \System\Terminal\Help\Line;
 	
 	/**
 	 * Terminal command: password (allows to change user password)
@@ -12,6 +13,21 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class passwordCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			$lines = array();
+			$help = new \System\Terminal\Help('Allows to change password');
+		
+			$lines[] = new Line('password', 'begins procedure for current logged user');
+			$lines[] = new Line('password [user]', 'begins procedure for selected user');
+				
+			$help->addLines($lines);
+		
+			return $help;
+		}
+		
 		/**
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */

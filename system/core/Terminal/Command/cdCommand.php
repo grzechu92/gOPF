@@ -12,6 +12,16 @@
 	 */
 	class cdCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
 		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			$help = new \System\Terminal\Help('Change directory');
+			$help->add(new \System\Terminal\Help\Line('cd [path]', 'change directory to pointed path'));
+				
+			return $help;
+		}
+		
+		/**
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {

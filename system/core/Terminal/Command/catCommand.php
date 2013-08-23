@@ -1,7 +1,7 @@
 <?php
 	namespace System\Terminal\Command;
 	use \System\Filesystem;
-	
+		
 	/**
 	 * Terminal command: cat (displays file content)
 	 *
@@ -10,6 +10,16 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class catCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			$help = new \System\Terminal\Help('Display file content');
+			$help->add(new \System\Terminal\Help\Line('cat [filename]', 'show content of pointed file'));
+			
+			return $help;
+		}
+		
 		/**
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */

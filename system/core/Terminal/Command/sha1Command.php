@@ -10,6 +10,16 @@
 	 */
 	class sha1Command extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
 		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			$help = new \System\Terminal\Help('Generate SHA1 checksum');
+			$help->add(new \System\Terminal\Help\Line('sha1 [text]', 'generate SHA1 checksum from source'));
+		
+			return $help;
+		}
+		
+		/**
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {

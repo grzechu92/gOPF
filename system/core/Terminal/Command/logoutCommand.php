@@ -10,6 +10,15 @@
 	 */
 	class logoutCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
 		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			$help = new \System\Terminal\Help('Guess what...');
+		
+			return $help;
+		}
+		
+		/**
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
