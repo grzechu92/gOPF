@@ -188,11 +188,9 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$("#command").blur(function(e) {
-		setTimeout(function() { $("#command").focus(); }, 1);
-	});
-	
 	$("body").keydown(function(e) {
+		$("#command").focus();
+		
 		if (e.keyCode == 9) {
 			Terminal.complete($("#command"));
 			
