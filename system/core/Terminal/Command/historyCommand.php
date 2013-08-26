@@ -1,5 +1,6 @@
 <?php
 	namespace System\Terminal\Command;
+	use \System\Terminal;
 	
 	/**
 	 * Terminal command: history (shows terminal commands history)
@@ -22,11 +23,15 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = \System\Terminal::$session;
-			
-			foreach ($session->history()->content as $command) {
-				$session->buffer($command);
+			$session = Terminal::$session;
+			$status = $session->pull();
+			$history = array();
+				
+			foreach ($status->history as $command) {
+				$history[] = $command;
 			}
+				
+			$session->buffer(implode("\n", $history));
 		}
 	}
 ?>

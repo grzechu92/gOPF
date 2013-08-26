@@ -14,7 +14,6 @@
  * Terminal.update(data);			Updates terminal data (prompt, output etc.)
  * Terminal.print(data);			Allows to put data into terminal output
  * Terminal.clear();				Clears terminal output
- * Terminal.history(offset);		Shows commands history on required offset (1, -1)
  * 
  * Requires:
  * @/System/Core/gOPF.js
@@ -44,8 +43,13 @@ Terminal = {
 		clear: false,
 		abort: false,
 		command: null,
-		complete: null
-	},	
+		complete: null,
+		updated: null,
+		storage: new Array(),
+		history: new Array(),
+	},
+	
+	position: 0,
 		
 	init: function() {
 		$.gPAE("connect");
@@ -80,10 +84,6 @@ Terminal = {
 	
 	debug: function() {
 		$.gPAE("sendEvent", "debug");
-	},
-	
-	history: function(offset) {
-		$.gPAE("sendEvent", "history", {offset: offset});
 	},
 	
 	reset: function() {
@@ -156,6 +156,8 @@ Terminal = {
 		}
 		
 		document.body.scrollTop = document.body.scrollHeight;
+		
+		Terminal.position = data.history.length;
 	},
 	
 	print: function(content) {
@@ -220,14 +222,24 @@ $(document).ready(function() {
 		}
 		
 		if (e.keyCode == 38) {
-			Terminal.history(-1);
+			if (Terminal.position-- <= -1) {
+				Terminal.position = -1;
+				$("#command").val('');
+			} else {
+				$("#command").val(Terminal.status.history[Terminal.position]);
+			}
 			
 			e.preventDefault();
 			return false;
 		}
 		
 		if (e.keyCode == 40) {
-			Terminal.history(1);
+			if (Terminal.position+1 > Terminal.status.history.length) {
+				$("#command").val('');
+			} else {
+				Terminal.position++;
+				$("#command").val(Terminal.status.history[Terminal.position]);
+			}
 			
 			e.preventDefault();
 			return false;

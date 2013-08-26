@@ -101,7 +101,7 @@
 				$session = Terminal::$session;
 				$status = $session->pull();
 				
-				if ($status instanceof Status && $status->checksum() != $push->container->session) {
+				if ($status instanceof Status && $status->updated != $push->container->session) {
 					$value = clone($status);
 					
 					$status->buffer = '';
@@ -109,7 +109,7 @@
 					$status->complete = '';
 					$status->clear = false;
 					
-					$push->container->session = $status->checksum();
+					$push->container->session = $status->updated;
 					$session->push($status);
 					
 					return array('value' => $value);
@@ -144,18 +144,7 @@
 				$session = Terminal::$session;
 				
 				$session->buffer(print_r($session->pull(), true));
-			});
-			
-			$this->addClientEvent('history', function($push) {
-				$session = Terminal::$session;
-				
-				if ($push->data->offset == -1) {
-					$command = $session->history()->previous();
-				} else {
-					$command = $session->history()->next();
-				}
-				
-				$session->command = $command;
+				$session->update();
 			});
 			
 			$this->addClientEvent('complete', function($push) {
@@ -205,6 +194,7 @@
 						
 					case 1:
 						$session->complete = str_replace($location, '', $matched[0]);
+						$session->update();
 						return;
 				}
 				
@@ -213,6 +203,7 @@
 				}
 				
 				$session->buffer($buffer);
+				$session->update();
 			});
 		}
 		
@@ -221,8 +212,9 @@
 		 * 
 		 * @param string $command Command content
 		 * @param bool $history If command has secret data, don't save it to history
+		 * @param bool $silent If silent, data won't be send to client
 		 */
-		private function execute($command, $history) {
+		private function execute($command, $history = false, $silent = false) {
 			$session = Terminal::$session;
 			$status = $session->pull();
 			
@@ -237,7 +229,7 @@
 			
 			try {
 				if ($status->logged && $history) {
-					$session->history()->push($command);
+					$session->history($command);
 				}
 				
 				$command = Command::factory($parsed);
@@ -257,7 +249,10 @@
 			
 			$session->processing = false;
 			$session->abort = false;
-			$session->updated = microtime(true);
+			
+			if (!$silent) {
+				$session->update();
+			}
 		}
 	}
 ?>

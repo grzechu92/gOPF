@@ -105,16 +105,25 @@
 		}
 		
 		/**
-		 * Allows access to terminal command history
+		 * Allows to add command into history
 		 * 
-		 * @return \System\Terminal\History
+		 * @param string Command to save in history
 		 */
-		public function history() {
-			if (!isset($this->container['history']) || !$this->container['history'] instanceof History) {
-				$this->container['history'] = new History();
+		public function history($command) {
+			$status = $this->pull();
+			if ($status->history[count($status->history)-1] != $command) {
+				$status->history[] = $command;
+				$this->push($status);
 			}
-			
-			return $this->container['history'];
+		}
+		
+		/**
+		 * Updates time of last status edit
+		 */
+		public function update() {
+			$status = $this->pull();
+			$status->update();
+			$this->push($status);
 		}
 		
 		/**

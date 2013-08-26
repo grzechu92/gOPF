@@ -118,6 +118,12 @@
 		public $storage = array();
 		
 		/**
+		 * Terminal session commands history
+		 * @var array
+		 */
+		public $history = array();
+		
+		/**
 		 * Initializes and setts required status fields
 		 */
 		public function initialize() {
@@ -134,6 +140,7 @@
 			$this->complete = null;
 			
 			$this->storage = array();
+			$this->history = array();
 		}
 		
 		/**
@@ -146,12 +153,10 @@
 		}
 		
 		/**
-		 * Generates checksum of status data
-		 * 
-		 * @return string Data checksum
+		 * Updates time of last status edit
 		 */
-		public function checksum() {
-			return sha1(json_encode($this));
+		public function update() {
+			$this->updated = microtime(true);
 		}
 	}
 ?>
