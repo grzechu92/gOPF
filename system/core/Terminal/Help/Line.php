@@ -35,7 +35,7 @@
 		
 		/**
 		 * Command description, if common
-		 * @var unknown
+		 * @var string
 		 */
 		public $description;
 		
