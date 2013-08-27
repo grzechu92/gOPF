@@ -26,7 +26,7 @@
 		 * General description of command
 		 * @var sting
 		 */
-		private $description;
+		public $description;
 		
 		/**
 		 * Array with command options
