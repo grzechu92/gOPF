@@ -1,5 +1,6 @@
 <?php
 	namespace System\Config;
+	use \System\Config\Parser\Line;
 	
 	/**
 	 * Config file class
