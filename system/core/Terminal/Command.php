@@ -1,5 +1,6 @@
 <?php 
 	namespace System\Terminal;
+	use \System\Config;
 	
 	/**
 	 * Base terminal command object
@@ -53,8 +54,13 @@
 		 * @throws \System\Terminal\Exception
 		 */
 		public static function factory(Command $parsed) {
+			$config = Config::factory('terminal.ini', Config::SYSTEM);
+			$commands = $config->get('commands');
+			
 			if ($parsed->name[0] == '/') {
 				$class = str_replace('/', '\\', $parsed->name).'Command';
+			} elseif (array_key_exists($parsed->name, $commands)) {
+				$class = $commands[$parsed->name];
 			} else {
 				$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
 			}
