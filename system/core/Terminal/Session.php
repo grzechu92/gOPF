@@ -111,7 +111,7 @@
 		 */
 		public function history($command) {
 			$status = $this->pull();
-			if ($status->history[count($status->history)-1] != $command) {
+			if (count($status->history) === 0 || $status->history[count($status->history)-1] != $command) {
 				$status->history[] = $command;
 				$this->push($status);
 			}
