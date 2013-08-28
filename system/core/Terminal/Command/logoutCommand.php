@@ -13,7 +13,7 @@
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
 		public function help() {
-			$help = new \System\Terminal\Help('Guess what...');
+			$help = new \System\Terminal\Help('It\'s easy, just read again left column');
 		
 			return $help;
 		}

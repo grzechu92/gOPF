@@ -23,16 +23,23 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$help = new Help('Availiable commands');
+			$help = new Help('Availiable commands and a few of important shortcuts');
+			$lines = array();
 			$config = Config::factory('terminal.ini', Config::SYSTEM);
 			$commands = $config->get('commands');
 			
 			foreach ($commands as $name=>$class) {
 				$class = new $class();				
-				$line = new Line($name, $class->help()->description);
-				$help->add($line);
+				$lines[] = new Line($name, $class->help()->description);
 			}
 			
+			$lines[] = new Line('');
+			$lines[] = new Line('');
+			$lines[] = new Line('Use TAB key to fill path while writing');
+			$lines[] = new Line('Use SHIFT + ` key to reset terminal if something went wrong');
+			$lines[] = new Line('Use CTRL + L when mess on the screen is anoying');
+			
+			$help->addLines($lines);
 			\System\Terminal::$session->buffer($help->build());
 		}
 	}
