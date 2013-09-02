@@ -45,7 +45,7 @@
 			$application = Config::factory('cron.ini', Config::APPLICATION);
 			$system = Config::factory('cron.ini', Config::SYSTEM);
 				
-			$jobs = array_merge_recursive($application->getArray(), $system->getArray());
+			$jobs = array_merge_recursive($application->getContent(), $system->getContent());
 			$toDo = array();
 			
 			$indexes = $this->getCurrentIndexes();
