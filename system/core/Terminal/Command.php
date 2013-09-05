@@ -57,12 +57,14 @@
 			$config = Config::factory('terminal.ini', Config::SYSTEM);
 			$commands = $config->get('commands');
 			
-			if ($parsed->name[0] == '/') {
-				$class = str_replace('/', '\\', $parsed->name).'Command';
-			} elseif (array_key_exists($parsed->name, $commands)) {
-				$class = $commands[$parsed->name];
+			if ($parsed->name[0] != '\\') {
+				if (array_key_exists($parsed->name, $commands)) {
+					$class = $commands[$parsed->name];
+				} else {
+					$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
+				}
 			} else {
-				$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
+				$class = $parsed->name;
 			}
 			
 			$command = new $class();
