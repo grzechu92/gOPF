@@ -1,40 +1,43 @@
 {
-	"LOADER_UNABLE": "Nie odnaleziono klasy: $1",
+	"LOADER_UNABLE": "Nie odnaleziono klasy $1",
 
-	"DATABASE_ERROR": "Podczas łączenia się z bazą danych: $1",
+	"DATABASE_ERROR": "Podczas łączenia się z bazą danych $1",
 	
-	"CONFIG_NOT_FOUND": "Nie odnaleziono wymaganego pliku konfiguracyjnego: $1",
-	"CONFIG_EDIT": "Próba edycji pliku konfiguracyjnego zabezpieczonego przed zapisem!",
+	"CONFIG_NOT_FOUND": "Nie odnaleziono wymaganego pliku konfiguracyjnego $1",
+	"CONFIG_EDIT": "Próba edycji pliku konfiguracyjnego zabezpieczonego przed zapisem",
 	
-	"TEMPLATE_NOT_FOUND": "Nie odnaleziono pliku z szablonem: $1",
+	"TEMPLATE_NOT_FOUND": "Nie odnaleziono pliku z szablonem $1",
 	
-	"STATIC_CONTROLLER": "Rządany kontroler jest statyczny: $1",
-	"CONTROLLER_NOT_FOUND": "Rządany kontroler nie został odnaleziony: $1",
-	"ACTION_NOT_FOUND": "Rządana akcja nie została odnaleziona: $1",
-	"MODEL_NOT_FOUND": "Rządany model nie został odnaleziony: $1",
-	"MODEL_METHOD_NOT_EXISTS": "Rządana metoda modelu nie została odnaleziona: $1",
+	"STATIC_CONTROLLER": "Rządany kontroler $1 jest statyczny",
+	"CONTROLLER_NOT_FOUND": "Rządany kontroler $1 nie został odnaleziony",
+	"ACTION_NOT_FOUND": "Rządana akcja $1 nie została odnaleziona",
+	"MODEL_NOT_FOUND": "Rządany model $1 nie został odnaleziony",
+	"MODEL_METHOD_NOT_EXISTS": "Metoda $2 nie została odnaleziona w modelu $1",
 	"ACCESS_DENIED": "Odmowa dostępu",
 
-	"FILESYSTEM_UNABLE_OPEN": "Nie można było otworzyć pliku: $1",
-	"FILESYSTEM_UNABLE_CLOSE": "Nie można było zamknąć pliku: $1",
-	"FILESYSTEM_UNABLE_READ": "Nie można było odczytać danych z pliku: $1",
-	"FILESYSTEM_UNABLE_WRITE": "Nie można było zapisać danych w pliku: $1",
-	"FILESYSTEM_UNABLE_DIRECTORY": "Nie można było utworzyć folderu: $1",
-	"FILESYSTEM_UNABLE_CHMOD": "Nie można było wykonać operacji zmiany uprawnień pliku: $1",
-	"FILESYSTEM_UNABLE_REMOVE_FILE": "Nie można było usunąć pliku: $1",
-	"FILESYSTEM_UNABLE_REMOVE_DIRECTORY": "Nie można było usunąć folderu: $1",
-	"FILESYSTEM_UNABLE_COPY": "Nie można było skopiować pliku: $1",
-	"FILESYSTEM_UNABLE_MOVE": "Nie można było przenieść pliku: $1",
-	"FILESYSTEM_UNABLE_RENAME": "Nie można było zmienić nazwy pliku: $1",
-	"FILESYSTEM_WRONG_PATH": "Nie można było odnaleźć pliku: $1",
-	"FILESYSTEM_UNABLE_SIZE": "Nie można było pobrać rozmiaru pliku: $1",
-	"FILESYSTEM_UNABLE_CHECKSUM": "Nie można było obliczyć sumy kontrolnej dla pliku: $1",
+	"FILESYSTEM_UNABLE_OPEN": "Nie można było otworzyć pliku $1",
+	"FILESYSTEM_UNABLE_CLOSE": "Nie można było zamknąć pliku $1",
+	"FILESYSTEM_UNABLE_READ": "Nie można było odczytać danych z pliku $1",
+	"FILESYSTEM_UNABLE_WRITE": "Nie można było zapisać danych w pliku $1",
+	"FILESYSTEM_UNABLE_DIRECTORY": "Nie można było utworzyć folderu $1",
+	"FILESYSTEM_UNABLE_CHMOD": "Nie można było wykonać operacji zmiany uprawnień pliku $1",
+	"FILESYSTEM_UNABLE_REMOVE_FILE": "Nie można było usunąć pliku $1",
+	"FILESYSTEM_UNABLE_REMOVE_DIRECTORY": "Nie można było usunąć folderu $1",
+	"FILESYSTEM_UNABLE_COPY": "Nie można było skopiować pliku $1",
+	"FILESYSTEM_UNABLE_MOVE": "Nie można było przenieść pliku $1",
+	"FILESYSTEM_UNABLE_RENAME": "Nie można było zmienić nazwy pliku $1",
+	"FILESYSTEM_WRONG_PATH": "Nie można było odnaleźć pliku $1",
+	"FILESYSTEM_UNABLE_SIZE": "Nie można było pobrać rozmiaru pliku $1",
+	"FILESYSTEM_UNABLE_CHECKSUM": "Nie można było obliczyć sumy kontrolnej dla pliku $1",
 
 	"SAFE_SERIALIZE_ERROR": "Wystąpił błąd podczas przetwarzania zserializowanych danych",
 
-	"SESSION_HIJACKING": "Wykryto próbę przejęcia sesji!",
+	"SESSION_HIJACKING": "Wykryto próbę przejęcia sesji",
 	"UNSUPPORTED_DRIVER_METHOD": "Niewspierana metoda $1 została wywołana w sterowniku $2",
 
 	"AN_ERROR_OCCURED": "WYSTĄPIŁ BŁĄD",
-	"WHILE_EXECUTING": "Podczas wykonywania:"
+	"WHILE_EXECUTING": "Podczas wykonywania:",
+	
+	"UNKNOWN_ENTITY_FIELD": "Pole $1 encji $2 nie istnieje",
+	"ENTITY_DOESNT_EXISTS": "Encja $1 nie istnieje"
 }

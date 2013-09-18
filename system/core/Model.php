@@ -30,7 +30,7 @@
 		 * @throws \System\Core\Exception
 		 */
 		public function __call($index, $args) {			
-			throw new \System\Core\Exception(I18n::translate('MODEL_METHOD_NOT_EXISTS', array($index)));
+			throw new \System\Core\Exception(I18n::translate('MODEL_METHOD_NOT_EXISTS', array(__CLASS__, $index)));
 		}
 		
 		/**

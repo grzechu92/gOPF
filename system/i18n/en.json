@@ -1,40 +1,43 @@
 {
-	"LOADER_UNABLE": "Unable to find class: $1",
+	"LOADER_UNABLE": "Unable to find class $1",
 
-	"DATABASE_ERROR": "While connecting to database: $1",
+	"DATABASE_ERROR": "While connecting to database $1",
 	
-	"CONFIG_NOT_FOUND": "Requested config file has been not found: $1",
-	"CONFIG_EDIT": "Trying to edit config file without permission!",
+	"CONFIG_NOT_FOUND": "Requested config file $1 has been not found",
+	"CONFIG_EDIT": "Trying to edit config file without permission",
 	
-	"TEMPLATE_NOT_FOUND": "Template file has been not found: $1",
+	"TEMPLATE_NOT_FOUND": "Template file $1 has been not found",
 	
-	"STATIC_CONTROLLER": "Called controller is static: $1",
-	"CONTROLLER_NOT_FOUND": "Requested controller has been not found: $1",
-	"ACTION_NOT_FOUND": "Requested action has been not found: $1",
-	"MODEL_NOT_FOUND": "Requested model has been not found: $1",
-	"MODEL_METHOD_NOT_EXISTS": "Requested model method has been not found: $1",
+	"STATIC_CONTROLLER": "Called controller $1 is static",
+	"CONTROLLER_NOT_FOUND": "Requested controller $1 has been not found",
+	"ACTION_NOT_FOUND": "Requested action $1 has been not found",
+	"MODEL_NOT_FOUND": "Requested model $1 has been not found",
+	"MODEL_METHOD_NOT_EXISTS": "Method $2 has been not found in model $1",
 	"ACCESS_DENIED": "Access denied",
 	
-	"FILESYSTEM_UNABLE_OPEN": "Unable to open file: $1",
-	"FILESYSTEM_UNABLE_CLOSE": "Unable to close file: $1",
-	"FILESYSTEM_UNABLE_READ": "Unable to read data from file: $1",
-	"FILESYSTEM_UNABLE_WRITE": "Unable to write data in file: $1",
-	"FILESYSTEM_UNABLE_DIRECTORY": "Unable to create directory: $1",
-	"FILESYSTEM_UNABLE_CHMOD": "Unable to change mode of file: $1",
-	"FILESYSTEM_UNABLE_REMOVE_FILE": "Unable to remove file: $1",
-	"FILESYSTEM_UNABLE_REMOVE_DIRECTORY": "Unable to remove directory: $1",
-	"FILESYSTEM_UNABLE_COPY": "Unable to copy file: $1",
-	"FILESYSTEM_UNABLE_MOVE": "Unable to move file: $1",
-	"FILESYSTEM_UNABLE_RENAME": "Unable to rename file: $1",
-	"FILESYSTEM_WRONG_PATH": "Unable to find file: $1",
-	"FILESYSTEM_UNABLE_SIZE": "Unable to get filesize: $1",
-	"FILESYSTEM_UNABLE_CHECKSUM": "Unable to calculate checksum of file: $1",
+	"FILESYSTEM_UNABLE_OPEN": "Unable to open file $1",
+	"FILESYSTEM_UNABLE_CLOSE": "Unable to close file $1",
+	"FILESYSTEM_UNABLE_READ": "Unable to read data from file $1",
+	"FILESYSTEM_UNABLE_WRITE": "Unable to write data in file $1",
+	"FILESYSTEM_UNABLE_DIRECTORY": "Unable to create directory $1",
+	"FILESYSTEM_UNABLE_CHMOD": "Unable to change mode of file $1",
+	"FILESYSTEM_UNABLE_REMOVE_FILE": "Unable to remove file $1",
+	"FILESYSTEM_UNABLE_REMOVE_DIRECTORY": "Unable to remove directory $1",
+	"FILESYSTEM_UNABLE_COPY": "Unable to copy file $1",
+	"FILESYSTEM_UNABLE_MOVE": "Unable to move file $1",
+	"FILESYSTEM_UNABLE_RENAME": "Unable to rename file $1",
+	"FILESYSTEM_WRONG_PATH": "Unable to find file $1",
+	"FILESYSTEM_UNABLE_SIZE": "Unable to get filesize $1",
+	"FILESYSTEM_UNABLE_CHECKSUM": "Unable to calculate checksum of file $1",
 	
 	"SAFE_SERIALIZE_ERROR": "An error occured while processing serialized data",
 	
-	"SESSION_HIJACKING": "Session hijacking attempt detected!",
+	"SESSION_HIJACKING": "Session hijacking attempt detected",
 	"UNSUPPORTED_DRIVER_METHOD": "Unsupported method $1 has been called in driver $2",
 	
 	"AN_ERROR_OCCURED": "AN ERROR OCCURED",
-	"WHILE_EXECUTING": "While executing:"
+	"WHILE_EXECUTING": "While executing:",
+	
+	"UNKNOWN_ENTITY_FIELD": "Field $1 of entity $2 does not exists",
+	"ENTITY_DOESNT_EXISTS": "Entity $1 does not exists"
 }
