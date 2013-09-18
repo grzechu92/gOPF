@@ -94,7 +94,7 @@
 			
 			if (count($vars) > 0) {
 				foreach ($vars as $id=>$var) {
-					$string = str_replace('$'.($id+1), $var, $string);
+					$string = str_replace('$'.($id+1), '<strong>'.$var.'</strong>', $string);
 				}
 			}
 			
