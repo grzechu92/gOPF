@@ -86,7 +86,8 @@
 							break;
 							
 						case self::ENTITIES_NAMESPACE:
-							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'entities'.$namespace.DIRECTORY_SEPARATOR.file;
+							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'entities'.$namespace.DIRECTORY_SEPARATOR.$file;
+							break;
 					}
 				}
 			}
