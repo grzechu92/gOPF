@@ -11,25 +11,31 @@
 	 */
 	class Loader {
 		/**
-		 * Holds predefined and reserved System namespace name
+		 * Holds predefined and reserved system namespace name
 		 * @var string
 		 */
 		const SYSTEM_NAMESPACE = 'System';
 		
 		/**
-		 * Holds predefined and reserved Controllers namespace name
+		 * Holds predefined and reserved controllers namespace name
 		 * @var string
 		 */
 		const CONTROLLERS_NAMESPACE = 'Controllers';
 		
 		/**
-		 * Holds predefined and reserved Models namespace name
+		 * Holds predefined and reserved models namespace name
 		 * @var string
 		 */
 		const MODELS_NAMESPACE = 'Models';
 		
 		/**
-		 * Holds predefined and reserved applications classes namespace name
+		 * Holds predefined and reserved entities namespace name
+		 * @var string
+		 */
+		const ENTITIES_NAMESPACE = 'Entities';
+		
+		/**
+		 * Holds predefined and reserved application classes namespace name
 		 * @var string
 		 */
 		const CLASSES_NAMESPACE = 'Application';
@@ -58,7 +64,7 @@
 				$file = '';
 			}
 			
-			foreach (array(self::SYSTEM_NAMESPACE, self::CONTROLLERS_NAMESPACE, self::MODELS_NAMESPACE, self::CLASSES_NAMESPACE) as $reserved) {
+			foreach (array(self::SYSTEM_NAMESPACE, self::CONTROLLERS_NAMESPACE, self::MODELS_NAMESPACE, self::CLASSES_NAMESPACE, self::ENTITIES_NAMESPACE) as $reserved) {
 				if (strpos($namespace, $reserved) === 0) {
 					$namespace = substr($namespace, strlen($reserved));
 					
@@ -78,6 +84,9 @@
 						case self::CLASSES_NAMESPACE:
 							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'classes'.$namespace.DIRECTORY_SEPARATOR.$file;
 							break;
+							
+						case self::ENTITIES_NAMESPACE:
+							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'entities'.$namespace.DIRECTORY_SEPARATOR.file;
 					}
 				}
 			}
