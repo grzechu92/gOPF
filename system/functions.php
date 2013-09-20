@@ -33,6 +33,6 @@
 	 * @see \System\I18n::translate()
 	 */
 	function __($index, $vars) {
-		return \System\I18n::translate($index, $vars);
+		return \System\I18n::translate($index, $vars, false);
 	}
 ?>

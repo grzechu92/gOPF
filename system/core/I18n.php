@@ -83,9 +83,10 @@
 		 * 
 		 * @param string $index ID of internationalized string
 		 * @param array $vars Variables in internationalized string
+		 * @param bool $bold Bold variables in string using <strong /> tag
 		 * @return string Internationalized string
 		 */
-		public function get($index, $vars = array()) {
+		public function get($index, $vars = array(), $bold = true) {
 			if (count($this->strings) === 0) {
 				$this->loadStrings();
 			}
@@ -94,7 +95,8 @@
 			
 			if (count($vars) > 0) {
 				foreach ($vars as $id=>$var) {
-					$string = str_replace('$'.($id+1), '<strong>'.$var.'</strong>', $string);
+					$translated = $bold ? '<strong>'.$var.'</strong>' : $var;
+					$string = str_replace('$'.($id+1), $translated, $string);
 				}
 			}
 			
