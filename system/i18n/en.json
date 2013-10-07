@@ -39,5 +39,6 @@
 	"WHILE_EXECUTING": "While executing:",
 	
 	"UNKNOWN_ENTITY_FIELD": "Field $1 of entity $2 does not exists",
-	"ENTITY_DOESNT_EXISTS": "Entity $1 does not exists"
+	"ENTITY_DOESNT_EXISTS": "Entity $1 does not exists",
+	"ENTITY_PARAMETERS": "Entity parameters cannot be empty"
 }

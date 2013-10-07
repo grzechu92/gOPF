@@ -39,5 +39,6 @@
 	"WHILE_EXECUTING": "Podczas wykonywania:",
 	
 	"UNKNOWN_ENTITY_FIELD": "Pole $1 encji $2 nie istnieje",
-	"ENTITY_DOESNT_EXISTS": "Encja $1 nie istnieje"
+	"ENTITY_DOESNT_EXISTS": "Encja $1 nie istnieje",
+	"ENTITY_PARAMETERS": "Parametry encji nie mogą być puste"
 }
