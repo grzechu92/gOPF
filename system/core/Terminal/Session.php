@@ -101,6 +101,7 @@
 		public function buffer($content) {
 			$status = $this->pull();
 			$status->buffer($content);
+			$status->update();
 			$this->push($status);
 		}
 		
