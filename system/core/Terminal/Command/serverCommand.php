@@ -1,0 +1,148 @@
+<?php
+	namespace System\Terminal\Command;
+	use \System\Terminal\Help\Line;
+	use \gOPF\gSSP;
+	
+	/**
+	 * Terminal command: server (read informations about server)
+	 *
+	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+	 */
+	class serverCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+		const INTERVAL = 500000;
+		const URL = 'http://localhost/server-status';
+		const MARGIN = 2;
+		
+		/**
+		 * @see \System\Terminal\CommandInterface::help()
+		 */
+		public function help() {
+			$lines = array();
+			$help = new \System\Terminal\Help('Display server trafiic and main server informations');
+			
+			$lines[] = new Line('server', 'display main server informations');
+			$lines[] = new Line('server -slots', 'displays current slots info');
+			$lines[] = new Line('server -interval [miliseconds]', 'set custom server status refreshing interval');
+				
+			$help->addLines($lines);			
+		
+			return $help;
+		}
+		
+		/**
+		 * @see \System\Terminal\CommandInterface::execute()
+		 */
+		public function execute() {
+			$running = true;
+			$interval = $this->getParameter('interval') ? $this->getParameter('interval')*1000 : self::INTERVAL;
+			
+			while ($running) {
+				usleep($interval);
+				
+				$session = self::$session;
+				$status = $session->pull();
+				
+				$status->buffer($this->executeTask());
+				$status->clear = true;
+				$status->update();
+				
+				if ($status->abort) {
+					$running = false;
+				}
+				
+				$session->push($status);
+			}
+		}
+		
+		private function executeTask() {
+			if (!$this->getParameter('slots')) {
+				return $this->displayMainInfo();
+			} else {
+				return $this->displaySlotsInfo();
+			}
+		}
+		
+		private function displayMainInfo() {
+			$parser = new gSSP(self::URL);
+			$return = '';
+				
+			foreach ($parser->getServer() as $line) {
+				$return .= $line."\n";
+			}
+				
+			return $return;
+		}
+		
+		private function displaySlotsInfo() {
+			$parser = new gSSP(self::URL);
+			$slots = $parser->getSlots(false, time()-60);
+			
+			$head = array(
+				'pid' => 'Process ID',
+				'state' => 'State',
+				'client' => 'Client IP',
+				'time' => 'Request time',
+				'host' => 'Request host',
+				'request' => 'Request content'
+			);
+			
+			
+			$rows = array();
+			$rows[] = $head;
+
+			$length = array();
+			$align = array(
+				STR_PAD_BOTH,
+				STR_PAD_BOTH,
+				STR_PAD_BOTH,
+				STR_PAD_BOTH,
+				STR_PAD_RIGHT,
+				STR_PAD_RIGHT	
+			);
+			
+			foreach ($slots as $slot) {
+				if ($slot->internal) {
+					continue;
+				}
+				
+				$col = array();
+				
+				foreach ($head as $name => $display) {
+					$col[] = $slot->{$name};
+				}
+				
+				$rows[] = $col;
+			}
+			
+			foreach ($rows as $row) {
+				$position = 0;
+				
+				foreach ($row as $col) {
+					if ($length[$position] < strlen($col) +(self::MARGIN*2)) {
+						$length[$position] = strlen($col) + (self::MARGIN*2);
+					}
+					
+					$position++;
+				}
+			}
+			
+			$output = '';
+			
+			foreach ($rows as $row) {
+				$position = 0;
+				
+				foreach ($row as $col) {
+					$output .= str_pad($col, $length[$position], ' ', $align[$position]);
+						
+					$position++;
+				}
+				
+				$output .= "\n";
+			}
+			
+			return $output;
+		}
+	}
+?>
