@@ -55,7 +55,13 @@
 		 * Slot status code
 		 * @var string
 		 */
-		public $status = null;
+		public $status;
+		
+		/**
+		 * Slot status name
+		 * @var string
+		 */
+		public $state;
 		
 		/**
 		 * Slot process ID
@@ -88,6 +94,12 @@
 		public $time;
 		
 		/**
+		 * Flag of internal request
+		 * @var bool
+		 */
+		public $internal = false;
+		
+		/**
 		 * Initiates Slot object
 		 * 
 		 * @param string $values Server stats row with selected slot
@@ -99,10 +111,15 @@
 			
 			$this->pid = $pid;
 			$this->status = self::getStatus($status);
+			$this->state = self::getState($this->status);
 			$this->client = $client;
 			$this->host = $host;
 			$this->request = $request;
 			$this->time = time()-$time;
+			
+			if (strpos($this->request, \gOPF\gSSP::SERVER_STATUS) > 0) {
+				$this->internal = true;
+			}
 		}
 		
 		/**
@@ -131,6 +148,28 @@
 			}
 			
 			return self::UNKNOWN;
+		}
+		
+		/**
+		 * Returns state name of status
+		 * 
+		 * @param string $status Status code
+		 * @return string State name
+		 */
+		private static function getState($status) {
+			$list = array(
+				self::OPENED => 'OPENED',
+				self::CLOSED => 'CLOSED',
+				self::READING => 'READING',
+				self::SENDING => 'SENDING',
+				self::ALIVE => 'ALIVE'
+			);
+			
+			if (isset($list[$status])) {
+				return $list[$status];
+			} else {
+				return 'UNKNOWN';
+			}
 		}
 	}
 ?>

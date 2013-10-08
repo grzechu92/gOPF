@@ -1,6 +1,7 @@
 <?php
 	namespace gOPF;
 	use \gOPF\gSSP\Slot;
+	use \gOPF\gSSP\Server;
 	
 	/**
 	 * gSSP - gSSP Server Status Parser
@@ -10,6 +11,12 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class gSSP {
+		/**
+		 * Server status URL name
+		 * @var string
+		 */
+		const SERVER_STATUS = 'server-status';
+		
 		/**
 		 * Server stats page URL address
 		 * @var string
@@ -23,12 +30,19 @@
 		private $slots = array();
 		
 		/**
+		 * Server informations and stats
+		 * @var \gOPF\gSSP\Server;
+		 */
+		private $server;
+		
+		/**
 		 * Initiates gSSP object
 		 * 
 		 * @param string $url Server stats page URL address
 		 */
 		public function __construct($url) {
 			$this->url = $url;
+			$this->update();
 		}
 		
 		/**
@@ -93,16 +107,36 @@
 		}
 		
 		/**
+		 * Returns informations about server
+		 * 
+		 * @return \gOPF\gSSP\Server Server informations and stats
+		 */
+		public function getServer() {
+			return $this->server;
+		}
+		
+		/**
 		 * Parses data with server status
 		 * 
 		 * @param string $data Server status page to parse
 		 */
 		private function parse($data) {
 			$this->slots = array();
+			$this->server = new Server();
+			$fields = array('version', '', '', 'time', 'start', '', '', 'uptime', 'load', 'traffic', 'cpu', 'stats', 'requests');
+			$field = 0;
 			$first = true;
 			
 			$document = new \DOMDocument('1.0', 'UTF-8');
 			$document->loadHTML($data);
+			
+			foreach ($document->getElementsByTagName('dt') as $row) {
+				if (!$fields[$field] == '') {
+					$this->server->{$fields[$field]} = $row->textContent;
+				}
+
+				$field++;
+			}
 			
 			foreach ($document->getElementsByTagName('tr') as $row) {
 				if ($first) {
