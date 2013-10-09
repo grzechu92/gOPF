@@ -11,8 +11,22 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class serverCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+		/**
+		 * Data refresh interval in nanoseconds (1s = 1 000 000ns)
+		 * @var int
+		 */
 		const INTERVAL = 500000;
+		
+		/**
+		 * Default server-status page URL address
+		 * @var string
+		 */
 		const URL = 'http://localhost/server-status';
+		
+		/**
+		 * Column margin
+		 * @var int
+		 */
 		const MARGIN = 2;
 		
 		/**
@@ -56,6 +70,11 @@
 			}
 		}
 		
+		/**
+		 * Executes specified task depends on parameters
+		 * 
+		 * @return string
+		 */
 		private function executeTask() {
 			if (!$this->getParameter('slots')) {
 				return $this->displayMainInfo();
@@ -64,6 +83,11 @@
 			}
 		}
 		
+		/**
+		 * Returns generated main info page 
+		 * 
+		 * @return string Generated page
+		 */
 		private function displayMainInfo() {
 			$parser = new gSSP(self::URL);
 			$return = '';
@@ -75,6 +99,11 @@
 			return $return;
 		}
 		
+		/**
+		 * Returns generated slos info page
+		 * 
+		 * @return string Generated page
+		 */
 		private function displaySlotsInfo() {
 			$parser = new gSSP(self::URL);
 			$slots = $parser->getSlots(false, time()-60);
@@ -135,7 +164,7 @@
 				
 				foreach ($row as $col) {
 					$output .= str_pad($col, $length[$position], ' ', $align[$position]);
-						
+					
 					$position++;
 				}
 				
