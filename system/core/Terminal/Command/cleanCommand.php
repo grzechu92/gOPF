@@ -1,7 +1,5 @@
 <?php
 	namespace System\Terminal\Command;
-	use \System\Terminal;
-	use \System\Filesystem;
 	
 	/**
 	 * Terminal command: clean (cleans various files in framework)
@@ -43,12 +41,10 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = Terminal::$session;
+			$session = \System\Terminal::$session;
 			
 			foreach ($this->directories as $directory) {
 				$session->buffer('Cleaning directory '.$directory);
-				
-// 				$stats = ;
 				
 				$iterator = new \RecursiveDirectoryIterator(__ROOT_PATH.$directory);
 				
@@ -57,7 +53,7 @@
 						continue;
 					}
 					
-					Filesystem::remove($file, $file->isDir());
+					\System\Filesystem::remove($file, $file->isDir());
 				}
 
 				usleep(800*1000);
