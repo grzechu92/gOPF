@@ -5,6 +5,7 @@
 	use \gOPF\gPAE\Response;
 	use \System\Terminal\Command;
 	use \System\Terminal\Status;
+	use \System\Terminal\Parser;
 	
 	/**
 	 * Terminal main initialization and router object
@@ -27,6 +28,12 @@
 		public static $session;
 		
 		/**
+		 * Terminal output parser
+		 * @var \System\Terminal\Parser
+		 */
+		private $parser;
+		
+		/**
 		 * gPAE push engine handler
 		 * @var \gOPF\gPAE
 		 */
@@ -44,6 +51,7 @@
 			Command::$terminal = self::$instance;
 			Command::$session = self::$session;
 			
+			$this->parser = new Parser();
 			$this->engine = new gPAE(array(gPAE::INTERVAL => 100));
 			$this->registerEvents();
 			
@@ -103,6 +111,7 @@
 				
 				if ($status instanceof Status && $status->updated != $push->container->session) {
 					$value = clone($status);
+					$value->buffer = $this->parser->parse($value->buffer);
 					
 					$status->buffer = '';
 					$status->command = '';
