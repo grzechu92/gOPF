@@ -41,6 +41,12 @@
 		const CLASSES_NAMESPACE = 'Application';
 		
 		/**
+		 * Holds predefined and reserver terminal commands namespace
+		 * @var string
+		 */
+		const COMMANDS_NAMESPACE = 'Commands';
+		
+		/**
 		 * Registers framework loader in PHP loaders registry
 		 */
 		public function __construct() {
@@ -64,7 +70,7 @@
 				$file = '';
 			}
 			
-			foreach (array(self::SYSTEM_NAMESPACE, self::CONTROLLERS_NAMESPACE, self::MODELS_NAMESPACE, self::CLASSES_NAMESPACE, self::ENTITIES_NAMESPACE) as $reserved) {
+			foreach (array(self::SYSTEM_NAMESPACE, self::CONTROLLERS_NAMESPACE, self::MODELS_NAMESPACE, self::CLASSES_NAMESPACE, self::ENTITIES_NAMESPACE, self::COMMANDS_NAMESPACE) as $reserved) {
 				if (strpos($namespace, $reserved) === 0) {
 					$namespace = substr($namespace, strlen($reserved));
 					
@@ -87,6 +93,10 @@
 							
 						case self::ENTITIES_NAMESPACE:
 							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'entities'.$namespace.DIRECTORY_SEPARATOR.$file;
+							break;
+							
+						case self::COMMANDS_NAMESPACE:
+							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'commands'.$namespace.DIRECTORY_SEPARATOR.$file;
 							break;
 					}
 				}
