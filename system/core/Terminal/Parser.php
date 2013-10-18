@@ -26,7 +26,7 @@
 		 * @return string Parsed output
 		 */
 		public function parse($output) {
-			foreach ($this->tahs as $tag=>$style) {
+			foreach ($this->tags as $tag=>$style) {
 				$output = str_replace('</'.$tag.'>', '</span>', $output);
 				$output = str_replace('<'.$tag.'>', '<span style="'.$style.'">', $output);
 			}
