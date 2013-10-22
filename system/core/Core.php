@@ -16,6 +16,12 @@
 		const VERSION = '1.8.0 alpha';
 		
 		/**
+		 * gOPF Core build time
+		 * @var string
+		 */
+		const BUILD = '20131022080512';
+		
+		/**
 		 * gOPF Core stage (__DEVELOPMENT or __PRODCUTION)
 		 * @var int
 		 */
