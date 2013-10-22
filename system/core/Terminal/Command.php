@@ -109,7 +109,7 @@
 						continue;
 					}
 					
-					$parameter = explode(' ', $section);
+					$parameter = explode(' ', $section, 2);
 					
 					if (count($parameter) == 1) {
 						$parsed->parameters[$parameter[0]] = null;
