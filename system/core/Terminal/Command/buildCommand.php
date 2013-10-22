@@ -17,8 +17,6 @@
 		private $ignored = array('.', '..', '.git', '.gitignore', '.settings', '.project', '.buildpath');
 		
 		private $output;
-		private $version;
-		
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
@@ -35,9 +33,8 @@
 			$session = self::$session;
 			
 			$this->output = $this->getParameter('output');
-			$this->version = $this->getParameter('version');
 			
-			if (!$this->output || !$this->version) {
+			if (!$this->output) {
 				$session->buffer('Wrong parameters!');
 				return;
 			}
@@ -47,7 +44,7 @@
 				return;
 			}
 			
-			$this->output = $this->output.'/'.$this->version;
+			$this->output = $this->output.'/'.\System\Core::VERSION;
 			$session->clear = true;
 			$session->buffer('Creating output directory: '.$this->output);
 			
