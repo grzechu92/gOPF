@@ -1,6 +1,8 @@
 <?php
 	namespace System\Terminal\Command;
 	use \System\Filesystem;
+	use \System\Core;
+	use \System\Terminal\Session;
 		
 	/**
 	 * Terminal command: build (creates build of framework)
@@ -16,7 +18,12 @@
 		 */
 		private $ignored = array('.', '..', '.git', '.gitignore', '.settings', '.project', '.buildpath');
 		
+		/**
+		 * Path to output directory
+		 * @var string
+		 */
 		private $output;
+		
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
@@ -33,31 +40,73 @@
 			$session = self::$session;
 			
 			$this->output = $this->getParameter('output');
+			$build = date('ymdhis');
+			$version = $this->getParameter('version');
 			
-			if (!$this->output) {
-				$session->buffer('Wrong parameters!');
-				return;
+			if (!$version) {
+				$version = Core::VERSION;
 			}
 			
+			if ($this->output) {
+				$this->createInstance($session, $version, $build);
+			} else {
+				$this->upgradeCore($session, $version, $build);
+			}
+		}
+		
+		/**
+		 * Upgrades core to specified version and build
+		 * 
+		 * @param \System\Terminal\Session $session Terminal session
+		 * @param string $version Version to upgrade
+		 * @param string $build Build to upgrade
+		 */
+		private function upgradeCore(Session $session, $version, $build) {
+			$session->buffer('Upgrading core to version: '.$version.' (build '.$build.')');
+			
+			$path = __ROOT_PATH.'/system/core/Core.php';
+			
+			$content = Filesystem::read($path);
+			$content = str_replace([Core::VERSION, Core::BUILD], [$version, $build], $content);
+			
+			Filesystem::write($path, $content);
+			sleep(3);
+		}
+		
+		/**
+		 * Creates framework clean clone in specified directory
+		 * 
+		 * @param \System\Terminal\Session $session Terminal session
+		 * @param string $version Framework version
+		 * @param string $build Framework build
+		 */
+		private function createInstance(Session $session, $version, $build) {
 			if (!Filesystem::checkDirectory($this->output)) {
 				$session->buffer('Wrong output path!');
 				return;
 			}
-			
-			$this->output = $this->output.'/'.\System\Core::VERSION;
+				
+			$this->output = $this->output.'/'.$version.' (build '.$build.')';
 			$session->clear = true;
 			$session->buffer('Creating output directory: '.$this->output);
-			
+				
 			sleep(2);
-			
+				
 			Filesystem::mkdir($this->output);
 			$this->iterate($session, __ROOT_PATH);
-			
-			$session->buffer('Fixing chmod\'s');
+				
+			$session->buffer('Fixing access rights...');
 			Filesystem::chmod($this->output, 0777, true);
-		}	
+		}
 		
-		private function iterate(\System\Terminal\Session $session, $directory, $context = false) {
+		/**
+		 * Iterates through directory
+		 * 
+		 * @param \System\Terminal\Session $session terminal session
+		 * @param string $directory Directory to iterate
+		 * @param string $context Target directory context
+		 */
+		private function iterate(Session $session, $directory, $context = false) {
 			if (!$context) {
 				$context = $this->output;
 			}
