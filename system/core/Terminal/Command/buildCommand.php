@@ -3,6 +3,7 @@
 	use \System\Filesystem;
 	use \System\Core;
 	use \System\Terminal\Session;
+	use \System\Terminal\Help\Line;
 		
 	/**
 	 * Terminal command: build (creates build of framework)
@@ -28,7 +29,14 @@
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
 		public function help() {
-			$help = new \System\Terminal\Help('Work in progress');
+			$lines = array();
+			
+			$help = new \System\Terminal\Help('Allows to build framework version');
+			$lines[] = new Line('build', 'upgrades build value in Core class');
+			$lines[] = new Line('build -output [path]', 'creates clean instance of framework in specified directory');
+			$lines[] = new Line('build -version [version]', 'upgrades build value and version in Core class');
+			
+			$help->addLines($lines);
 			
 			return $help;
 		}
