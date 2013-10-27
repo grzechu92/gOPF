@@ -44,20 +44,21 @@
 		/**
 		 * Initiates Kwejk object instance
 		 * 
+		 * @param string $cookie Defines cookie path
 		 * @param string $proxy Proxy IP adress and port separated by colon 
-		 * @param bool $safe leep a few seconds after request
+		 * @param bool $safe Sleep a few seconds after request
 		 * @oaran bool $debug Debugging mode, prints out every request content
 		 */
-		public function __construct($proxy = '', $safe = false, $debug = false) {
+		public function __construct($cookie = '', $proxy = '', $safe = true, $debug = false) {
 			if (!empty($proxy)) {
 				$this->proxy = $proxy;
 			}
 			
 			self::$safe = $safe;
 			self::$debug = $debug;
+			$this->cookie = ($cookie == '') ? '/tmp/'.microtime(true) : $cookie;
 			
 			$this->sendRequest('/');
-			$this->getCookie($this->sendRequest('/login/', array()));
 		}
 		
 		/**
@@ -81,14 +82,17 @@
 		 */
 		public function login($username, $password) {
 			$content = $this->sendRequest('/login', array(
+				'utf8' => '✓',
+				'authenticity_token' => $this->getAuthenticityToken($this->sendRequest('/login')),
 				'user[username]' => $username,
 				'user[password]' => $password,
-				'authenticity_token' => $this->getAuthenticityToken($this->sendRequest('/login'))
+				'user[remember_me]' => '0',
+				'commit' => 'Zaloguj się'
 			));
 			
-			$message = self::getMessage($content);
+			$message = $this->getMessage($content);
 			
-			if (!empty($message)) {
+			if (!empty($message) && $message != "Zalogowano pomyślnie.") {
 				throw new Exception($message);
 			}
 		}
@@ -105,8 +109,9 @@
 			$c = curl_init();
 			curl_setopt($c, CURLOPT_URL, self::URL.$url);
 			curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($c, CURLOPT_COOKIE, $this->cookie);
-			curl_setopt($c, CURLOPT_USERAGENT, 'KwejkAPI BOT v1.8 by Grze_chu <mail@grze.ch>');
+			curl_setopt($c, CURLOPT_COOKIEJAR, $this->cookie);
+			curl_setopt($c, CURLOPT_COOKIEFILE, $this->cookie);
+			curl_setopt($c, CURLOPT_USERAGENT, 'KwejkAPI BOT v2.0 by Grze_chu <mail@grze.ch>');
 			curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
 			curl_setopt($c, CURLOPT_HEADER, 1);
 			
@@ -129,7 +134,6 @@
 			}
 		
 			$content = curl_exec($c);
-			$this->getCookie($content);
 				
 			if (self::$safe) {
 				sleep(rand(5, 15));
@@ -159,10 +163,11 @@
  				'authenticity_token' => $this->getAuthenticityToken($content),
  				'media_object[title]' => $title,
  				'media_object[source]' => $source,
- 				'media_object[image]' => '@'.$file.';type='.mime_content_type($file),
+ 				'media_object[image]' => new \CurlFile($file, mime_content_type($file), basename($file)),
  				'media_object[object_type]' => 0,
  				'recaptcha_challenge_field' => $captcha->challengeID,
- 				'recaptcha_response_field' => $captcha->solved
+ 				'recaptcha_response_field' => $captcha->solved,
+ 				'commit' => 'Wyślij'
  			), array(CURLOPT_HTTPHEADER => array('Content-type: multipart/form-data')));
  			
  			$message = self::getMessage($result);
@@ -185,29 +190,6 @@
 		private function getAuthenticityToken($content) {
 			if (preg_match_all('#\<input name="authenticity_token" (.*?) value="(.*?)"\ \/>#s', $content, $matches)) {
 				return $matches[2][0];
-			}
-		}
-		
-		/**
-		 * Returns captcha image URL from page
-		 * 
-		 * @param string $content Page content
-		 * @return string Image URL
-		 */
-		private function getCaptchaURL($content) {
-			if (preg_match_all('#\<img src=(\'|")(.*?)(\'|")(.*?)\>#s', $content, $matches)) {
-				return self::URL.$matches[2][1];
-			}
-		}
-		
-		/**
-		 * Gets cookie string from HTTP headers
-		 *
-		 * @param string $headers Page source code with HTTP headers
-		 */
-		private function getCookie($headers) {
-			if (preg_match('/^Set-Cookie: (.*?);/m', $headers, $matches)) {
-				$this->cookie = $matches[1];
 			}
 		}
 	}
