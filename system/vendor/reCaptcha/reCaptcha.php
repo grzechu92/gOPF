@@ -35,6 +35,18 @@
 		const RECAPTCHA_VERIFY_SERVER = 'www.google.com';
 		
 		/**
+		 * reCaptcha challenge generate path
+		 * @var string
+		 */
+		const CHALLENGE_PATH = '/challenge?k=';
+		
+		/**
+		 * reCaptcha captcha image generate path
+		 * @var string
+		 */
+		const IMAGE_PATH = '/image?c=';
+		
+		/**
 		 * Initiates reCAPTCHA object
 		 * 
 		 * @param string $public Public application key
@@ -43,6 +55,36 @@
 		public function __construct($public, $private) {
 			self::$privateKey = $private;
 			self::$publicKey = $public;
+		}
+		
+		/**
+		 * Generates path to captcha image
+		 * 
+		 * @param string $challenge Captcha challenge
+		 * @return string Path to captcha image
+		 */
+		public static function getCaptchaImage($challenge) {
+			return self::RECAPTCHA_API_SERVER.self::IMAGE_PATH.$challenge;
+		}
+		
+		/**
+		 * Generate captcha challenge for selected key
+		 * 
+		 * @param string $key Public key
+		 * @return string Captcha challenge
+		 */
+		public static function getCaptchaChallenge($key = false) {
+			if (!$key) {
+				$key = self::$publicKey;
+			}
+			
+			$content = file_get_contents(self::RECAPTCHA_API_SERVER.self::CHALLENGE_PATH.$key);
+				
+			if (preg_match_all('#challenge : \'(.*?)\'#s', $content, $matches)) {
+				return $matches[1][0];
+			} else {
+				return '';
+			}
 		}
 		
 		/**

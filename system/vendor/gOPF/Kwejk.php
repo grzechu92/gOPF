@@ -2,6 +2,7 @@
 	namespace gOPF;
 	use \gOPF\Kwejk\Exception;
 	use \gOPF\Kwejk\Captcha;
+	use \reCaptcha\reCaptcha;
 	
 	/**
 	 * Kwejk API class
@@ -16,6 +17,12 @@
 		 * @var string
 		 */
 		const URL = 'http://kwejk.pl';
+		
+		/**
+		 * Kwejk reCaptcha public key
+		 * @var string
+		 */
+		const CAPTCHA_KEY = '6LfE4tYSAAAAALDY5gzhh92ar4UVQW3YgVA9-iZ_';
 		
 		/**
 		 * Sleep a few seconds after request
@@ -71,6 +78,15 @@
 			if (preg_match_all('#\<li class="success"\>(.*?)\<\/li\>#s', $content, $matches)) {
 				return trim($matches[1][0]);
 			}
+		}
+		
+		/**
+		 * Returns new captcha challengr from Kwejk reCaptcha key
+		 * 
+		 * @return string reCaptcha challenge key
+		 */
+		public static function getCaptchaChallenge() {
+			return reCaptcha::getCaptchaChallenge(self::CAPTCHA_KEY);
 		}
 		
 		/**
@@ -184,7 +200,7 @@
 		/**
 		 * Returns page authenticity token from source code
 		 * 
-		 * $param string $content Page source code
+		 * @param string $content Page source code
 		 * @return string Authencity token
 		 */
 		private function getAuthenticityToken($content) {
