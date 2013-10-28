@@ -109,8 +109,8 @@
 		 * Submits an HTTP POST to a reCAPTCHA server
 		 * 
 		 * @param string $host Request host address
-		 * @param string $path 
-		 * @param string $data
+		 * @param string $path Path to script
+		 * @param string $data Request data
 		 * @param int $port Request port
 		 * @return array Response data
 		 */
