@@ -108,9 +108,16 @@
 			
 			$message = $this->getMessage($content);
 			
-			if (!empty($message) && $message != "Zalogowano pomyślnie.") {
+			if (!empty($message)) {
 				throw new Exception($message);
 			}
+		}
+		
+		/**
+		 * Logs user out
+		 */
+		public function logout() {
+			$this->sendRequest('/logout');
 		}
 		
 		/**
@@ -150,6 +157,10 @@
 			}
 		
 			$content = curl_exec($c);
+			
+			if (empty($content)) {
+				throw new Exception('Connection error.');
+			}
 				
 			if (self::$safe) {
 				sleep(rand(5, 15));
