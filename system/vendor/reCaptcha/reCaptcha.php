@@ -1,6 +1,7 @@
 <?php
 	namespace reCaptcha;
 	use \System\Request;
+	use \reCaptcha\reCaptcha\Exception;
 	
 	/**
 	 * reCAPTCHA gOPF API class
@@ -83,7 +84,7 @@
 			if (preg_match_all('#challenge : \'(.*?)\'#s', $content, $matches)) {
 				return $matches[1][0];
 			} else {
-				return '';
+				throw new Exception('Unable to get challenge key');
 			}
 		}
 		
