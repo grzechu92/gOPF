@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<title>gOPF Terminal v<?= \System\Core::VERSION ?></title>
+<title>gOPF Terminal</title>
 
 <link rel="stylesheet" href="@/System/Terminal/style.css" />
 

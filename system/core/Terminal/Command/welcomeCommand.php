@@ -1,6 +1,7 @@
 <?php
 	namespace System\Terminal\Command;
 	use \System\Terminal\Help;
+	use \System\Core;
 	
 	/**
 	 * Terminal command: welcome (displays terminal welcome message)
@@ -25,8 +26,8 @@
 		public function execute() {
 			$session = self::$session;
 			
-			$message = "\n".str_pad('gOPF Terminal v'.\System\Core::VERSION, 50, ' ', STR_PAD_BOTH)."\n";
-			$message .= "\n".str_pad('Yeap, that\'s it, type help if you want to know more', 50, ' ', STR_PAD_BOTH)."\n";
+			$message = "\n".str_pad('gOPF Terminal v'.Core::VERSION.' (build '.Core::BUILD.')', 60, ' ', STR_PAD_BOTH)."\n";
+			$message .= "\n".str_pad('Yeap, that\'s it, type help if you want to know more', 60, ' ', STR_PAD_BOTH)."\n";
 			
 			$session->clear = true;
 			$session->buffer($message);
