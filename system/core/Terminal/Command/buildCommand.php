@@ -31,7 +31,7 @@
 		public function help() {
 			$lines = array();
 			
-			$help = new \System\Terminal\Help('Allows to build framework version');
+			$help = new \System\Terminal\Help('Build framework version');
 			$lines[] = new Line('build', 'upgrades build value in Core class');
 			$lines[] = new Line('build -output [path]', 'creates clean instance of framework in specified directory');
 			$lines[] = new Line('build -version [version]', 'upgrades build value and version in Core class');

@@ -18,7 +18,7 @@
 		 */
 		public function help() {
 			$lines = array();
-			$help = new \System\Terminal\Help('Allows to change password');
+			$help = new \System\Terminal\Help('Change password');
 		
 			$lines[] = new Line('password', 'begins procedure for current logged user');
 			$lines[] = new Line('password [user]', 'begins procedure for selected user');
