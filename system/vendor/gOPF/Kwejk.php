@@ -25,16 +25,22 @@
 		const CAPTCHA_KEY = '6LfE4tYSAAAAALDY5gzhh92ar4UVQW3YgVA9-iZ_';
 		
 		/**
+		 * Request useragent string
+		 * @var string
+		 */
+		const USERAGENT = 'KwejkAPI v2.0 by Grze_chu <mail@grze.ch>';
+		
+		/**
 		 * Sleep a few seconds after request
 		 * @var bool
 		 */
-		public static $safe = false;
+		private $safe = false;
 		
 		/**
 		 * Debugging mode, prints output of every request
 		 * @var bool
 		 */
-		public static $debug = false;
+		private $debug = false;
 		
 		/**
 		 * Session cookie string
@@ -49,20 +55,28 @@
 		private $proxy;
 		
 		/**
+		 * Throw exception with every message (even on success)
+		 * @var bool
+		 */
+		private $exception = false;
+		
+		/**
 		 * Initiates Kwejk object instance
 		 * 
 		 * @param string $cookie Defines cookie path
 		 * @param string $proxy Proxy IP adress and port separated by colon 
 		 * @param bool $safe Sleep a few seconds after request
 		 * @oaran bool $debug Debugging mode, prints out every request content
+		 * @param bool $exception Throw exception with every message (even on success)
 		 */
-		public function __construct($cookie = '', $proxy = '', $safe = true, $debug = false) {
+		public function __construct($cookie = '', $proxy = '', $safe = true, $debug = false, $exception = false) {
 			if (!empty($proxy)) {
 				$this->proxy = $proxy;
 			}
 			
-			self::$safe = $safe;
-			self::$debug = $debug;
+			$this->safe = $safe;
+			$this->debug = $debug;
+			$this->exception = $exception;
 			$this->cookie = ($cookie == '') ? '/tmp/'.microtime(true) : $cookie;
 			
 			$this->sendRequest('/');
@@ -99,7 +113,7 @@
 		public function login($username, $password) {
 			$content = $this->sendRequest('/login', array(
 				'utf8' => '✓',
-				'authenticity_token' => $this->getAuthenticityToken($this->sendRequest('/login')),
+				'authenticity_token' => self::getAuthenticityToken($this->sendRequest('/login')),
 				'user[username]' => $username,
 				'user[password]' => $password,
 				'user[remember_me]' => '0',
@@ -109,7 +123,9 @@
 			$message = $this->getMessage($content);
 			
 			if (!empty($message)) {
-				throw new Exception($message);
+				if ($message != Exception::LOGIN_SUCCESS || $this->exception) {
+					throw new Exception($message);
+				}
 			}
 		}
 		
@@ -134,7 +150,7 @@
 			curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($c, CURLOPT_COOKIEJAR, $this->cookie);
 			curl_setopt($c, CURLOPT_COOKIEFILE, $this->cookie);
-			curl_setopt($c, CURLOPT_USERAGENT, 'KwejkAPI BOT v2.0 by Grze_chu <mail@grze.ch>');
+			curl_setopt($c, CURLOPT_USERAGENT, self::USERAGENT);
 			curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
 			curl_setopt($c, CURLOPT_HEADER, 1);
 			
@@ -159,14 +175,14 @@
 			$content = curl_exec($c);
 			
 			if (empty($content)) {
-				throw new Exception('Connection error.');
+				throw new Exception(Exception::CONNECTION_ERROR);
 			}
 				
-			if (self::$safe) {
+			if ($this->safe) {
 				sleep(rand(5, 15));
 			}
 			
-			if (self::$debug) {
+			if ($this->debug) {
 				echo $content;
 			}
 			
@@ -183,11 +199,9 @@
 		 * @throws \gOPF\Kwejk\Exception
 		 */
 		public function sendImage(Captcha $captcha, $file, $title, $source = '') {
-			$content = $this->sendRequest('/dodaj');
-			
  			$result = $this->sendRequest('/obrazek', array(
  				'utf8' => '✓',
- 				'authenticity_token' => $this->getAuthenticityToken($content),
+ 				'authenticity_token' => self::getAuthenticityToken($this->sendRequest('/dodaj')),
  				'media_object[title]' => $title,
  				'media_object[source]' => $source,
  				'media_object[image]' => new \CurlFile($file, mime_content_type($file), basename($file)),
@@ -200,11 +214,13 @@
  			$message = self::getMessage($result);
  			
  			if (!empty($message)) {
- 				throw new Exception($message);
+ 				if ($message != Exception::UPLOAD_SUCCESS || $this->exception) {
+ 					throw new Exception($message);
+ 				}
  			}
  				
  			if (strpos($result, 'http://kwejk.pl/ban.html')) {
- 				throw new Exception('Banned!');
+ 				throw new Exception(Exception::BAN);
  			}
 		}
 		
@@ -214,7 +230,7 @@
 		 * @param string $content Page source code
 		 * @return string Authencity token
 		 */
-		private function getAuthenticityToken($content) {
+		private static function getAuthenticityToken($content) {
 			if (preg_match_all('#\<input name="authenticity_token" (.*?) value="(.*?)"\ \/>#s', $content, $matches)) {
 				return $matches[2][0];
 			}
