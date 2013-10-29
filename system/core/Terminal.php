@@ -253,7 +253,9 @@
 			} catch (\System\Terminal\Exception $e) {
 				$session->buffer($e->getMessage());
 			} catch (\System\Core\Exception $e) {
-				$session->buffer('Error:'."\n".$e->getMessage());
+				$session->buffer('System error:'."\n".$e->getMessage());
+			} catch (\Exception $e){
+				$session->buffer('Unknown error:'."\n".$e->getMessage());
 			}
 			
 			$session->processing = false;
