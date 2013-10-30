@@ -16,12 +16,14 @@
 		const CONNECTION_ERROR = 'Błąd połączenia';
 		const ALREADY_LOGGED = 'Już jesteś zalogowany';
 		const UPLOAD_SUCCESS = '';
+		const NOT_AUTHORIZED = 'By kontynuować musisz się zalogować lub zarejestrować.';
+		const FILE_NOT_EXIST = 'Plik nie istnieje';
 		
 		/**
 		 * @see \Exception::__construct()
 		 */
 		public function __construct($message) {
-			$this->message = 'Kwejk.pl API error: '.$message;
+			$this->message = 'Kwejk.pl API: '.$message;
 			$this->code = $message;
 		}
 	}

@@ -94,6 +94,12 @@
 			}
 		}
 		
+		public static function getUsername($content) {
+			if (preg_match_all('#Cześć, (.*?)!#s', $content, $matches)) {
+				return trim($matches[1][0]);
+			}
+		}
+		
 		/**
 		 * Returns new captcha challengr from Kwejk reCaptcha key
 		 * 
@@ -199,6 +205,10 @@
 		 * @throws \gOPF\Kwejk\Exception
 		 */
 		public function sendImage(Captcha $captcha, $file, $title, $source = '') {
+			if (!\System\Filesystem::checkFile($file)) {
+				throw new Exception(Exception::FILE_NOT_EXIST);
+			}
+			
  			$result = $this->sendRequest('/obrazek', array(
  				'utf8' => '✓',
  				'authenticity_token' => self::getAuthenticityToken($this->sendRequest('/dodaj')),
@@ -222,6 +232,22 @@
  			if (strpos($result, 'http://kwejk.pl/ban.html')) {
  				throw new Exception(Exception::BAN);
  			}
+		}
+		
+		/**
+		 * Checks if user is logged
+		 * 
+		 * @return string
+		 */
+		public function isLogged() {
+			$result = $this->sendRequest('/edit');
+			$message = self::getMessage($result);
+			
+			if ($message == Exception::NOT_AUTHORIZED) {
+				return '';
+			} else {
+				return self::getUsername($result);
+			}
 		}
 		
 		/**

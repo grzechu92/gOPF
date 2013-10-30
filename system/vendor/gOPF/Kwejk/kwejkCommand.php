@@ -1,14 +1,45 @@
 <?php
 	namespace gOPF\Kwejk;
+	use \System\Terminal\Help\Line;
 	use \gOPF\Kwejk;
 	use \reCaptcha\reCaptcha;
+	use \System\Terminal\Exception;
 	
+	/**
+	 * Terminal command: build (allows to use KwejkAPI without web interface)
+	 *
+	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+	 */
 	class kwejkCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+		/**
+		 * Cookie name for Kwejk session
+		 * @var string
+		 */
+		const COOKIE_NAME = 'kwejkCommandCookie';
+		
+		/**
+		 * Command storage
+		 * @var array
+		 */
+		private $storage = array();
+		
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
 		public function help() {
+			$lines = array();
+			$help = new \System\Terminal\Help('KwejkAPI interface command');
 			
+			$lines[] = new Line('kwejk -status', 'show Kwejk session status');
+			$lines[] = new Line('kwejk -login -username [username] -password [password]', 'authorize user');
+			$lines[] = new Line('[todo] kwejk -proxy', 'set proxy connection address');
+			$lines[] = new Line('kwejk -captcha', 'generate and store single captcha for future use');
+			$lines[] = new Line('kwejk -upload -file [system path] -title [title]', 'upload image');
+			
+			$help->addLines($lines);
+			return $help;
 		}
 		
 		/**
@@ -16,56 +47,105 @@
 		 */
 		public function execute() {
 			$session = self::$session;
+			$this->readStorage();
 			
-			if ($this->getParameter('login')) {
-				$k = new Kwejk(__VARIABLE_PATH.'/kwejkCommandCookie', '', false, false);
-				$k->login($this->getParameter('username'), $this->getParameter('password'));
-			}
-			
-			if ($this->getParameter('request')) {
-				$session->buffer(htmlentities($k->sendRequest($this->getParameter('request'))));
+			try {
+				if ($this->getParameter('login')) {
+					$this->kwejk()->login($this->getParameter('username'), $this->getParameter('password'));
+				}
+				
+				if ($this->getParameter('status')) {
+					$logged = $this->kwejk()->isLogged();
+					$output = 'Logged as: '.(empty($logged) ? 'not authorized' : $logged)."\n";
+					$output .= 'Captchas: '.count($this->storage['captchas']);
+					
+					self::$session->buffer($output);
+				}
+				
+				if ($this->getParameter('upload')) {
+					$this->kwejk()->sendImage($this->getCaptcha(), $this->getParameter('file'), $this->getParameter('title'));
+				}
+				
+				if ($this->getParameter('logout')) {
+					$this->kwejk()->logout();
+				}
+			} catch (\gOPF\Kwejk\Exception $e) {
+				self::$session->buffer($e->getMessage());
 			}
 			
 			if ($this->getParameter('captcha')) {
 				$key = reCaptcha::getCaptchaChallenge(Kwejk::CAPTCHA_KEY);
-				$image = reCaptcha::getCaptchaImage($key);
+				$this->storage['resolving'] = $key;
+
 				$status = $session->pull();
-				
-				$status->storage['captcha'] = $key;
 				$status->prompt = 'Resolve captcha: ';
 				$status->prefix = 'kwejk -resolve ';
-				$status->buffer('<img src="'.$image.'" />');
-				
+				$status->buffer('<img src="'.reCaptcha::getCaptchaImage($key).'" />');
 				$session->push($status);
 			}
 			
 			if ($this->getParameter('resolve')) {
+				if (!isset($this->storage['captchas'])) {
+					$this->storage['captchas'] = array();
+				}
+				
+				$this->storage['captchas'][] = $this->storage['resolving'].':'.$this->getParameter('resolve');
+				unset($this->storage['resolving']);
+				
 				$status = $session->pull();
-
-				$status->storage['captcha'] .= ':'.$this->getParameter('resolve');
 				$status->prompt = null;
 				$status->prefix = null;
-				$status->buffer($this->getParameter('resolve'));
-								
 				$session->push($status);
 			}
-			
-			if ($this->getParameter('stored')) {
-				$session->buffer($session->pull()->storage['captcha']);
+		}
+		
+		public function __destruct() {
+			$this->writeStorage();
+		}
+		
+		/**
+		 * 
+		 * @return \gOPF\Kwejk
+		 */
+		private function kwejk() {
+			if (isset($this->storage['proxy'])) {
+				$proxy = $this->storage['proxy'];
+			} else {
+				$proxy = '';
 			}
 			
-			if ($this->getParameter('upload')) {
-				$k = new Kwejk(__VARIABLE_PATH.'/kwejkCommandCookie', '', false, false);
-				list($challengeID, $solved) = explode(':', $session->pull()->storage['captcha']);
-				
-				$captcha = new Captcha($challengeID, $solved);
-				$k->sendImage($captcha, $this->getParameter('file'), $this->getParameter('title'));
+			return new Kwejk(__VARIABLE_PATH.DIRECTORY_SEPARATOR.self::COOKIE_NAME, $proxy, false, false, true);
+		}
+		
+		/**
+		 * 
+		 * @return \gOPF\Kwejk\Captcha
+		 */
+		private function getCaptcha() {
+			if (count($this->storage['captchas']) == 0) {
+				throw new Exception('There is no captchas availiable');
 			}
 			
-			if ($this->getParameter('logout')) {
-				$k = new Kwejk(__VARIABLE_PATH.'/kwejkCommandCookie', '', false, false);
-				$k->logout();
+			$last = array_pop($this->storage['captchas']);
+			$exploded = explode(':', $last);
+			
+			return new \gOPF\Kwejk\Captcha($exploded[0], $exploded[1]);
+		}
+		
+		private function readStorage() {
+			$status = self::$session->pull();
+			
+			if (isset($status->storage[__CLASS__])) {
+				$this->storage = $status->storage[__CLASS__];
+			} else {
+				$this->storage = array();
 			}
+		}
+		
+		private function writeStorage() {
+			$status = self::$session->pull();
+			$status->storage[__CLASS__] = $this->storage;
+			self::$session->push($status);
 		}
 	}
 ?>
