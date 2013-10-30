@@ -19,7 +19,7 @@
 		 * gOPF Core build time
 		 * @var string
 		 */
-		const BUILD = '131026112033';
+		const BUILD = '131030054505';
 		
 		/**
 		 * gOPF Core stage (__DEVELOPMENT or __PRODCUTION)
