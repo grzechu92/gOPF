@@ -94,6 +94,12 @@
 			}
 		}
 		
+		/**
+		 * Returns username from Kwejk by searching in source codes
+		 * 
+		 * @param string $content Kwejk page source code
+		 * @return string Username
+		 */
 		public static function getUsername($content) {
 			if (preg_match_all('#Cześć, (.*?)!#s', $content, $matches)) {
 				return trim($matches[1][0]);

@@ -34,7 +34,7 @@
 			
 			$lines[] = new Line('kwejk -status', 'show Kwejk session status');
 			$lines[] = new Line('kwejk -login -username [username] -password [password]', 'authorize user');
-			$lines[] = new Line('[todo] kwejk -proxy', 'set proxy connection address');
+			$lines[] = new Line('kwejk -proxy [ip::port]', 'set proxy connection IP');
 			$lines[] = new Line('kwejk -captcha', 'generate and store single captcha for future use');
 			$lines[] = new Line('kwejk -upload -file [system path] -title [title]', 'upload image');
 			
@@ -97,15 +97,27 @@
 				$status->prefix = null;
 				$session->push($status);
 			}
+			
+			if ($this->getParameter('proxy')) {
+				if ($this->getParameter('proxy') === true) {
+					unset($this->storage['proxy']);
+				}
+				
+				$this->storage['proxy'] = $this->getParameter('proxy');
+			}
 		}
 		
+		/**
+		 * Save command storage
+		 */
 		public function __destruct() {
 			$this->writeStorage();
 		}
 		
 		/**
+		 * Initialize Kwejk API instance
 		 * 
-		 * @return \gOPF\Kwejk
+		 * @return \gOPF\Kwejk Kwejk API instance
 		 */
 		private function kwejk() {
 			if (isset($this->storage['proxy'])) {
@@ -118,8 +130,9 @@
 		}
 		
 		/**
+		 * Generate captcha from storage
 		 * 
-		 * @return \gOPF\Kwejk\Captcha
+		 * @return \gOPF\Kwejk\Captcha Solved captcha
 		 */
 		private function getCaptcha() {
 			if (count($this->storage['captchas']) == 0) {
@@ -132,6 +145,9 @@
 			return new \gOPF\Kwejk\Captcha($exploded[0], $exploded[1]);
 		}
 		
+		/**
+		 * Read command storage
+		 */
 		private function readStorage() {
 			$status = self::$session->pull();
 			
@@ -142,6 +158,9 @@
 			}
 		}
 		
+		/**
+		 * Write command storage
+		 */
 		private function writeStorage() {
 			$status = self::$session->pull();
 			$status->storage[__CLASS__] = $this->storage;
