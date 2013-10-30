@@ -237,7 +237,7 @@
 			}
 			
 			try {
-				if ($status->logged && $history) {
+				if ($status->logged && $history && empty($status->prefix)) {
 					$session->history($command);
 				}
 				
