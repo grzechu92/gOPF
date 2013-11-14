@@ -23,7 +23,7 @@
 			$unit = array('B', 'kB', 'mB', 'gB', 'tB', 'pB');
 			$return = round($size / pow(1024, ($i = floor(log($size, 1024)))), 2).' '.$unit[$i];
 			
-			return ($invert) ? '-'.$return : $return;
+			return (isset($invert) && $invert) ? '-'.$return : $return;
 		} else {
 			return '0 B';
 		}
