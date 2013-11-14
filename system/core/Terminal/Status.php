@@ -124,6 +124,12 @@
 		public $history = array();
 		
 		/**
+		 * Array with uploaded files id's
+		 * @var array
+		 */
+		public $files = array();
+		
+		/**
 		 * Initializes and setts required status fields
 		 */
 		public function initialize() {
@@ -141,6 +147,7 @@
 			
 			$this->storage = array();
 			$this->history = array();
+			$this->files = array();
 		}
 		
 		/**

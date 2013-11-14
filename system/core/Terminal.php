@@ -6,6 +6,7 @@
 	use \System\Terminal\Command;
 	use \System\Terminal\Status;
 	use \System\Terminal\Parser;
+	use \System\Filesystem;
 	
 	/**
 	 * Terminal main initialization and router object
@@ -154,6 +155,23 @@
 				
 				$session->buffer(print_r($session->pull(), true));
 				$session->update();
+			});
+			
+			$this->addClientEvent('upload', function($push) {
+				sleep(1);
+				
+				$session = Terminal::$session;
+				$status = $session->pull();
+				
+				if ($status->logged) {
+					Filesystem::write(__ROOT_PATH.$status->path.$push->data->name, $push->data->content);
+					$status->files[$push->data->id] = true;					
+				} else {
+					$status->files[$push->data->id] = false;
+				}
+				
+				$status->update();
+				$session->push($status);
 			});
 			
 			$this->addClientEvent('complete', function($push) {

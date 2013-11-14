@@ -47,6 +47,27 @@ Terminal = {
 		updated: null,
 		storage: new Array(),
 		history: new Array(),
+		files: new Array()
+	},
+	
+	uploader: {
+		queue: new Array(),
+		uploading: false,
+		upload: function() {
+			if (!Terminal.uploader.uploading) {
+				var element = Terminal.uploader.queue.pop();
+				
+				if (element != undefined) {
+					Terminal.uploader.uploading = true;
+					Terminal.lock();
+					Terminal.upload(element.id, element.name, element.content);
+					
+					$("#"+element.id).html('UPLOADING');
+				} else {
+					Terminal.unlock();
+				}
+			}
+		}
 	},
 	
 	position: 0,
@@ -67,6 +88,8 @@ Terminal = {
 			Terminal.check(data.value);
 			Terminal.update(data.value);
 		});
+		
+		setInterval(Terminal.uploader.upload, 500);
 	},
 	
 	send: function(command) {
@@ -150,9 +173,14 @@ Terminal = {
 		$("#command").prop("type", data.type);
 		
 		if (data.processing) {
-			$("form").hide();
+			Terminal.lock();
 		} else {
-			$("form").show();
+			Terminal.unlock();
+		}
+		
+		for (var c in data.files) {
+			$("#"+c).html(data.files[c] ? "DONE" : "FAIL");
+			Terminal.uploader.uploading = false;
 		}
 		
 		document.body.scrollTop = document.body.scrollHeight;
@@ -166,6 +194,10 @@ Terminal = {
 	
 	clear: function() {
 		$("#console").html("");
+	},
+	
+	upload: function(id, name, content) {
+		$.gPAE("sendEvent", "upload", {id: id, name: name, content: content});
 	}
 }
 
@@ -251,5 +283,38 @@ $(document).ready(function() {
 			e.preventDefault();
 			return false;
 		}
+	});
+	
+	$("html").on("drop", function(e) {
+		var files = e.originalEvent.dataTransfer.files;
+		
+		for (var i = 0; i < files.length; i++) {
+			(function(file) {
+				var id = (Math.random()+"").split(".")[1];
+				
+				Terminal.print("Uploading file "+file.name+"... <span id="+id+">QUEUED</span>\n");
+				
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					Terminal.uploader.queue.push({id: id, name: file.name, content: e.currentTarget.result});
+				};
+				
+				reader.readAsDataURL(file);
+		    })(files[i]);
+		}
+		
+		e.stopPropagation();
+		e.preventDefault();
+	});
+	
+	$("html").on("dragover dragleave", function(e) {
+		if (e.type == "dragover") {
+			Terminal.lock();
+		} else {
+			Terminal.unlock();
+		}
+		
+		e.stopPropagation();
+		e.preventDefault();
 	});
 });
