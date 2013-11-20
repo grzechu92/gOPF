@@ -54,18 +54,22 @@ Terminal = {
 	uploader: {
 		queue: new Array(),
 		uploading: false,
+		locked: false,
 		upload: function() {
 			if (!Terminal.uploader.uploading) {
 				var element = Terminal.uploader.queue.pop();
 				
 				if (element != undefined) {
 					Terminal.lock();
+					Terminal.uploader.locked =  true;
 					Terminal.uploader.uploading = true;
 					Terminal.upload(element.id, element.name, element.content);
 					
 					$("#"+element.id).html('UPLOADING');
 				} else {
-					Terminal.unlock();
+					if (Terminal.uploader.locked) {
+						Terminal.unlock();
+					}
 				}
 			}
 		}
@@ -310,6 +314,12 @@ $(document).ready(function() {
 	});
 	
 	$("html").on("dragover dragleave", function(e) {
+		if (e.type == "dragover") {
+			Terminal.lock();
+		} else {
+			Terminal.unlock();
+		}
+		
 		e.stopPropagation();
 		e.preventDefault();
 	});
