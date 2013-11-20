@@ -68,6 +68,7 @@ Terminal = {
 					$("#"+element.id).html('UPLOADING');
 				} else {
 					if (Terminal.uploader.locked) {
+						Terminal.uploader.locked = false;
 						Terminal.unlock();
 					}
 				}
