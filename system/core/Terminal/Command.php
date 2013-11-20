@@ -123,6 +123,16 @@
 		}
 		
 		/**
+		 * @see @see \System\Terminal\CommandInterface::onInstall()
+		 */
+		public function onInstall() {}
+		
+		/**
+		 * @see @see \System\Terminal\CommandInterface::onUninstall()
+		 */
+		public function onUninstall() {}
+		
+		/**
 		 * Checks if parameter has been passed with command
 		 * If is passed, but empty, returns true
 		 * If is passed and has value, returns value

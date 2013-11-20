@@ -109,6 +109,8 @@
 				if (!($object instanceof \System\Terminal\CommandInterface)) {
 					return self::WRONG_CLASS;
 				}
+				
+				$object->onInstall();
 			} catch (\System\Loader\Exception $e) {
 				return self::WRONG_CLASS;
 			}
@@ -128,11 +130,14 @@
 				return self::EMPTY_COMMAND;
 			}
 			
-			$value = $config->getArrayValue('commands', $command);
+			$class = $config->getArrayValue('commands', $command);
 			
-			if (empty($value)) {
+			if (empty($class)) {
 				return self::COMMAND_NOT_EXISTS;
 			}
+			
+			$object = new $class();
+			$object->onUninstall();
 			
 			$config->removeFromArray('commands', $command);
 		}

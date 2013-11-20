@@ -20,5 +20,15 @@
 		 * @return \System\Terminal\Help Help content
 		 */
 		public function help();
+		
+		/**
+		 * Action when command is installed
+		 */
+		public function onInstall();
+		
+		/**
+		 * Action when command is uninstalled
+		 */
+		public function onUninstall();
 	}
 ?>
