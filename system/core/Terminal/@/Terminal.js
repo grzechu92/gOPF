@@ -4,16 +4,17 @@
  * @/System/Terminal/Terminal.js
  * 
  * Usage:
- * Terminal.init();					Initiates terminal connection
- * Terminal.send(command);			Allows to pass command to terminal
- * Terminal.abort();				Abort current command process (if supported)
- * Terminal.debug();				Prints current terminal session status
- * Terminal.check();				Checks terminal status
- * Terminal.lock();					Locks terminal
- * Terminal.unlock();				Unlocks terminal
- * Terminal.update(data);			Updates terminal data (prompt, output etc.)
- * Terminal.print(data);			Allows to put data into terminal output
- * Terminal.clear();				Clears terminal output
+ * Terminal.init();						Initiates terminal connection
+ * Terminal.send(command);				Allows to pass command to terminal
+ * Terminal.abort();					Abort current command process (if supported)
+ * Terminal.debug();					Prints current terminal session status
+ * Terminal.check();					Checks terminal status
+ * Terminal.lock();						Locks terminal
+ * Terminal.unlock();					Unlocks terminal
+ * Terminal.update(data);				Updates terminal data (prompt, output etc.)
+ * Terminal.print(data);				Allows to put data into terminal output
+ * Terminal.clear();					Clears terminal output
+ * Terminal.upload(id, name, content);	Allows to upload file into terminal gate
  * 
  * Requires:
  * @/System/Core/gOPF.js
@@ -21,7 +22,7 @@
  * @/System/Terminal/style.css
  * 
  * 
- * Version 1.0
+ * Version 1.1
  * 
  * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -58,8 +59,8 @@ Terminal = {
 				var element = Terminal.uploader.queue.pop();
 				
 				if (element != undefined) {
-					Terminal.uploader.uploading = true;
 					Terminal.lock();
+					Terminal.uploader.uploading = true;
 					Terminal.upload(element.id, element.name, element.content);
 					
 					$("#"+element.id).html('UPLOADING');
@@ -183,7 +184,7 @@ Terminal = {
 			Terminal.uploader.uploading = false;
 		}
 		
-		document.body.scrollTop = document.body.scrollHeight;
+		document.scrollTop = document.body.scrollHeight;
 		
 		Terminal.position = data.history.length;
 	},
@@ -287,6 +288,7 @@ $(document).ready(function() {
 	
 	$("html").on("drop", function(e) {
 		var files = e.originalEvent.dataTransfer.files;
+		console.log("drop", files);
 		
 		for (var i = 0; i < files.length; i++) {
 			(function(file) {
@@ -308,12 +310,6 @@ $(document).ready(function() {
 	});
 	
 	$("html").on("dragover dragleave", function(e) {
-		if (e.type == "dragover") {
-			Terminal.lock();
-		} else {
-			Terminal.unlock();
-		}
-		
 		e.stopPropagation();
 		e.preventDefault();
 	});

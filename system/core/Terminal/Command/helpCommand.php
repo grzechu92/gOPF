@@ -33,8 +33,8 @@
 				$lines[] = new Line($name, $class->help()->description);
 			}
 			
-			$lines[] = new Line('');
-			$lines[] = new Line('');
+			$lines[] = new Line(Line::SEPARATOR);
+			$lines[] = new Line('If you want to upload file, just drag it into terminal');
 			$lines[] = new Line('Use TAB key to fill path while writing');
 			$lines[] = new Line('Use SHIFT + ` key to reset terminal if something went wrong');
 			$lines[] = new Line('Use CTRL + L when mess on the screen is anoying');

@@ -164,8 +164,17 @@
 				$status = $session->pull();
 				
 				if ($status->logged) {
-					Filesystem::write(__ROOT_PATH.$status->path.$push->data->name, $push->data->content);
-					$status->files[$push->data->id] = true;					
+					try {
+						$file = explode(',', $push->data->content);
+						$path = __ROOT_PATH.$status->path.$push->data->name;
+						
+						Filesystem::write($path, base64_decode($file[1]));
+						Filesystem::chmod($path, 0777);
+						$status->files[$push->data->id] = true;					
+					} catch (\Exception $e) {
+						$status->buffer($e->getMessage());
+						$status->files[$push->data->id] = false;
+					}
 				} else {
 					$status->files[$push->data->id] = false;
 				}
