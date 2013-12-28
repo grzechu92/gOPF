@@ -1,5 +1,6 @@
 <?php
 	namespace System;
+	use \System\Router\Route;
 	
 	/**
 	 * Matches request to matching bootstrap, and runns request processing procedure
@@ -34,75 +35,44 @@
 			$routes = Config::factory('routes.ini', Config::APPLICATION);
 			$routes = $routes->getContent();
 			
-			$this->matchRoute($routes['routes'], $routes['default']);
+			$this->match($routes['routes'], $routes['default']);
 		}
 		
 		/**
 		 * Matches route for requested URL
 		 * 
 		 * @param array $routes Availiable routes
-		 * @param string $defaultRoute Default route, selected when no availiable routes is matched
+		 * @param string $default Default route, selected when no availiable routes is matched
 		 */
-		private function matchRoute($routes, $defaultRoute) {
-			$route = array();
-			$section = '/\<(\w+)\:(numeric|alpha|alphanumeric|any)\>/';
+		private function match($routes, $default) {
+			$matched = false;
 			
-			foreach ($routes as $rule=>$defaults) {
-				$rule = str_replace('/', '\\/', $rule);
+			foreach ($routes as $rule => $values) {
+				$rule = new Route($rule, $values);
 				
-				$pattern = preg_replace(
-					array('/@alphanumeric/', '/@numeric/', '/@alpha/', '/@any/'),
-					array('(\w+)', '(\d+)', '(\D+)', '(.+)'),
-					preg_replace($section, '@$2', $rule)
-				).'(|\/(.*))';
-				
-				if (!preg_match('/^'.$pattern.'$/', Request::$URL)) {
+				if (!$rule->match()) {
 					continue;
 				}
-								
-				$route = $this->parseDefaults($defaults);
 				
-				$names = array();
-				preg_match_all($section, $rule, $names);
+				$rule->parse();
 				
-				$values = array();
-				preg_match_all('/'.preg_replace($section, '(?P<$1>[^\/]+)', $rule).'/', Request::$URL, $values, PREG_SET_ORDER);
+				 
 				
-				foreach ($names[1] as $name) {
-					$route[$name] = $values[0][$name];
-				}
-				
+				$matched = $rule;
 				break;
 			}
 			
-			if (empty($route)) {
-				$route = $this->parseDefaults($defaultRoute);
+			if (!($matched instanceof Route)) {
+				$matched = new Route('', $default);
+				$matched->parse();
 			}
 			
 			foreach (array('context', 'controller', 'action') as $variable) {
-				Request::$$variable = (isset($route[$variable])) ? $route[$variable] : null;
-				unset($route[$variable]);
+				Request::$$variable = (isset($matched->values->{$variable})) ? $matched->values->{$variable} : null;
+				unset($matched->values->{$variable});
 			}
 			
-			Request::$parameters = $route;
-		}
-		
-		/**
-		 * Parses defaults string from config file
-		 * 
-		 * @param string $defaults Defaults string
-		 * @return array Parsed defaults
-		 */
-		private function parseDefaults($defaults) {
-			$values = array();
-			$exploded = explode(',', $defaults);
-			
-			foreach ($exploded as $part) {
-				$separated = explode(':', $part);
-				$values[$separated[0]] = $separated[1];
-			}
-			
-			return $values;
+			Request::$parameters = new \System\ArrayContainer((array) $matched->values);
 		}
 	}
 ?>
