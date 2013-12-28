@@ -10,6 +10,12 @@
 	 */
 	class Request {
 		/**
+		 * Request object instance
+		 * @var \System\Request;
+		 */
+		public static $instance;		
+		
+		/**
 		 * Requested controller
 		 * @var string
 		 */
@@ -73,6 +79,10 @@
 		 * Filters global varialbe contents
 		 */
 		public function __construct() {
+			if (self::$instance instanceof Request) {
+				return;
+			}
+			
 			self::$CLI = isset($_SERVER['argv']) ? $_SERVER['argv'] : array();
 			self::$URL = isset(self::$CLI[1]) ? self::$CLI[1] :$this->parseURL();
 			
@@ -85,8 +95,18 @@
 			}
 			
 			self::$files = $_FILES;
+			self::$instance = $this;
 			
 			unset($_GET, $_POST, $_COOKIE, $_FILES, $_REQUEST);
+		}
+		
+		/**
+		 * Return object instance
+		 * 
+		 * @return \System\Request
+		 */
+		public static function instance() {
+			return self::$instance;
 		}
 		
 		/**
