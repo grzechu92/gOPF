@@ -107,7 +107,7 @@
 				$separated = explode(':', $part);
 				$value = trim($separated[1]);
 				
-				$this->values->{trim($separated[0])} = (strpos($value, ' ') > 0) ? explode($value, ' ') : $value;
+				$this->values->{trim($separated[0])} = (strpos($value, ' ') > 0) ? explode(' ', $value) : $value;
 			}
 		}
 	}

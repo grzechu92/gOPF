@@ -1,7 +1,7 @@
 <?php
 	namespace System;
 	use \System\Router\Route;
-	
+		
 	/**
 	 * Matches request to matching bootstrap, and runns request processing procedure
 	 * 
@@ -56,9 +56,23 @@
 				
 				$rule->parse();
 				
-				 
+				if (isset($rule->values->validate)) {
+					foreach ($rule->values->validate as $controller) {
+						$class = '\\Controllers\\'.trim($controller).'Controller';
+												
+						if (!in_array('System\Router\ValidableInterface', class_implements($class))) {
+							throw new \System\Router\Exception(\System\I18n::translate('ROUTE_NOT_VALIDABLE', array($class)));
+						}
+						
+						if ($class::validate($rule)) {
+							$matched = $rule;
+							break;
+						}
+					}
+				} else {
+					$matched = $rule;
+				}
 				
-				$matched = $rule;
 				break;
 			}
 			

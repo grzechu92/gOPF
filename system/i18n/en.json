@@ -40,5 +40,7 @@
 	
 	"UNKNOWN_ENTITY_FIELD": "Field $1 of entity $2 does not exists",
 	"ENTITY_DOESNT_EXISTS": "Entity $1 does not exists",
-	"ENTITY_PARAMETERS": "Entity parameters cannot be empty"
+	"ENTITY_PARAMETERS": "Entity parameters cannot be empty",
+	
+	"ROUTE_NOT_VALIDABLE": "Class $1 does not implements ValidateInterface interface"
 }

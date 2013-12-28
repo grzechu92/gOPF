@@ -40,5 +40,7 @@
 	
 	"UNKNOWN_ENTITY_FIELD": "Pole $1 encji $2 nie istnieje",
 	"ENTITY_DOESNT_EXISTS": "Encja $1 nie istnieje",
-	"ENTITY_PARAMETERS": "Parametry encji nie mogą być puste"
+	"ENTITY_PARAMETERS": "Parametry encji nie mogą być puste",
+	
+	"ROUTE_NOT_VALIDABLE": "Klasa $1 nie implementuje interfejsu ValidateInterface"
 }
