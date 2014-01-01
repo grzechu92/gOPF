@@ -18,9 +18,14 @@
 		
 		/**
 		 * Connects to database using selected engine
-		 * 
-		 * @return mixed Database handler, if required
 		 */
 		public function connect();
+		
+		/**
+		 * Returns handler to database
+		 * 
+		 * @return mixed Database handler
+		 */
+		public function handler();
 	}
 ?>

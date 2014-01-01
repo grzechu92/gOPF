@@ -20,7 +20,7 @@
 			$handler = new \PDO($dsn, $this->config['user'], $this->config['pass'], $charset);
 			$handler->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 			
-			return $handler;
+			$this->handler = $handler;
 		}
 	}
 ?>

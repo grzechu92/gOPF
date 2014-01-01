@@ -16,10 +16,23 @@
 		protected $config = array();
 		
 		/**
+		 * Engine handler
+		 * @var mixed
+		 */
+		protected $handler;
+		
+		/**
 		 * @see \System\Database\EngineInterface::__construct()
 		 */
 		public function __construct($config) {
 			$this->config = $config;
+		}
+		
+		/**
+		 * @see \System\Database\EngineInterface::handler()
+		 */
+		public function handler() {
+			return $this->handler;
 		}
 	}
 ?>

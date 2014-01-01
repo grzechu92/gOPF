@@ -66,8 +66,13 @@
 		private function loadEngine() {
 			try {
 				$engine = new $this->config->engine($this->config->connection);
-				$this->connection = $engine->connect();
-				$this->connected = true;
+				
+				if ($engine instanceof \System\Database\EngineInterface) {
+					$engine->connect();
+					
+					$this->connected = true;
+					$this->connection = $engine->handler();
+				}
 			} catch (\Exception $exception) {
 				throw new \System\Database\Exception(\System\I18n::translate('DATABASE_ERROR', array($exception->getMessage())));
 			}

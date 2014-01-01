@@ -10,8 +10,8 @@
 	 */
 	abstract class Model {
 		/**
-		 * Framework database
-		 * @var \System\Database
+		 * Framework database handler
+		 * @var mixed
 		 */
 		protected $database;
 		
