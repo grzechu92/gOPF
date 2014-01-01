@@ -64,8 +64,12 @@
 		 * Loads required database engine
 		 */
 		private function loadEngine() {
-			$engine = new $this->config->engine($this->config->connection);
-			$this->connection = $engine->connect();
-			$this->connected = true;
+			try {
+				$engine = new $this->config->engine($this->config->connection);
+				$this->connection = $engine->connect();
+				$this->connected = true;
+			} catch (\Exception $exception) {
+				throw new \System\Database\Exception(\System\I18n::translate('DATABASE_ERROR', array($exception->getMessage())));
+			}
 		}
 	}
