@@ -1,35 +1,35 @@
 <?php
 	namespace gOPF\gODI;
-	use \gOPF\gODI\Statement\Select;
+	use \PDO;
 	
-	class Statement {
-		private $handler;
+	abstract class Statement {
+		const INT = PDO::PARAM_INT;
+		const STRING = PDO::PARAM_STR;
+		const BOOL = PDO::PARAM_BOOL;
 		
-		public function __construct(\PDO $handler) {
-			$this->handler = $handler;
+		private $PDO;
+		private $bind = array();
+		
+		final public function __construct(PDO $PDO) {
+			$this->PDO = $PDO;
 		}
 		
-		public function select($fields = '*') {
-			$statement = new Select($this);
-			$statement->fields($fields);
+		final public function bind(\gOPF\gODI\Statement\Bind $bind) {
+			$this->bind[] = $bind;
+		}
+		
+		final protected function execute() {
+			$q = $this->build();
+			var_dump($q, $this->bind);
 			
-			return $statement;
-		}
-		
-		public function delete() {
+			$query = $this->PDO->prepare($q);
 			
-		}
-		
-		public function insert() {
+			foreach ($this->bind as $bind) {
+				$query->bindValue($bind->name, $bind->value, $bind->type);
+			}
 			
-		}
-		
-		public function update() {
-			
-		}
-		
-		public function raw() {
-			return $this->handler;
+			$query->execute();
+			return $query->fetchAll(PDO::FETCH_OBJ);
 		}
 	}
 ?>

@@ -1,5 +1,5 @@
 <?php
-	namespace gOPF\gODI\Statement\Traits;
+	namespace gOPF\gODI\Traits;
 	
 	trait FieldsTrait {
 		private $fields = array();
@@ -10,6 +10,8 @@
 			} else {
 				$this->fields = array($fields);
 			}
+			
+			return $this;
 		}
 	}
 ?>
