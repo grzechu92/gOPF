@@ -29,7 +29,13 @@
 			}
 			
 			$query->execute();
-			return $query->fetchAll(PDO::FETCH_OBJ);
+			$result = $query->fetchAll(PDO::FETCH_OBJ);
+			
+			if (count($result) == 1) {
+				return $result[0];
+			} else {
+				return $result;
+			}
 		}
 	}
 ?>

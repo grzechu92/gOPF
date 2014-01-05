@@ -24,32 +24,32 @@
 			return $this->set('=', $value, $type);
 		}
 		
-		public function not($value, $type) {
-			
+		public function not($value, $type = Statement::INT) {
+			return $this->set('<>', $value, $type);
 		}
 		
-		public function gt($value, $type) {
-			
+		public function gt($value, $type = Statement::INT) {
+			return $this->set('>', $value, $type);
 		} 
 		
-		public function lt($value, $type) {
-			
+		public function lt($value, $type = Statement::INT) {
+			return $this->set('<', $value, $type);
 		}
 		
-		public function gte($value, $type) {
-				
+		public function gte($value, $type = Statement::INT) {
+			return $this->set('>=', $value, $type);
 		}
 		
-		public function lte($value, $type) {
-				
+		public function lte($value, $type = Statement::INT) {
+			return $this->set('<=', $value, $type);
 		}
 		
-		public function like($value, $type = 'string') {
-			
+		public function like($value, $type = Statement::STRING) {
+			return $this->set('LIKE', $value, $type);
 		}
 		
-		public function is($value, $type = 'string') {
-			
+		public function is($value, $type = Statement::STRING) {
+			return $this->set('IS', $value, $type);
 		}
 		
 		private function set($operator, $value, $type) {
