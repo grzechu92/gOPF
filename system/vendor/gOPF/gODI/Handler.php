@@ -27,7 +27,7 @@
 		}
 		
 		public function delete() {
-			
+			return new Delete($this->PDO);
 		}
 		
 		public function insert() {

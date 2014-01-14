@@ -4,12 +4,6 @@
 	trait TableTrait {
 		private $table;
 		
-		/**
-		 * 
-		 * 
-		 * @param string $table Table name
-		 * @return \gOPF\gODI\Statement\Statement;
-		 */
 		public function from($table) {
 			$this->table = $table;
 			

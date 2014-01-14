@@ -6,6 +6,8 @@
 		const INT = PDO::PARAM_INT;
 		const STRING = PDO::PARAM_STR;
 		const BOOL = PDO::PARAM_BOOL;
+		const ASC = 'ASC';
+		const DESC = 'DESC';
 		
 		private $PDO;
 		private $bind = array();
@@ -14,15 +16,16 @@
 			$this->PDO = $PDO;
 		}
 		
+		final public function __toString() {
+			return $this->build();
+		}
+		
 		final public function bind(\gOPF\gODI\Statement\Bind $bind) {
 			$this->bind[] = $bind;
 		}
 		
 		final protected function execute() {
-			$q = $this->build();
-			var_dump($q, $this->bind);
-			
-			$query = $this->PDO->prepare($q);
+			$query = $this->PDO->prepare($this->build());
 			
 			foreach ($this->bind as $bind) {
 				$query->bindValue($bind->name, $bind->value, $bind->type);

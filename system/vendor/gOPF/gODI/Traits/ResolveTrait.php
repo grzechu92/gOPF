@@ -14,10 +14,16 @@
 		}
 		
 		public function get($limit = 1, $offset = 0) {
-			$this->limit = $limit;
-			$this->offset = $offset;
+			$this->limit($limit, $offset);
 			
 			return $this->execute();
+		}
+		
+		public function limit($limit, $offset = 0) {
+			$this->limit = $limit;
+			$this->offset = $offset;
+				
+			return $this;
 		}
 	}
 ?>
