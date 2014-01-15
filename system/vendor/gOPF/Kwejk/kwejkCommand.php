@@ -34,9 +34,10 @@
 			
 			$lines[] = new Line('kwejk -status', 'show Kwejk session status');
 			$lines[] = new Line('kwejk -login -username [username] -password [password]', 'authorize user');
-			$lines[] = new Line('kwejk -proxy [ip::port]', 'set proxy connection IP');
+			$lines[] = new Line('kwejk -proxy [ip:port]', 'set proxy connection IP');
 			$lines[] = new Line('kwejk -captcha', 'generate and store single captcha for future use');
 			$lines[] = new Line('kwejk -upload -file [system path] -title [title]', 'upload image');
+			$lines[] = new Line('kwejk -ip', 'show API session IP');
 			
 			$help->addLines($lines);
 			return $help;
@@ -104,6 +105,10 @@
 				}
 				
 				$this->storage['proxy'] = $this->getParameter('proxy');
+			}
+			
+			if ($this->getParameter('ip')) {
+				$session->buffer($this->kwejk()->ip());
 			}
 		}
 		

@@ -19,6 +19,12 @@
 		const URL = 'http://kwejk.pl';
 		
 		/**
+		 * Proxy test URL
+		 * @var string
+		 */
+		const TEST_URL = 'http://ip.jsontest.com/';
+		
+		/**
 		 * Kwejk reCaptcha public key
 		 * @var string
 		 */
@@ -142,6 +148,15 @@
 		}
 		
 		/**
+		 * Returns current session IP, for testing proxy
+		 * 
+		 * @return string Current IP
+		 */
+		public function ip() {
+			return json_decode($this->sendRequest('', array(), array(), self::TEST_URL), true)['ip'];
+		}
+		
+		/**
 		 * Logs user out
 		 */
 		public function logout() {
@@ -154,17 +169,18 @@
 		 * @param string $url Path to page (for example: /login)
 		 * @param array $variables Variables to post (key => value)
 		 * @param array $opts Custom CURLOPT's (CURLOPT_* => value)
+		 * @param string $customURL Custom request URL
 		 * @return string Requested content with HTTP Headers
 		 */
-		public function sendRequest($url, $variables = array(), $opts = array()) {
+		public function sendRequest($url, $variables = array(), $opts = array(), $customURL = false) {
 			$c = curl_init();
-			curl_setopt($c, CURLOPT_URL, self::URL.$url);
+			curl_setopt($c, CURLOPT_URL, !$customURL ? self::URL.$url : $customURL);
 			curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($c, CURLOPT_COOKIEJAR, $this->cookie);
 			curl_setopt($c, CURLOPT_COOKIEFILE, $this->cookie);
 			curl_setopt($c, CURLOPT_USERAGENT, self::USERAGENT);
 			curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
-			curl_setopt($c, CURLOPT_HEADER, 1);
+			curl_setopt($c, CURLOPT_HEADER, 0);
 			
 			if (!empty($this->proxy)) {
 				list($ip, $proxy) = explode(':', $this->proxy); 
