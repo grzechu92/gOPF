@@ -1,6 +1,7 @@
 <?php 
 	namespace System\Terminal\Command;
 	use \System\Config;
+	use \System\Log;
 	use \System\Terminal\Status;
 	use \System\Terminal\Help;
 	
@@ -89,15 +90,23 @@
 			$user = $config->getArrayValue('users', $status->user);
 			
 			if (empty($user) || $user != sha1($this->getParameter('password'))) {
+				$message = 'Terminal login failed! ';
+				
 				sleep(1);
 				$this->getLogin($status);
 				$status->buffer('Access denied!');
 			} else {
+				$message = 'Terminal login successful! ';
+				
 				$status->prefix = null;
 				$status->prompt = null;
 				$status->logged = true;
 				$status->type = Status::TEXT;
 			}
+			
+			$message .= '('.$status->user.'@'.$_SERVER['REMOTE_ADDR'].')';
+			
+			new Log($message, Log::NOTICE, Log::SYSTEM);
 			
 			return $status;
 		}
