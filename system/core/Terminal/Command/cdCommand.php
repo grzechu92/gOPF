@@ -115,11 +115,9 @@
 		 * @return string Valid path
 		 */
 		private function buildPath($path) {
-			if ($path[strlen($path)-1] != DIRECTORY_SEPARATOR) {
-				$path .= DIRECTORY_SEPARATOR;
-			}
-			
-			return $path;
+			$path = DIRECTORY_SEPARATOR.str_replace(__ROOT_PATH, '', realpath(__ROOT_PATH.$path)).DIRECTORY_SEPARATOR;
+						
+			return str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
 		}
 	}
 ?>
