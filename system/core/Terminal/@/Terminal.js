@@ -189,7 +189,7 @@ Terminal = {
 			Terminal.uploader.uploading = false;
 		}
 		
-		document.scrollTop = document.body.scrollHeight;
+		$("#command").focus();
 		
 		Terminal.position = data.history.length;
 	},
