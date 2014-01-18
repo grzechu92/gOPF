@@ -181,6 +181,7 @@
 			curl_setopt($c, CURLOPT_USERAGENT, self::USERAGENT);
 			curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
 			curl_setopt($c, CURLOPT_HEADER, 0);
+			curl_setopt($c, CURLOPT_TIMEOUT, 15);
 			
 			if (!empty($this->proxy)) {
 				list($ip, $proxy) = explode(':', $this->proxy); 
