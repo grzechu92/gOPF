@@ -8,7 +8,7 @@
 			if (is_array($fields)) {
 				$this->fields = $fields;
 			} else {
-				$this->fields = array($fields);
+				$this->fields[] = $fields;
 			}
 			
 			return $this;

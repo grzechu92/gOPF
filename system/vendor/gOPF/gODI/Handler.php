@@ -19,23 +19,22 @@
 		
 		/**
 		 * 
-		 * @param string $fields
 		 * @return \gOPF\gODI\Statement\Select
 		 */
-		public function select($fields = '*') {
-			return (new Select($this->PDO))->fields($fields);
+		public function select($table) {
+			return (new Select($this->PDO))->table($table);
 		}
 		
-		public function delete() {
-			return new Delete($this->PDO);
+		public function delete($table) {
+			return (new Delete($this->PDO))->table($table);
 		}
 		
-		public function insert() {
-			
+		public function insert($table) {
+			return (new Insert($this->PDO))->table($table);
 		}
 		
-		public function update() {
-			
+		public function update($table) {
+			return (new Update($this->PDO))->table($table);
 		}
 		
 		public function raw() {

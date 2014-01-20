@@ -5,7 +5,7 @@
 		use \gOPF\gODI\Traits\FieldsTrait;
 		use \gOPF\gODI\Traits\TableTrait; 
 		use \gOPF\gODI\Traits\SearchTrait;
-		use \gOPF\gODI\Traits\ResolveTrait;
+		use \gOPF\gODI\Traits\LimitTrait;
 		use \gOPF\gODI\Traits\SortTrait;
 		
 		public function build() {
@@ -18,6 +18,16 @@
 			);
 			
 			return trim(implode(' ', $parts));
+		}
+		
+		public function all() {
+			return $this->execute(true);
+		}
+		
+		public function get($limit = 1, $offset = 0) {
+			$this->limit($limit, $offset);
+				
+			return $this->execute(true);
 		}
 	}
 ?>

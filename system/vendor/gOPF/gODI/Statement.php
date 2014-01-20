@@ -24,7 +24,7 @@
 			$this->bind[] = $bind;
 		}
 		
-		final protected function execute() {
+		final protected function execute($values) {
 			$query = $this->PDO->prepare($this->build());
 			
 			foreach ($this->bind as $bind) {
@@ -32,12 +32,17 @@
 			}
 			
 			$query->execute();
-			$result = $query->fetchAll(PDO::FETCH_OBJ);
 			
-			if (count($result) == 1) {
-				return $result[0];
+			if ($values) {
+				$result = $query->fetchAll(PDO::FETCH_OBJ);
+				
+				if (count($result) == 1) {
+					return $result[0];
+				} else {
+					return $result;
+				}
 			} else {
-				return $result;
+				return $query->rowCount();
 			}
 		}
 	}

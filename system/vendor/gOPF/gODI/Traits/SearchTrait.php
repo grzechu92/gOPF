@@ -5,11 +5,6 @@
 	trait SearchTrait {
 		private $search = array();
 		
-		/**
-		 * 
-		 * @param string $field
-		 * @return \gOPF\gODI\Statement\Where
-		 */
 		public function where($field) {
 			return new Where($this, $this->search, $field);
 		}
