@@ -11,9 +11,11 @@
 		
 		private $PDO;
 		private $bind = array();
+		protected $table;
 		
-		final public function __construct(PDO $PDO) {
+		final public function __construct(PDO $PDO, $table) {
 			$this->PDO = $PDO;
+			$this->table = $table;
 		}
 		
 		final public function __toString() {

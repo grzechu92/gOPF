@@ -3,7 +3,6 @@
 	
 	class Insert extends Statement {
 		use \gOPF\gODI\Traits\ValuesTrait;
-		use \gOPF\gODI\Traits\TableTrait;
 		
 		public function build() {
 			$parts = array(

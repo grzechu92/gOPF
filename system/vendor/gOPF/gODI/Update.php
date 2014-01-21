@@ -3,7 +3,6 @@
 	
 	class Update extends Statement {
 		use \gOPF\gODI\Traits\ValuesTrait;
-		use \gOPF\gODI\Traits\TableTrait;
 		use \gOPF\gODI\Traits\SearchTrait;
 		use \gOPF\gODI\Traits\LimitTrait;
 		use \gOPF\gODI\Traits\SortTrait;

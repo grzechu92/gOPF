@@ -22,19 +22,19 @@
 		 * @return \gOPF\gODI\Statement\Select
 		 */
 		public function select($table) {
-			return (new Select($this->PDO))->table($table);
+			return new Select($this->PDO, $table);
 		}
 		
 		public function delete($table) {
-			return (new Delete($this->PDO))->table($table);
+			return new Delete($this->PDO, $table);
 		}
 		
 		public function insert($table) {
-			return (new Insert($this->PDO))->table($table);
+			return new Insert($this->PDO, $table);
 		}
 		
 		public function update($table) {
-			return (new Update($this->PDO))->table($table);
+			return new Update($this->PDO, $table);
 		}
 		
 		public function raw() {

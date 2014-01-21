@@ -2,7 +2,6 @@
 	namespace gOPF\gODI;
 	
 	class Delete extends Statement {
-		use \gOPF\gODI\Traits\TableTrait; 
 		use \gOPF\gODI\Traits\SearchTrait;
 		use \gOPF\gODI\Traits\SortTrait;
 		use \gOPF\gODI\Traits\LimitTrait;
