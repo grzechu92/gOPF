@@ -15,8 +15,17 @@
 		 * @see System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
-			$jobs = $this->getJobs();
-			
+			$this->execute(date('H:i'));
+		}
+		
+		/**
+		 * Process cron request
+		 * 
+		 * @param string $time Time index to execute (HH:MM)
+		 */
+		public function execute($time) {
+			$jobs = $this->getJobs($time);
+				
 			if (count($jobs) > 0) {
 				foreach ($jobs as $job) {
 					if (!empty($job)) {
@@ -39,16 +48,17 @@
 		/**
 		 * Returns unique jobs list, which should be done at this time
 		 * 
+		 * @param string $time Time index to execute
 		 * @return array Jobs to do
 		 */
-		private function getJobs() {
+		private function getJobs($time) {
 			$application = Config::factory('cron.ini', Config::APPLICATION);
 			$system = Config::factory('cron.ini', Config::SYSTEM);
 				
 			$jobs = array_merge_recursive($application->getContent(), $system->getContent());
 			$toDo = array();
 			
-			$indexes = $this->getCurrentIndexes();
+			$indexes = $this->getCurrentIndexes($time);
 			
 			foreach ($indexes as $key) {
 				if (!empty($jobs[$key])) {
@@ -80,10 +90,11 @@
 		/**
 		 * Generates current time indexes to call by cron engine
 		 * 
+		 * @param string $time Time index to find
 		 * @return array Array with time values
 		 */
-		private function getCurrentIndexes() {
-			$time = date('H:i');
+		private function getCurrentIndexes($time) {
+			$time = $time;
 			$return = array($time);
 			
 			$parts = array();
