@@ -32,7 +32,7 @@
 			$session = self::$session;
 			
 			if ($this->getParameter('readable')) {
-				$session->buffer(date('H:m:s'));
+				$session->buffer(date('H:i:s'));
 			} else {
 				$session->buffer(time());
 			}
