@@ -59,7 +59,7 @@
 					continue;
 				}
 				
-				usleep($interval*1000);
+				usleep(1000 * $interval);
 			}
 			
 			throw new Exception(I18n::translate('SAFE_SERIALIZE_ERROR'));
