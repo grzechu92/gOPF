@@ -1,9 +1,8 @@
 <?php
 	namespace System\Dispatcher;
-	use System\Request;
 	use System\Config;
-	
-	/**
+
+/**
 	 * CRON request processing context
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -11,6 +10,12 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Cron extends Context implements ContextInterface {
+        /**
+         * Cron config filename
+         * @var string
+         */
+        const FILENAME = 'cron.ini';
+
 		/**
 		 * @see System\Dispatcher\ContextInterface::process()
 		 */
@@ -38,7 +43,7 @@
 		/**
 		 * Splits jobs separated by comma, and returns it
 		 * 
-		 * @param string $jobs String with sperated jobs
+		 * @param string $jobs String with separated jobs
 		 * @return array Separated jobs array
 		 */
 		private function splitJobs($jobs) {
@@ -52,8 +57,8 @@
 		 * @return array Jobs to do
 		 */
 		private function getJobs($time) {
-			$application = Config::factory('cron.ini', Config::APPLICATION);
-			$system = Config::factory('cron.ini', Config::SYSTEM);
+			$application = Config::factory(self::FILENAME, Config::APPLICATION);
+			$system = Config::factory(self::FILENAME, Config::SYSTEM);
 				
 			$jobs = array_merge_recursive($application->getContent(), $system->getContent());
 			$toDo = array();
@@ -94,9 +99,7 @@
 		 * @return array Array with time values
 		 */
 		private function getCurrentIndexes($time) {
-			$time = $time;
 			$return = array($time);
-			
 			$parts = array();
 			
 			foreach (explode(':', $time) as $index=>$double) {
