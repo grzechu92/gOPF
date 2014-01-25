@@ -37,6 +37,7 @@
 		 * 
 		 * @param string $method Method name
 		 * @param array $args Array with arguments
+         * @return mixed Function result
 		 */
 		public function __call($method, $args) {
 			return call_user_func_array($this->{$method}, $args);

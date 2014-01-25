@@ -47,6 +47,7 @@
 		 * 
 		 * @param string $name Section name
 		 * @param string $action Action in controller to call
+         * @return bool Section rendering status
 		 */
 		public static function sectionSlot($name, $action = 'main') {
 			if (empty(self::$instance->sections[$name])) {
@@ -65,6 +66,7 @@
 				foreach (self::$instance->sections[$name] as $key=>$section) {
 					if (empty(self::$instance->buffer[$name])) {
 						echo $section->getContent();
+                        return true;
 					}
 				}
 			}
