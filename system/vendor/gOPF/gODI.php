@@ -1,7 +1,7 @@
 <?php
 	namespace gOPF;
-	
-	/**
+
+    /**
 	 * gODI - gODI Object Database Interface
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -16,7 +16,6 @@
 		private $statement;
 		
 		/**
-		 * 
 		 * @see \System\Database\EngineInterface::handler()
 		 */
 		public function handler() {

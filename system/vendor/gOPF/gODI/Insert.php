@@ -1,10 +1,20 @@
 <?php
 	namespace gOPF\gODI;
-	
+
+    /**
+     * gODI Insert statement
+     *
+     * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+     * @copyright Copyright (C) 2011-2013, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+     * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+     */
 	class Insert extends Statement {
 		use \gOPF\gODI\Traits\ValuesTrait;
-		
-		public function build() {
+
+        /**
+         * @see \gOPF\gODI\Statement::build()
+         */
+        public function build() {
 			$parts = array(
 				'INSERT INTO '.$this->table,
 				'SET '.implode($this->values, ', ')
@@ -12,8 +22,13 @@
 			
 			return trim(implode(' ', $parts));
 		}
-		
-		public function make() {
+
+        /**
+         * Execute statement
+         *
+         * @return int Affected rows
+         */
+        public function make() {
 			return $this->execute(false);
 		}
 	}
