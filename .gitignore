@@ -1,7 +1,9 @@
 .project
 .settings/*
+.idea/*
 .buildpath
 application/log/*
 system/log/*
 application/var/*
 system/var/*
+application/*
