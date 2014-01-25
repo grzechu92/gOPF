@@ -22,7 +22,7 @@
  * @/System/Terminal/style.css
  * 
  * 
- * Version 1.1
+ * Version 1.2
  * 
  * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -46,13 +46,13 @@ Terminal = {
 		command: null,
 		complete: null,
 		updated: null,
-		storage: new Array(),
-		history: new Array(),
-		files: new Array()
+		storage: [],
+		history: [],
+		files: []
 	},
 	
 	uploader: {
-		queue: new Array(),
+		queue: [],
 		uploading: false,
 		locked: false,
 		upload: function() {
@@ -100,7 +100,7 @@ Terminal = {
 	
 	send: function(command) {
 		if (!Terminal.status.processing) {
-			var command = (Terminal.status.prefix == null) ? command : Terminal.status.prefix + command;
+			command = (Terminal.status.prefix == null) ? command : Terminal.status.prefix + command;
 			
 			$.gPAE("sendEvent", "command", {command: command, secret: !($("#command").prop("type") == "text")});
 			Terminal.lock();
@@ -165,7 +165,7 @@ Terminal = {
 			var after = command.val().slice(position);
 			var before = command.val().slice(0, position);
 			
-			var command = before+data.complete+after;
+			command = before+data.complete+after;
 			
 			if (command != null) {
 				$("#command").val(command);
@@ -188,14 +188,13 @@ Terminal = {
 			$("#"+c).html(data.files[c] ? "DONE" : "FAIL");
 			Terminal.uploader.uploading = false;
 		}
-		
-		$("#command").focus();
-		
+
 		Terminal.position = data.history.length;
 	},
 	
 	print: function(content) {
 		$("#console").append(content);
+        $("#command").focus();
 	},
 	
 	clear: function() {
