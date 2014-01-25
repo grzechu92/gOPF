@@ -61,7 +61,6 @@
                     }
 
                     $buffer .= $hour.' = '.implode("\n        ", $list)."\n\n";
-                    self::$session->buffer(print_r($list, true));
                 }
 
                 self::$session->buffer($buffer);
