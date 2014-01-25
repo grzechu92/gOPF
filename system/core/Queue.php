@@ -24,7 +24,7 @@
 		
 		/**
 		 * Queue elements
-		 * @var array
+		 * @var \System\Queue\Element[]
 		 */
 		public $elements = array();
 		

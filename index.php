@@ -26,7 +26,7 @@
 	define('__STAGE', __DEVELOPMENT);
 
 	/**
-	 * Set error reporing level
+	 * Set error reporting level
 	 */
 	error_reporting(__STAGE == __PRODUCTION ? 0 : E_ALL);
 	
