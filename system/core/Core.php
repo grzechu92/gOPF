@@ -1,5 +1,6 @@
 <?php
 	namespace System;
+
 	
 	/**
 	 * Holds all framework modules in place
@@ -29,7 +30,7 @@
 		
 		/**
 		 * Core object instance
-		 * @var Core
+		 * @var \System\Core
 		 */
 		public static $instance;
 		
@@ -41,7 +42,7 @@
 		
 		/**
 		 * Array with events
-		 * @var array
+		 * @var \System\Core\Events[]
 		 */
 		private static $events = array();
 		
@@ -57,7 +58,7 @@
 		/**
 		 * Returns instance of Core object
 		 * 
-		 * @return Core Object instance
+		 * @return \System\Core Object instance
 		 */
 		public static function instance() {
 			return self::$instance;
@@ -110,7 +111,7 @@
 				}
 			}
 		}
-		
+
 		/**
 		 * Initializes all important core components
 		 */

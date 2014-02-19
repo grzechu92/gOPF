@@ -1,7 +1,8 @@
 <?php 
 	namespace System;
-	use System\Storage\Element;
-	
+    use \System\Container as CoreContainer;
+    use \System\Storage\Container;
+
 	/**
 	 * Storage module of framework
 	 *
@@ -10,11 +11,16 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Storage {
+        const APC = 'APCDriver';
+        const SESSION = 'DefaultDriver';
+        const FILESYSTEM = 'FilesystemDriver';
+        const SERIALIZED_FILESYSTEM = 'SerialziedFilesystemDriver';
+
 		/**
-		 * Storage elements container
-		 * @var array
+		 * Storage containers
+		 * @var \System\Storage\Container[]
 		 */
-		private static $elements = array();
+		private static $containers = array();
 		
 		/**
 		 * Storage module configuration
@@ -28,86 +34,106 @@
 		public function __construct() {
 			self::$config = Config::factory('storage.ini', Config::SYSTEM);
 		}
+
+        /**
+         * Returns custom parameters container
+         *
+         * @param string $name Container name
+         * @param string $type Container driver type
+         * @return \System\Storage\Container Container instance
+         */
+        public static function factory($name, $type) {
+            return self::initContainer($name, $type);
+        }
 		
 		/**
-		 * Sets value into storage
+		 * Sets value into storage container
 		 * 
-		 * @param string $name Storage name
-		 * @param mixed $value Storage value
+		 * @param string $name Storage container name
+		 * @param mixed $value Storage container value
 		 */
 		public static function set($name, $value) {
-			self::initElement($name);
+			self::initContainer($name);
 			
-			self::$elements[$name]->set($value);
+			self::$containers[$name]->set($value);
 		}
 		
 		/**
-		 * Returns value of storage element 
+		 * Returns value of storage container
 		 * 
-		 * @param string $name Storage name
-		 * @return mixed Storage value
+		 * @param string $name Storage container name
+		 * @return mixed Storage container value
 		 */
 		public static function get($name) {
-			self::initElement($name);
+			self::initContainer($name);
 			
-			return self::$elements[$name]->get();
+			return self::$containers[$name]->get();
 		}
 		
 		/**
-		 * Removes storage element driver
+		 * Removes storage container
 		 * 
-		 * @param string $name Storage name
+		 * @param string $name Storage container name
 		 */
 		public static function delete($name) {
-			if (!empty(self::$elements[$name])) {
-				self::$elements[$name]->remove();
-				unset(self::$elements[$name]);
+			if (!empty(self::$containers[$name])) {
+				self::$containers[$name]->remove();
+
+				unset(self::$containers[$name]);
 			}
 		}
 		
 		/**
-		 * Reads value of storage from driver
+		 * Reads value of container from driver
 		 * 
-		 * @param string $name Storage name
+		 * @param string $name Storage container name
 		 */
 		public static function read($name) {
-			self::initElement($name);
+			self::initContainer($name);
 			
-			self::$elements[$name]->read();
+			self::$containers[$name]->read();
 		}
 		
 		/**
-		 * Saves value of storage into driver
+		 * Saves value of container into driver
 		 * 
-		 * @param string $name Storage name
+		 * @param string $name Storage container name
 		 */
 		public static function write($name) {
-			self::$elements[$name]->write();
+			self::$containers[$name]->write();
 		}
 		
 		/**
-		 * Marks storage element, as temporary
+		 * Marks storage container, as temporary
 		 * 
-		 * @param string $name Storage name
+		 * @param string $name Storage container name
 		 * @param bool $temp Is temporary?
 		 */
 		public static function temporary($name, $temp = true) {
-			self::initElement($name);
+			self::initContainer($name);
 			
-			self::$elements[$name]->temporary = $temp;
+			self::$containers[$name]->temporary = $temp;
 		}
-		
-		/**
-		 * Initiates driver of storage element with specified name
-		 * 
-		 * @param string $name Storage name
-		 */
-		private static function initElement($name) {
-			if (!isset(self::$elements[$name])) {
-				$driver = '\\System\\Storage\\'.self::$config->driver;
+
+        /**
+         * Initiates storage container with specified name and driver
+         *
+         * @param string $name Storage name
+         * @param string $driver Driver name
+         * @return \System\Storage\Container Storage element
+         */
+		private static function initContainer($name, $driver = '') {
+            if (empty($driver)) {
+                $driver = self::$config->driver;
+            }
+
+			if (!isset(self::$containers[$name])) {
+				$driver = '\\System\\Storage\\'.$driver;
 				
-				self::$elements[$name] = new Element($name, null, new $driver(sha1($name), 0));
-			}
+				return self::$containers[$name] = new Container($name, null, new $driver(sha1($name), 0));
+			} else {
+                return self::$containers[$name];
+            }
 		}
 	}
 ?>

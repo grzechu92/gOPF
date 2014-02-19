@@ -2,13 +2,13 @@
 	namespace System\Storage;
 	
 	/**
-	 * Storage element class
+	 * Storage container class
 	 * 
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class Element {
+	class Container {
 		/**
 		 * Element name
 		 * @var string
@@ -41,7 +41,7 @@
 		
 		
 		/**
-		 * Initializes element, saves with in requested data
+		 * Initializes container, saves with in requested data
 		 * 
 		 * @param string $name Storage element name
 		 * @param mixed $value Storage element value
@@ -56,7 +56,7 @@
 		}
 		
 		/**
-		 * Saves element if required
+		 * Saves container if required
 		 */
 		public function __destruct() {
 			if (!$this->temporary && empty($this->value)) {
@@ -71,7 +71,7 @@
 		}
 		
 		/**
-		 * Reads value of element from driver
+		 * Reads value of container from driver
 		 */
 		public function read() {
 			$this->value = $this->driver->get();
@@ -86,9 +86,9 @@
 		}
 		
 		/**
-		 * Sets new value of element
+		 * Sets new value of container
 		 * 
-		 * @param mixed $value Element value
+		 * @param mixed $value Container value
 		 */
 		public function set($value) {
 			$this->save = true;
@@ -96,9 +96,9 @@
 		}
 		
 		/**
-		 * Returns element value
+		 * Returns container value
 		 * 
-		 * @return mixed Element value
+		 * @return mixed Container value
 		 */
 		public function get() {
 			return $this->value;
