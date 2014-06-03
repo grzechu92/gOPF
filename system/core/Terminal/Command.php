@@ -123,12 +123,12 @@
 		}
 		
 		/**
-		 * @see @see \System\Terminal\CommandInterface::onInstall()
+		 * @see \System\Terminal\CommandInterface::onInstall()
 		 */
 		public function onInstall() {}
 		
 		/**
-		 * @see @see \System\Terminal\CommandInterface::onUninstall()
+		 * @see \System\Terminal\CommandInterface::onUninstall()
 		 */
 		public function onUninstall() {}
 		

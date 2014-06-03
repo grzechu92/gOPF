@@ -118,7 +118,7 @@
 		 * @throws \System\Filesystem\Exception
 		 */
 		public function setContent($content) {
-			if (!fwrite($this->handle, $content)) {
+			if (fwrite($this->handle, $content) === false) {
 				throw new Exception(I18n::translate('FILESYSTEM_UNABLE_WRITE', array($this->path)), $this->path);
 			}
 		}
