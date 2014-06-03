@@ -1,7 +1,5 @@
 <?php 
 	namespace System;
-    use \System\Container as CoreContainer;
-    use \System\Storage\Container;
 
 	/**
 	 * Storage module of framework
@@ -130,7 +128,7 @@
 			if (!isset(self::$containers[$name])) {
 				$driver = '\\System\\Storage\\'.$driver;
 				
-				return self::$containers[$name] = new Container($name, null, new $driver(sha1($name), 0));
+				return self::$containers[$name] = new \System\Storage\Container($name, null, new $driver(sha1($name), 0));
 			} else {
                 return self::$containers[$name];
             }
