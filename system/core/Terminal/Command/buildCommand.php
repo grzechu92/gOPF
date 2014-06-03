@@ -17,7 +17,7 @@
 		 * Array with ignored filenames
 		 * @var array
 		 */
-		private $ignored = array('.', '..', '.git', '.gitignore', '.settings', '.project', '.buildpath');
+		private $ignored = array('.', '..', '.git', '.gitignore', '.settings', '.project', '.buildpath', '.idea' , '.keep');
 		
 		/**
 		 * Path to output directory
@@ -34,6 +34,7 @@
 			$help = new \System\Terminal\Help('Build framework version');
 			$lines[] = new Line('build', 'upgrades build value in Core class');
 			$lines[] = new Line('build -output [path]', 'creates clean instance of framework in specified directory');
+            $lines[] = new Line('build -output [path] -bare', 'creates clean and bare instance of framework in specified directory');
 			$lines[] = new Line('build -version [version]', 'upgrades build value and version in Core class');
 			
 			$help->addLines($lines);
@@ -93,14 +94,18 @@
 				$session->buffer('Wrong output path!');
 				return;
 			}
-				
-			$this->output = $this->output.'/'.$version.' (build '.$build.')';
-			$session->clear = true;
-			$session->buffer('Creating output directory: '.$this->output);
-				
+
+            $session->clear = true;
+
+            if (!$this->getParameter('bare')) {
+                $this->output = $this->output.'/'.$version.' (build '.$build.')';
+                $session->buffer('Creating output directory: '.$this->output);
+                Filesystem::mkdir($this->output);
+            } else {
+                $session->buffer('Creating bare instance of gOPF '.$version.' (build '.$build.')');
+            }
+
 			sleep(2);
-				
-			Filesystem::mkdir($this->output);
 			$this->iterate($session, __ROOT_PATH);
 				
 			$session->buffer('Fixing access rights...');
@@ -114,8 +119,8 @@
 		 * @param string $directory Directory to iterate
 		 * @param string $context Target directory context
 		 */
-		private function iterate(Session $session, $directory, $context = false) {
-			if (!$context) {
+		private function iterate(Session $session, $directory, $context = '') {
+			if ($context == '') {
 				$context = $this->output;
 			}
 			
