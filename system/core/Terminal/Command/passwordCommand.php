@@ -92,8 +92,10 @@
 		private function changeUserPassword(Status $status, $user) {
 			$error = false;
 			$config = Config::factory('terminal.ini', Config::SYSTEM, true);
-			
-			if (empty($config->getArrayValue('users', $user))) {
+
+            $users = $config->getArrayValue('users', $user);
+
+			if (empty($users)) {
 				$error = true;
 				$status->buffer('User do not exists');
 			}
