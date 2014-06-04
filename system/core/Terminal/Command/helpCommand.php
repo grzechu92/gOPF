@@ -5,7 +5,7 @@
 	use \System\Terminal\Help\Line;
 	
 	/**
-	 * Terminal command: help (shows availiable commands with them description)
+	 * Terminal command: help (shows available commands with them description)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -23,12 +23,12 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$help = new Help('Availiable commands and a few of important shortcuts');
+			$help = new Help('Available commands and a few of important shortcuts');
 			$lines = array();
 			$config = Config::factory('terminal.ini', Config::SYSTEM);
 			$commands = $config->get('commands');
 			
-			foreach ($commands as $name=>$class) {
+			foreach ($commands as $name => $class) {
 				$class = new $class();				
 				$lines[] = new Line($name, $class->help()->description);
 			}

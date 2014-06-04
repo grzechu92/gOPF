@@ -22,5 +22,14 @@
 			$this->statement = new \gOPF\gODI\Handler($this->handler);
 			return $this->statement;
 		}
-	}
+
+        /**
+         * @see \System\Database\EngineInterface::query()
+         */
+        public function query($query) {
+            $result = $this->statement->raw()->query($query);
+
+            return $result->fetch(\PDO::FETCH_OBJ);
+        }
+    }
 ?>

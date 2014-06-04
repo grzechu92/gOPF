@@ -9,6 +9,12 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class PDO extends Engine implements EngineInterface {
+        /**
+         * @see \System\Database\Engine::$handler
+         * @var \PDO
+         */
+        protected $handler;
+
 		/**
 		 * @see \System\Database\EngineInterface::__construct()
 		 */
@@ -22,5 +28,14 @@
 			
 			$this->handler = $handler;
 		}
-	}
+
+        /**
+         * @see \System\Database\EngineInterface::query()
+         */
+        public function query($query) {
+            $result = $this->handler->query($query);
+
+            return $result->fetch(\PDO::FETCH_OBJ);
+        }
+    }
 ?>

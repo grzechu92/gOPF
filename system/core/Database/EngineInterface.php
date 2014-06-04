@@ -27,5 +27,13 @@
 		 * @return mixed Database handler
 		 */
 		public function handler();
+
+        /**
+         * Execute query no matter what engine is selected
+         *
+         * @param string $query Query to execute
+         * @return \stdClass Query result
+         */
+        public function query($query);
 	}
 ?>
