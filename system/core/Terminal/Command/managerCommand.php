@@ -29,7 +29,7 @@
 		 * @var string
 		 */
 		const COMMAND_NOT_EXISTS = 'Command does\'t exist!';
-		
+
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
@@ -37,8 +37,8 @@
 			$lines = array();
 			$help = new \System\Terminal\Help('Manage installed commands');
 			
-			$lines[] = new Line('manager -install -command [command] -class [class]', 'adds new command to command registry');
-			$lines[] = new Line('manager -uninstall -command [command]', 'removes command from command registry');
+			$lines[] = new Line('manager -install [class]', 'adds new command to command registry');
+			$lines[] = new Line('manager -uninstall [command]', 'removes command from command registry');
 			$lines[] = new Line('manager -list', 'list all availiable commands');
 			
 			$help->addLines($lines);
@@ -53,29 +53,29 @@
 			$config = Config::factory('terminal.ini', Config::SYSTEM, true);
 			$output = '';
 			
-			$command = trim($this->getParameter('command'));
-			$class = trim($this->getParameter('class'));
-			
 			if ($this->getParameter('list')) {
 				$output = $this->listCommands($config);
 			}
-			
+
 			if ($this->getParameter('install')) {
-				$output = $this->installCommand($config, $command, $class);
+                $class = trim($this->getParameter('install'));
+
+				$output = $this->installCommand($config, $class);
 			}
-			
+
 			if ($this->getParameter('uninstall')) {
+                $command = trim($this->getParameter('uninstall'));
+
 				$output = $this->uninstallCommand($config, $command);
 			}
-			
+
 			if (!empty($output)) {
 				\System\Terminal::$session->buffer($output);
 			}
-			
 		}
 		
 		/**
-		 * Lists availiable commands
+		 * Lists available commands
 		 * 
 		 * @param \System\Config\File $config Terminal config
 		 * @return string Terminal output
@@ -93,16 +93,11 @@
 		/**
 		 * Adds new command to registry
 		 * 
-		 * @param File $config Terminal config
-		 * @param string $command Command to add
+		 * @param \System\Config\File $config Terminal config
 		 * @param string $class Class with namespace to command
 		 * @return string Terminal output
 		 */
-		private function installCommand(File $config, $command, $class) {
-			if (empty($command)) {
-				return self::EMPTY_COMMAND;
-			}
-			
+		private function installCommand(File $config, $class) {
 			try {
 				$object = new $class();
 				
@@ -111,17 +106,16 @@
 				}
 				
 				$object->onInstall();
+                $config->setArrayValue('commands', $object->getName(), $class);
 			} catch (\System\Loader\Exception $e) {
 				return self::WRONG_CLASS;
 			}
-			
-			$config->setArrayValue('commands', $command, $class);
 		}
 		
 		/**
 		 * Removes command from registry
 		 * 
-		 * @param File $config Terminal config
+		 * @param \System\Config\File $config Terminal config
 		 * @param string $command Command to remove
 		 * @return string Terminal output
 		 */

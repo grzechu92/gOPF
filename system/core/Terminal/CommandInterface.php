@@ -30,5 +30,12 @@
 		 * Action when command is uninstalled
 		 */
 		public function onUninstall();
+
+        /**
+         * Return command name
+         *
+         * @return string Command name
+         */
+        public function getName();
 	}
 ?>

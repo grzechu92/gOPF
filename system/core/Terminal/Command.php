@@ -131,6 +131,16 @@
 		 * @see \System\Terminal\CommandInterface::onUninstall()
 		 */
 		public function onUninstall() {}
+
+        /**
+         * @see \System\Terminal\CommandInterface::getName();
+         */
+        public function getName() {
+            $clean = str_replace(\System\Terminal::COMMAND_SUFFIX, '', get_called_class());
+            $exploded = explode('\\', $clean);
+
+            return $exploded[count($exploded) - 1];
+        }
 		
 		/**
 		 * Checks if parameter has been passed with command

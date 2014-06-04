@@ -15,6 +15,12 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Terminal {
+        /**
+         * Terminal command suffix
+         * @var string
+         */
+        const COMMAND_SUFFIX = 'Command';
+
 		/**
 		 * Terminal instance handler
 		 * @var \System\Terminal\Terminal

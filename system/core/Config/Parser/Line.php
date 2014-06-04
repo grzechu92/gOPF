@@ -63,9 +63,11 @@
 			if (!empty($this->content) && $this->content[0] == '[') {
 				$this->array = true;
 				$this->name = trim(str_replace(['[', ']'], ['', ''], $this->content));
-			}
+            }
+
+            $trim = trim($this->content);
 			
-			if (empty(trim($this->content))) {
+			if (empty($trim)) {
 				$this->content = '';
 				$this->empty = true;
 			}
