@@ -62,6 +62,15 @@
 		public function update($table) {
 			return new Update($this->PDO, $table);
 		}
+
+        /**
+         * Returns transaction component
+         *
+         * @return \gOPF\gODI\Transaction
+         */
+        public function transaction() {
+            return new Transaction($this->PDO);
+        }
 		
 		/**
 		 * Returns raw PDO connection
