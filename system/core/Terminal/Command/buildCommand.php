@@ -17,7 +17,7 @@
 		 * Array with ignored filenames
 		 * @var array
 		 */
-		private $ignored = array('.', '..', '.git', '.gitignore', '.settings', '.project', '.buildpath', '.idea' , '.keep');
+		private $ignored = array('.', '..', '.git', '.settings', '.project', '.buildpath', '.idea');
 		
 		/**
 		 * Path to output directory
