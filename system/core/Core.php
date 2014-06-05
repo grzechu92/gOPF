@@ -23,7 +23,7 @@
 		const BUILD = '140605102142';
 		
 		/**
-		 * gOPF Core stage (__DEVELOPMENT or __PRODCUTION)
+		 * gOPF Core stage (__DEVELOPMENT or __PRODUCTION)
 		 * @var int
 		 */
 		const STAGE = __STAGE;
