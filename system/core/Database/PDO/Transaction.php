@@ -1,8 +1,8 @@
 <?php
-    namespace gOPF\gODI;
+    namespace System\Database\PDO;
 
     /**
-     * gODI transaction component
+     * Transaction implementation for PDO
      *
      * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
      * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -10,39 +10,39 @@
      */
     class Transaction implements \System\Database\TransactionInterface {
         /**
-         * PDO connector
+         * PDO handler
          * @var \PDO
          */
         private $PDO;
 
         /**
-         * Initializes statement
+         * Initializes Transaction object
          *
-         * @param \PDO $PDO PDO connector
+         * @param \PDO $PDO PDO database handler
          */
         public function __construct(\PDO $PDO) {
             $this->PDO = $PDO;
         }
 
         /**
-         * Begin transaction
+         * @see \System\Database\TransactionInterface::revert()
+         */
+        public function revert() {
+            $this->PDO->rollBack();
+        }
+
+        /**
+         * @see \System\Database\TransactionInterface::begin()
          */
         public function begin() {
             $this->PDO->beginTransaction();
         }
 
         /**
-         * Commit transaction
+         * @see \System\Database\TransactionInterface::commit()
          */
         public function commit() {
             $this->PDO->commit();
-        }
-
-        /**
-         * Revert transaction
-         */
-        public function revert() {
-            $this->PDO->rollBack();
         }
     }
 ?>

@@ -1,7 +1,7 @@
 <?php
 	namespace System\Database;
-	
-	/**
+
+    /**
 	 * PDO database engine
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -36,6 +36,13 @@
             $result = $this->handler->query($query);
 
             return $result->fetch(\PDO::FETCH_OBJ);
+        }
+
+        /**
+         * @see \System\Database\EngineInterface::transaction()
+         */
+        public function transaction() {
+            return new \System\Database\PDO\Transaction($this->handler);
         }
     }
 ?>

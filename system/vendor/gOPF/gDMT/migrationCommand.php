@@ -4,6 +4,13 @@
     use \System\Terminal\Help\Line;
     use \gOPF\gDMT;
 
+    /**
+     * Terminal command: migration (migrate product database)
+     *
+     * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+     * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+     * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+     */
     class migrationCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
         /**
          * Path to migrations
@@ -17,6 +24,9 @@
          */
         private $migrations;
 
+        /**
+         * Initialize migration command object
+         */
         public function __construct() {
             $this->path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.gDMT::MIGRATION_PATH;
             $this->migrations = new \gOPF\gDMT();
@@ -68,6 +78,11 @@
             $this->migrations->removeDatabaseStructure();
         }
 
+        /**
+         * Generate output for migrations status
+         *
+         * @return string Migrations status
+         */
         private function getMigrationsStatus() {
             $output = '';
             $migrations = $this->migrations->getAvailableMigrations();
@@ -79,7 +94,7 @@
                     /* @var $migration \gOPF\gDMT\MigrationInterface */
                     $migration = $element->value;
 
-                    $output .= 'Migration '.$element->name.' - '.($this->migrations->isExecuted($element->name) ? '<b>DONE</b>' : '<b>TODO</b>').' - '.$migration->getDescription()."\n";
+                    $output .= $element->name.' - '.($this->migrations->isExecuted($element->name) ? '<b>DONE</b>' : '<b>TODO</b>').' - '.$migration->getDescription()."\n";
                 }
             }
 

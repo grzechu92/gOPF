@@ -7,12 +7,18 @@
          */
         protected $database;
 
-        public static function getDescription() {
-            return 'Utworzenie w bazie danych tabeli test';
+        public function getDescription() {
+            return 'Utworzenie w bazie danych tabeli o nazwie tabela';
         }
 
         public function execute() {
-            $this->database->raw('');
+            $this->database->raw('
+                CREATE TABLE IF NOT EXISTS `tabela` (
+                    `foo` int(11) NOT NULL,
+                    `bar` int(11) NOT NULL,
+                    `time` int(11) NOT NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+            ');
         }
     }
 ?>

@@ -31,5 +31,12 @@
 
             return $result->fetch(\PDO::FETCH_OBJ);
         }
+
+        /**
+         * @see \System\Database\EngineInterface::transaction();
+         */
+        public function transaction() {
+            return $this->statement->transaction();
+        }
     }
 ?>

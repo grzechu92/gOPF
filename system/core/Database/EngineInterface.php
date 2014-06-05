@@ -35,5 +35,12 @@
          * @return \stdClass Query result
          */
         public function query($query);
+
+        /**
+         * Unified transaction interface
+         *
+         * @return \System\Database\TransactionInterface
+         */
+        public function transaction();
 	}
 ?>
