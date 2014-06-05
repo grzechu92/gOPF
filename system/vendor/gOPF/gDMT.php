@@ -1,6 +1,7 @@
 <?php
     namespace gOPF;
     use \System\Filesystem;
+    use \System\Queue\Element;
 
     /**
      * gDMT - gDMT Database Migration Tool
@@ -12,13 +13,27 @@
     class gDMT {
         /**
          * Migration files path
+         * @var string
          */
-        const MIGRATION_PATH = '/migrations/';
+        const MIGRATION_PATH = 'migrations';
 
         /**
          * Migrations database name
+         * @var string
          */
         const MIGRATIONS_DATABASE = 'migrations';
+
+        /**
+         * Migration class name
+         * @var string
+         */
+        const MIGRATION_CLASS = 'Migration';
+
+        /**
+         * Migrations namespace
+         * @var string
+         */
+        const MIGRATION_NAMESPACE = 'Migrations';
 
         /**
          * @var string
@@ -31,24 +46,35 @@
         private $database;
 
         public function __construct() {
-            $this->path = __APPLICATION_PATH.self::MIGRATION_PATH;
-            $this->database = \System\Core::instance()->database->connection();
+            \System\Loader::registerReservedNamespace(new \System\Loader\NS(self::MIGRATION_NAMESPACE, __APPLICATION_PATH.DIRECTORY_SEPARATOR.self::MIGRATION_PATH));
+
+            $this->path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.self::MIGRATION_PATH;
+            $this->database = \System\Core::instance()->database->engine();
         }
 
         public function getAvailableMigrations() {
-            $migrations = array();
+            $queue = new \System\Queue();
 
             if (Filesystem::checkDirectory($this->path)) {
-                foreach (new \DirectoryIterator($this->path) as $file) {
-                    if ($file->isDot()) {
-                        continue;
-                    }
+                $migration = 0;
 
-                    $migrations[] = $file->getFilename();
+                while (true) {
+                    try {
+                        $class = '\\'.self::MIGRATION_NAMESPACE.'\\'.self::MIGRATION_CLASS.$migration;
+                        $object = new $class($this->database->handler());
+
+                        if ($object instanceof \gOPF\gDMT\MigrationInterface) {
+                            $queue->push(new Element($object->getMigrationNumber(), $object));
+                        }
+
+                        $migration++;
+                    } catch (\Exception $e) {
+                        break;
+                    }
                 }
             }
 
-            return $migrations;
+            return $queue;
         }
 
         public function initializeDatabaseStructure() {
@@ -70,10 +96,6 @@
         }
 
         public function executeMigration($number) {
-
-        }
-
-        private function getMigrationsList() {
 
         }
     }

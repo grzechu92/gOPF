@@ -18,7 +18,7 @@
         private $migrations;
 
         public function __construct() {
-            $this->path = __APPLICATION_PATH.gDMT::MIGRATION_PATH;
+            $this->path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.gDMT::MIGRATION_PATH;
             $this->migrations = new \gOPF\gDMT();
         }
 
@@ -30,8 +30,7 @@
 
             $help = new \System\Terminal\Help('Database migration tool');
             $lines[] = new Line('migration', 'start migration process');
-            $lines[] = new Line('migration -list', 'display all migrations');
-            $lines[] = new Line('migration -executed', 'display all executed migrations');
+            $lines[] = new Line('migration -status', 'display all migrations status');
 
             $help->addLines($lines);
 
@@ -42,7 +41,11 @@
          * @see \System\Terminal\CommandInterface::execute()
          */
         public function execute() {
+            $session = self::$session;
 
+            if ($this->getParameter('status')) {
+                $session->buffer($this->getMigrationsStatus());
+            }
         }
 
         /**
@@ -62,6 +65,21 @@
             Filesystem::remove($this->path);
 
             $this->migrations->removeDatabaseStructure();
+        }
+
+        private function getMigrationsStatus() {
+            $output = '';
+            $migrations = $this->migrations->getAvailableMigrations();
+
+            if (count($migrations) == 0) {
+                $output = 'No migrations available.';
+            } else {
+                foreach ($migrations as $element) {
+                    $output .= 'Migration '.$element->name.' - '.($this->migrations->isExecuted($element->name) ? 'DONE' : 'TODO')."\n";
+                }
+            }
+
+            return $output;
         }
     }
 ?>

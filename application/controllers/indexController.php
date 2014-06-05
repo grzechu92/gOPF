@@ -7,6 +7,7 @@
 		
 		public function mainAction() {
 			$lib = new gDMT();
+
             var_dump($lib->getAvailableMigrations());
 		}
 	}
