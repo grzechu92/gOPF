@@ -10,7 +10,7 @@
 	 */
 	class Parser {
 		/**
-		 * Availiable styles and tabs
+		 * available styles and tabs
 		 * @var array
 		 */
 		private $tags = array(

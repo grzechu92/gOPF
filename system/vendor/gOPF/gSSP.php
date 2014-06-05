@@ -53,7 +53,7 @@
 		}
 		
 		/**
-		 * Returns availiable slots
+		 * Returns available slots
 		 * 
 		 * @param bool $working Return only currently working slots
 		 * @param int $time Returns slots which changes their status from selected timestamp
@@ -74,7 +74,7 @@
 		}
 		
 		/**
-		 * Returns availiable slots grouped by host
+		 * Returns available slots grouped by host
 		 *
 		 * @param bool $working Return only currently working slots
 		 * @param int $time Returns slots which changes their status from selected timestamp
@@ -85,7 +85,7 @@
 		}
 		
 		/**
-		 * Returns all availiable slots grouped by client IP address
+		 * Returns all available slots grouped by client IP address
 		 *
 		 * @param bool $working Return only currently working slots
 		 * @param int $time Returns slots which changes their status from selected timestamp
@@ -96,7 +96,7 @@
 		}
 		
 		/**
-		 * Returns all availiable slots grouped by request
+		 * Returns all available slots grouped by request
 		 *
 		 * @param bool $working Return only currently working slots
 		 * @param int $time Returns slots which changes their status from selected timestamp

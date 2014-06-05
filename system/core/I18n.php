@@ -34,7 +34,7 @@
 		private static $instance;
 		
 		/**
-		 * Array of availiable language strings
+		 * Array of available language strings
 		 * @var array
 		 */
 		public $strings = array();

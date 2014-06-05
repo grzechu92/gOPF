@@ -141,7 +141,7 @@
 		 */
 		private function getCaptcha() {
 			if (count($this->storage['captchas']) == 0) {
-				throw new Exception('There is no captchas availiable');
+				throw new Exception('There is no captchas available');
 			}
 			
 			$last = array_pop($this->storage['captchas']);

@@ -39,7 +39,7 @@
 			
 			$lines[] = new Line('manager -install [class]', 'adds new command to command registry');
 			$lines[] = new Line('manager -uninstall [command]', 'removes command from command registry');
-			$lines[] = new Line('manager -list', 'list all availiable commands');
+			$lines[] = new Line('manager -list', 'list all available commands');
 			
 			$help->addLines($lines);
 			
