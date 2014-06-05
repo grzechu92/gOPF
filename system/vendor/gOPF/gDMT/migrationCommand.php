@@ -56,6 +56,8 @@
 
             if ($this->getParameter('status')) {
                 $session->buffer($this->getMigrationsStatus());
+            } else {
+                $this->runMigration();
             }
         }
 
@@ -94,11 +96,46 @@
                     /* @var $migration \gOPF\gDMT\MigrationInterface */
                     $migration = $element->value;
 
-                    $output .= $element->name.' - '.($this->migrations->isExecuted($element->name) ? '<bold>DONE</bold>' : '<bold>TODO</bold>').' - '.$migration->getDescription()."\n";
+                    $output .= $element->name.' - '.($this->migrations->isExecuted($element->name) ? '<bold><green>DONE</green></bold>' : '<bold><red>TODO</red></bold>').' - '.$migration->getDescription()."\n";
                 }
             }
 
             return $output;
+        }
+
+        public function runMigration() {
+            $session = self::$session;
+            $migrations = $this->migrations->getAvailableMigrations();
+
+            if (count($migrations) == 0) {
+                $session->buffer('No migrations available.');
+            } else {
+                foreach ($migrations as $element) {
+                    /* @var $migration \gOPF\gDMT\MigrationInterface */
+                    $migration = $element->value;
+                    $session->buffer('Checking migration <bold>'.$element->name.'</bold> status...');
+                    usleep(200000);
+
+                    if ($this->migrations->isExecuted($element->name)) {
+                        $session->buffer('<bold><green>DONE</green></bold>');
+                        usleep(200000);
+                    } else {
+                        $session->buffer('<bold><red>MIGRATING</red></bold>');
+                        sleep(1);
+
+                        $status = $this->migrations->executeMigration($migration);
+
+                        if ($status === true) {
+                            $session->buffer('<bold><green>DONE</green></bold>');
+                            sleep(1);
+                        } else {
+                            $session->buffer('<bold><red>ERROR</red></bold>');
+                            $session->buffer($status);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 ?>

@@ -44,5 +44,12 @@
         public function commit() {
             $this->PDO->commit();
         }
+
+        /**
+         * @see \System\Database\TransactionInterface::status()
+         */
+        public function status() {
+            return $this->PDO->inTransaction();
+        }
     }
 ?>

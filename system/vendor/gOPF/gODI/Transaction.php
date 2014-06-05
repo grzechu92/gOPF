@@ -25,24 +25,31 @@
         }
 
         /**
-         * Begin transaction
+         * @see \System\Database\TransactionInterface::begin()
          */
         public function begin() {
             $this->PDO->beginTransaction();
         }
 
         /**
-         * Commit transaction
+         * @see \System\Database\TransactionInterface::commit()
          */
         public function commit() {
             $this->PDO->commit();
         }
 
         /**
-         * Revert transaction
+         * @see \System\Database\TransactionInterface::revert()
          */
         public function revert() {
             $this->PDO->rollBack();
+        }
+
+        /**
+         * @see \System\Database\TransactionInterface::status()
+         */
+        public function status() {
+            return $this->PDO->inTransaction();
         }
     }
 ?>

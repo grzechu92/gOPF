@@ -32,9 +32,10 @@
          * Execute query no matter what engine is selected
          *
          * @param string $query Query to execute
+         * @param bool $result Is query must expect any result
          * @return \stdClass Query result
          */
-        public function query($query);
+        public function query($query, $result = false);
 
         /**
          * Unified transaction interface

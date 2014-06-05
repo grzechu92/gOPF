@@ -32,10 +32,10 @@
         /**
          * @see \System\Database\EngineInterface::query()
          */
-        public function query($query) {
-            $result = $this->handler->query($query);
+        public function query($query, $result = false) {
+            $return = $this->handler->query($query);
 
-            return $result->fetch(\PDO::FETCH_OBJ);
+            return $result ? $return->fetch(\PDO::FETCH_OBJ) : null;
         }
 
         /**

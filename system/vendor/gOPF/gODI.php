@@ -26,10 +26,10 @@
         /**
          * @see \System\Database\EngineInterface::query()
          */
-        public function query($query) {
-            $result = $this->statement->raw()->query($query);
+        public function query($query, $result = false) {
+            $return = $this->statement->raw()->query($query);
 
-            return $result->fetch(\PDO::FETCH_OBJ);
+            return $result ? $return->fetch(\PDO::FETCH_OBJ) : null;
         }
 
         /**

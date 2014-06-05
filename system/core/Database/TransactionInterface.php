@@ -23,5 +23,12 @@
          * Commit transaction
          */
         public function commit();
+
+        /**
+         * Checks that if database is in transaction
+         *
+         *  @return bool Transaction status
+         */
+        public function status();
     }
 ?>
