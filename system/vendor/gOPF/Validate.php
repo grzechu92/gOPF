@@ -38,15 +38,15 @@
 			'url' => 'URL',
 			'time' => 'time',
 			'date' => 'date'
-		); 
-		
+		);
+
 		/**
 		 * Check that if given string passes validate rules
-		 * 
+		 *
 		 * @param string $string String to validate
 		 * @param string $parameters Parameters to check, CSS property style
-		 * @param string $name Variable name, used in throwing exceptions
-		 * @throws \gOPF\Valiate\Exception
+		 * @param string|bool $name Variable name, used in throwing exceptions
+		 * @throws \gOPF\Validate\Exception
 		 */
 		public static function check($string, $parameters, $name = false) {			
 			$parameters = array_filter(explode(';', str_replace(' ', '', $parameters)));

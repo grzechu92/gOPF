@@ -42,7 +42,7 @@
 		
 		/**
 		 * Array with events
-		 * @var \System\Core\Events[]
+		 * @var \System\Core\Event[]
 		 */
 		private static $events = array();
 		

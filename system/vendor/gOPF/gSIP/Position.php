@@ -25,7 +25,7 @@
 		 * Initiates position object
 		 * 
 		 * @param int $x Coordinate X value
-		 * @param int $y Coordinate Y value
+		 * @param int|bool $y Coordinate Y value
 		 */
 		public function __construct($x, $y = false) {
 			if ($y === false) {

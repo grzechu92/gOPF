@@ -8,10 +8,10 @@
 	
 	"TEMPLATE_NOT_FOUND": "Nie odnaleziono pliku z szablonem $1",
 	
-	"STATIC_CONTROLLER": "Rządany kontroler $1 jest statyczny",
-	"CONTROLLER_NOT_FOUND": "Rządany kontroler $1 nie został odnaleziony",
-	"ACTION_NOT_FOUND": "Rządana akcja $1 nie została odnaleziona",
-	"MODEL_NOT_FOUND": "Rządany model $1 nie został odnaleziony",
+	"STATIC_CONTROLLER": "Żądany kontroler $1 jest statyczny",
+	"CONTROLLER_NOT_FOUND": "Żądany kontroler $1 nie został odnaleziony",
+	"ACTION_NOT_FOUND": "Żądana akcja $1 nie została odnaleziona",
+	"MODEL_NOT_FOUND": "Żądany model $1 nie został odnaleziony",
 	"MODEL_METHOD_NOT_EXISTS": "Metoda $2 nie została odnaleziona w modelu $1",
 	"ACCESS_DENIED": "Odmowa dostępu",
 

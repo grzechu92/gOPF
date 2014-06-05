@@ -20,7 +20,7 @@
 	require __CORE_PATH.'/Filesystem.php';
 	require __CORE_PATH.'/Loader.php';
     require __CORE_PATH.'/Loader/NS.php';
-	$loader = new Loader();
+	new Loader();
 	
 	/**
 	 * Run framework system

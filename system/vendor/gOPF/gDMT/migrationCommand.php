@@ -94,7 +94,7 @@
                     /* @var $migration \gOPF\gDMT\MigrationInterface */
                     $migration = $element->value;
 
-                    $output .= $element->name.' - '.($this->migrations->isExecuted($element->name) ? '<b>DONE</b>' : '<b>TODO</b>').' - '.$migration->getDescription()."\n";
+                    $output .= $element->name.' - '.($this->migrations->isExecuted($element->name) ? '<bold>DONE</bold>' : '<bold>TODO</bold>').' - '.$migration->getDescription()."\n";
                 }
             }
 

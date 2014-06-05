@@ -129,7 +129,7 @@ Terminal = {
 		}
 	},
 	
-	check: function(data) {
+	check: function() {
 		if (Terminal.processing) {
 			Terminal.lock();
 		} else {
@@ -204,7 +204,7 @@ Terminal = {
 	upload: function(id, name, content) {
 		$.gPAE("sendEvent", "upload", {id: id, name: name, content: content});
 	}
-}
+};
 
 $.gPAE("config", {url: "/terminal/connection", debug: 2});
 

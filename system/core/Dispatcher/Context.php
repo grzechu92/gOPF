@@ -86,12 +86,12 @@
 			$class = '\\Models\\'.$name.'Model';
 			$this->models[$name] = new $class(); 
 		}
-		
+
 		/**
 		 * Checks if controller is static or dynamic
-		 * 
+		 *
 		 * @param string $name Name of controller
-		 * @throws \System\Dispather\Exception
+		 * @throws \System\Dispatcher\Exception
 		 */
 		protected function checkState($name) {
 			$class = '\\Controllers\\'.$name.'Controller';

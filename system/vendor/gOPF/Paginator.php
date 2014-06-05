@@ -132,8 +132,7 @@
 			}
 				
 			$end = $this->current+$this->offset;
-			$offset = $this->offset;
-				
+
 			while ($end > $this->pages) {
 				$end--;
 		

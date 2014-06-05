@@ -1,5 +1,6 @@
 <?php
     namespace gOPF;
+    use \gOPF\gDMT\MigrationInterface;
     use \System\Filesystem;
     use \System\Queue\Element;
 
@@ -63,7 +64,7 @@
                         $class = '\\'.self::MIGRATION_NAMESPACE.'\\'.self::MIGRATION_CLASS.$migration;
                         $object = new $class($this->database->handler());
 
-                        if ($object instanceof \gOPF\gDMT\MigrationInterface) {
+                        if ($object instanceof MigrationInterface) {
                             $queue->push(new Element($object->getMigrationNumber(), $object));
                         }
 
@@ -95,8 +96,16 @@
             return $result->amount == 1;
         }
 
-        public function executeMigration($number) {
+        public function executeMigration(MigrationInterface $migration) {
+            if ($this->isExecuted($migration->getMigrationNumber())) {
+                return;
+            }
 
+            try {
+//                $this->database->
+            } catch(\Exception $e) {
+
+            }
         }
     }
 ?>

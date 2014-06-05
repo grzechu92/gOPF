@@ -32,7 +32,7 @@
 	var core = {
 		connection: null,
 		config: {url: null, debug: 0, reconnect: {frequency: 0}, timeout: {base: 0}},
-		events: new Array(),
+		events: [],
 		
 		debug: function(message, level) {
 			if (this.config.debug >= level) {

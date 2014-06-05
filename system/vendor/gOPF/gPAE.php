@@ -158,7 +158,7 @@
 		}
 		
 		/**
-		 * Runns main functionality
+		 * starts main functionality
 		 * 
 		 * @return \gOPF\gPAE\Response Result of request processing
 		 */

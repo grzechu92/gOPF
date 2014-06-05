@@ -71,7 +71,7 @@
 		/**
 		 * Generate captcha challenge for selected key
 		 * 
-		 * @param string $key Public key
+		 * @param string|false $key Public key
 		 * @return string Captcha challenge
 		 */
 		public static function getCaptchaChallenge($key = false) {

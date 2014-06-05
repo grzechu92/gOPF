@@ -10,10 +10,10 @@
 	 */
 	class Sanitizer {
 		/**
-		 * Removes unexcpected chars from text, doesn't which fit to URL
+		 * Removes unexpected chars from text, which doesn't fit to URL
 		 * 
-		 * @param text $url Text to clean
-		 * @param int $length Crop to specified length
+		 * @param string $url Text to clean
+		 * @param int|bool $length Crop to specified length
 		 * @return string Sanitized text
 		 */
 		public static function URL($url, $length = false) {

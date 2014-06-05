@@ -17,7 +17,7 @@
 		
 		/**
 		 * Array with directories to clean
-		 * @var unknown
+		 * @var array
 		 */
 		private $directories = array(
 			'/application/log',

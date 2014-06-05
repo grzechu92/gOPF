@@ -24,7 +24,7 @@
 		
 		/**
 		 * General description of command
-		 * @var sting
+		 * @var string
 		 */
 		public $description;
 		

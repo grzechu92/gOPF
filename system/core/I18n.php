@@ -64,7 +64,7 @@
 			self::$instance = $this;
 			
 			$this->config = Config::factory('i18n.ini', Config::SYSTEM);
-			$this->accept = $this->getAcceptedLanguages();
+			$this->accepted = $this->getAcceptedLanguages();
 		}
 		
 		/**
@@ -185,7 +185,7 @@
 			$selected = $this->config->application;
 			
 			if ($this->config->dynamic) {
-				foreach ($this->accept as $language) {
+				foreach ($this->accepted as $language) {
 					if (Filesystem::checkFile(__APPLICATION_PATH.'/i18n/'.$language.'.json')) {
 						$selected = $language;
 						

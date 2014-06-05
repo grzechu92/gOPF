@@ -30,7 +30,7 @@
 		private $slots = array();
 		
 		/**
-		 * Server informations and stats
+		 * Server information and stats
 		 * @var \gOPF\gSSP\Server;
 		 */
 		private $server;
@@ -107,9 +107,9 @@
 		}
 		
 		/**
-		 * Returns informations about server
+		 * Returns information about server
 		 * 
-		 * @return \gOPF\gSSP\Server Server informations and stats
+		 * @return \gOPF\gSSP\Server Server information and stats
 		 */
 		public function getServer() {
 			return $this->server;
@@ -161,6 +161,7 @@
 		/**
 		 * Groups slots by selected field
 		 *
+         * @param string $property Return only matching slots by property
 		 * @param bool $working Return only currently working slots
 		 * @param int $time Returns slots which changes their status from selected timestamp
 		 * @return array Array with grouped slots

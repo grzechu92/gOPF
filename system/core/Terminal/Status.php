@@ -28,7 +28,7 @@
 		public $user;
 		
 		/**
-		 * Custom prompt for terminal, if null prompt is builded from username, host and path
+		 * Custom prompt for terminal, if null prompt is built from username, host and path
 		 * @var string
 		 */
 		public $prompt;
@@ -82,7 +82,7 @@
 		public $processing = true;
 		
 		/**
-		 * If setted, terminal client will clear printed content
+		 * If set, terminal client will clear printed content
 		 * @var bool
 		 */
 		public $clear = false;
@@ -94,7 +94,7 @@
 		public $abort = false;
 		
 		/**
-		 * Microtime of last terminal status update
+		 * Micro time of last terminal status update
 		 * @var float
 		 */
 		public $updated;

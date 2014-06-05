@@ -2,7 +2,7 @@
 	namespace System;
 	
 	/**
-	 * Checks request context, and runns specified request processing procedure
+	 * Checks request context, and starts specified request processing procedure
 	 * 
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>

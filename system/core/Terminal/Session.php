@@ -62,7 +62,7 @@
 		}
 		
 		/**
-		 * Allows to falst pull/get action
+		 * Allows to fast pull/get action
 		 * 
 		 * @param string $name Variable name
 		 * @return mixed Variable value

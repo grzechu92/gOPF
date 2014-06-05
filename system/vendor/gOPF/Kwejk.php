@@ -55,7 +55,7 @@
 		private $cookie;
 		
 		/**
-		 * Proxy IP adress and port separated by double colon
+		 * Proxy IP address and port separated by double colon
 		 * @var string
 		 */
 		private $proxy;
@@ -70,9 +70,9 @@
 		 * Initiates Kwejk object instance
 		 * 
 		 * @param string $cookie Defines cookie path
-		 * @param string $proxy Proxy IP adress and port separated by colon 
+		 * @param string $proxy Proxy IP address and port separated by colon
 		 * @param bool $safe Sleep a few seconds after request
-		 * @oaran bool $debug Debugging mode, prints out every request content
+		 * @param bool $debug Debugging mode, prints out every request content
 		 * @param bool $exception Throw exception with every message (even on success)
 		 */
 		public function __construct($cookie = '', $proxy = '', $safe = true, $debug = false, $exception = false) {
@@ -169,7 +169,7 @@
 		 * @param string $url Path to page (for example: /login)
 		 * @param array $variables Variables to post (key => value)
 		 * @param array $opts Custom CURLOPT's (CURLOPT_* => value)
-		 * @param string $customURL Custom request URL
+		 * @param string|bool $customURL Custom request URL
 		 * @return string Requested content with HTTP Headers
 		 */
 		public function sendRequest($url, $variables = array(), $opts = array(), $customURL = false) {

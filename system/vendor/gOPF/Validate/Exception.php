@@ -25,7 +25,7 @@
 		 * @see \Exception::__construct();
 		 * 
 		 * @param string $error Wrong parameter
-		 * @param string $name Varible name
+		 * @param string $name Variable name
 		 */
 		public function __construct($error, $name) {
 			$this->message = 'Validate Error: '.$error.(!empty($name) ? ' in '.$name : '');

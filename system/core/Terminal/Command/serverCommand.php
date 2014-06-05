@@ -4,7 +4,7 @@
 	use \gOPF\gSSP;
 	
 	/**
-	 * Terminal command: server (read informations about server)
+	 * Terminal command: server (read information about server)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -34,9 +34,9 @@
 		 */
 		public function help() {
 			$lines = array();
-			$help = new \System\Terminal\Help('Display server trafiic and main server informations');
+			$help = new \System\Terminal\Help('Display server trafic and main server information');
 			
-			$lines[] = new Line('server', 'display main server informations');
+			$lines[] = new Line('server', 'display main server information');
 			$lines[] = new Line('server -slots', 'displays current slots info');
 			$lines[] = new Line('server -interval [miliseconds]', 'set custom server status refreshing interval');
 				

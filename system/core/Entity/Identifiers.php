@@ -2,7 +2,7 @@
 	namespace System\Entity;
 	
 	/**
-	 * Database Entity framewor Identifiers class
+	 * Database Entity framework Identifiers class
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>

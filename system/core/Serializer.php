@@ -26,7 +26,7 @@
 		 * Returns safely unserialized data
 		 * 
 		 * @param string $string Safe serialized data string (checksum + serialzied data)
-		 * @return mixed Unserialized data
+		 * @return mixed unserialized data
 		 * @throws \System\Serializer\Exception
 		 */
 		public static function unserialize($string) {

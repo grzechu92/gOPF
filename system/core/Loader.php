@@ -13,7 +13,7 @@
 	class Loader {
         /**
          * Reserved namespaces
-         * @var array[\System\Loader\NS]
+         * @var \System\Loader\NS[]
          */
         private static $namespaces = array();
 

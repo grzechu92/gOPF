@@ -84,7 +84,7 @@
 		/**
 		 * Parses command string and returns Command object filled with parsed data
 		 * 
-		 * @param string $command Raw comand
+		 * @param string $command Raw command
 		 * @return \System\Terminal\Command Parsed command data
 		 */
 		public static function parse($command) {

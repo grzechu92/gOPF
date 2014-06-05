@@ -30,7 +30,7 @@
 		 * 
 		 * @param string $name Controller name
 		 * @param string $action Action name
-		 * @param bool Dynamic call
+		 * @param bool $dynamic Dynamic call
 		 * @return mixed Request result
 		 */
 		public function callController($name, $action, $dynamic);

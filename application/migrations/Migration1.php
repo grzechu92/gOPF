@@ -8,7 +8,7 @@
         protected $database;
 
         public function getDescription() {
-            return 'Wypełnienie tabeli test 10 wpisami z godziną i losowymi liczbamiads';
+            return 'Wypełnienie tabeli test 10 wpisami z godziną i losowymi liczbami';
         }
 
         public function execute() {

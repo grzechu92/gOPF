@@ -82,6 +82,7 @@
 		 * 
 		 * @param \System\Config\File $new New file which you want to merge into older
 		 * @param \System\Config\File $old Older file
+         * @param bool $removes Allow to fill with null
 		 **/
 		public static function merge(File $new, File $old, $removes = false) {
 			$old->merge($new, $removes);
@@ -90,8 +91,8 @@
 		/**
 		 * Checks configuration file, when not found throws and exception
 		 * 
-		 * @param $filename Name of configuration file
-		 * @param $path Path to configuration file
+		 * @param $filename string Name of configuration file
+		 * @param $path string Path to configuration file
 		 * @throws \System\Config\Exception
 		 */
 		private static function checkFile($filename, $path) {
@@ -101,7 +102,7 @@
 		}
 		
 		/**
-		 * Loads configration file content
+		 * Loads configuration file content
 		 * 
 		 * @param string $path Path to configuration file
 		 * @return array Configuration file content
@@ -134,7 +135,8 @@
 					break;
 			
 				case self::CUSTOM:
-					$path = $file;
+                default:
+					$path = $filename;
 					break;
 			}
 			

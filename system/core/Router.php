@@ -3,7 +3,7 @@
 	use \System\Router\Route;
 		
 	/**
-	 * Matches request to matching bootstrap, and runns request processing procedure
+	 * Matches request to matching bootstrap, and starts request processing procedure
 	 * 
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -23,7 +23,7 @@
 		private $status = true;
 
 		/**
-		 * Contructor of router module
+		 * Constructor of router module
 		 */
 		public function __construct() {
 			$router = Config::factory('router.ini', Config::SYSTEM);
@@ -37,10 +37,10 @@
 			
 			$this->match($routes['routes'], $routes['default']);
 		}
-		
+
 		/**
 		 * Matches route for requested URL
-		 * 
+		 *
 		 * @param array $routes Available routes
 		 * @param string $default Default route, selected when no available routes is matched
 		 */

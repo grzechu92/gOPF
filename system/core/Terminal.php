@@ -23,7 +23,7 @@
 
 		/**
 		 * Terminal instance handler
-		 * @var \System\Terminal\Terminal
+		 * @var \System\Terminal
 		 */
 		public static $instance;
 

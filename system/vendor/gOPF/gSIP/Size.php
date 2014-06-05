@@ -25,7 +25,7 @@
 		 * Initializes size object
 		 * 
 		 * @param int $width Width value
-		 * @param int $height Height value
+		 * @param int|bool $height Height value
 		 * @throws \gOPF\gSIP\Exception
 		 */
 		public function __construct($width, $height = false) {
@@ -44,7 +44,7 @@
 		/**
 		 * Returns array with width and height
 		 * 
-		 * @return arrat Array with values
+		 * @return array Array with values
 		 */
 		public function getSize() {
 			return array($this->width, $this->height);
