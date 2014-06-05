@@ -11,7 +11,7 @@
 	 */
 	class Router {
 		/**
-		 * Availiable routes
+		 * Available routes
 		 * @var array
 		 */
 		private $routes;
@@ -41,8 +41,8 @@
 		/**
 		 * Matches route for requested URL
 		 * 
-		 * @param array $routes Availiable routes
-		 * @param string $default Default route, selected when no availiable routes is matched
+		 * @param array $routes Available routes
+		 * @param string $default Default route, selected when no available routes is matched
 		 */
 		private function match($routes, $default) {
 			$matched = false;

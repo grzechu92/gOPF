@@ -1,7 +1,8 @@
 <?php
 	namespace System;
 	use \System\Filesystem;
-	
+    use \System\Loader\NS;
+
 	/**
 	 * Framework libraries loader, based on personalized PSR-0 implementation
 	 * 
@@ -10,104 +11,87 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Loader {
-		/**
-		 * Holds predefined and reserved system namespace name
-		 * @var string
-		 */
-		const SYSTEM_NAMESPACE = 'System';
-		
-		/**
-		 * Holds predefined and reserved controllers namespace name
-		 * @var string
-		 */
-		const CONTROLLERS_NAMESPACE = 'Controllers';
-		
-		/**
-		 * Holds predefined and reserved models namespace name
-		 * @var string
-		 */
-		const MODELS_NAMESPACE = 'Models';
-		
-		/**
-		 * Holds predefined and reserved entities namespace name
-		 * @var string
-		 */
-		const ENTITIES_NAMESPACE = 'Entities';
-		
-		/**
-		 * Holds predefined and reserved application classes namespace name
-		 * @var string
-		 */
-		const CLASSES_NAMESPACE = 'Application';
-		
-		/**
-		 * Holds predefined and reserver terminal commands namespace
-		 * @var string
-		 */
-		const COMMANDS_NAMESPACE = 'Commands';
-		
+        /**
+         * Reserved namespaces
+         * @var array[\System\Loader\NS]
+         */
+        private static $namespaces = array();
+
 		/**
 		 * Registers framework loader in PHP loaders registry
 		 */
 		public function __construct() {
+            self::registerCoreNamespaces();
+
 			spl_autoload_register(array($this, 'loadClass'));
 		}
+
+        /**
+         * Register custom reserved namespace
+         *
+         * @param NS $ns Reserved namespace data object
+         */
+        public static function registerReservedNamespace(NS $ns) {
+            self::$namespaces[$ns->name] = $ns;
+        }
+
+        /**
+         * Register core reserved namespaces
+         */
+        private static function registerCoreNamespaces() {
+            $reserved = array();
+
+            $reserved[] = new NS('Controllers', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'controllers');
+            $reserved[] = new NS('Models', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'models');
+            $reserved[] = new NS('Application', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'classes');
+            $reserved[] = new NS('Entities', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'entities');
+            $reserved[] = new NS('Commands', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'commands');
+
+            foreach ($reserved as $ns) {
+                self::registerReservedNamespace($ns);
+            }
+        }
 		
 		/**
 		 * Loads required class in PSR-0 pattern
 		 * 
-		 * @param string $className Class name to load
+		 * @param string $class Class name to load
 		 * @throws \System\Loader\Exception
 		 */
-		public function loadClass($className) {
-			$className = ltrim($className, '\\');
+		public function loadClass($class) {
+            $class = ltrim($class, '\\');
+            $path = '';
 			
-			if ($separator = strripos($className, '\\')) {
-				$namespace = str_replace('\\', DIRECTORY_SEPARATOR, substr($className, 0, $separator));
-      	 		$file = str_replace('_', DIRECTORY_SEPARATOR, substr($className, $separator + 1)).'.php';
+			if ($separator = strripos($class, '\\')) {
+				$namespace = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $separator));
+      	 		$file = str_replace('_', DIRECTORY_SEPARATOR, substr($class, $separator + 1)).'.php';
 			} else {
 				$namespace = '';
 				$file = '';
 			}
-			
-			foreach (array(self::SYSTEM_NAMESPACE, self::CONTROLLERS_NAMESPACE, self::MODELS_NAMESPACE, self::CLASSES_NAMESPACE, self::ENTITIES_NAMESPACE, self::COMMANDS_NAMESPACE) as $reserved) {
-				if (strpos($namespace, $reserved) === 0) {
-					$namespace = substr($namespace, strlen($reserved));
-					
-					switch ($reserved) {
-						case self::SYSTEM_NAMESPACE:
-							$path = __CORE_PATH.$namespace.DIRECTORY_SEPARATOR.$file;
-							break;
-							
-						case self::CONTROLLERS_NAMESPACE:
-							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'controllers'.$namespace.DIRECTORY_SEPARATOR.$file;
-							break;
-							
-						case self::MODELS_NAMESPACE:
-							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'models'.$namespace.DIRECTORY_SEPARATOR.$file;
-							break;
-							
-						case self::CLASSES_NAMESPACE:
-							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'classes'.$namespace.DIRECTORY_SEPARATOR.$file;
-							break;
-							
-						case self::ENTITIES_NAMESPACE:
-							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'entities'.$namespace.DIRECTORY_SEPARATOR.$file;
-							break;
-							
-						case self::COMMANDS_NAMESPACE:
-							$path = __APPLICATION_PATH.DIRECTORY_SEPARATOR.'commands'.$namespace.DIRECTORY_SEPARATOR.$file;
-							break;
-					}
-				}
-			}
-			
+
+            $exploded = explode('/', $namespace);
+            $parsed = substr($namespace, strlen($exploded[0]));
+
+            if ($exploded[0] == 'System') {
+                $path = __CORE_PATH.$parsed.DIRECTORY_SEPARATOR.$file;
+            }
+
+            if (empty($path)) {
+                foreach (self::$namespaces as $ns) {
+                    if ($exploded[0] == $ns->name) {
+                        $path = $ns->build($parsed, $file);
+                        break;
+                    }
+                }
+            }
+
 			if (empty($path)) {
 				$path = __VENDOR_PATH.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$file;
 			}
-		
+
 			$path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
-			
+
 			if (__STAGE == __PRODUCTION || Filesystem::checkFile($path)) {
 				require $path;
 			} else {
