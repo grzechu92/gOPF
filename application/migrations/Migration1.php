@@ -2,11 +2,11 @@
     namespace Migrations;
 
     class Migration1 extends \gOPF\gDMT\Migration implements \gOPF\gDMT\MigrationInterface {
-        public function execute() {
-
+        public static function getDescription() {
+            return 'Wypełnienie tabeli test 10 wpisami z godziną';
         }
 
-        public static function getDescription() {
+        public function execute() {
 
         }
     }

@@ -29,6 +29,7 @@
             $lines = array();
 
             $help = new \System\Terminal\Help('Database migration tool');
+
             $lines[] = new Line('migration', 'start migration process');
             $lines[] = new Line('migration -status', 'display all migrations status');
 
@@ -75,7 +76,10 @@
                 $output = 'No migrations available.';
             } else {
                 foreach ($migrations as $element) {
-                    $output .= 'Migration '.$element->name.' - '.($this->migrations->isExecuted($element->name) ? 'DONE' : 'TODO')."\n";
+                    /* @var $migration \gOPF\gDMT\MigrationInterface */
+                    $migration = $element->value;
+
+                    $output .= 'Migration '.$element->name.' - '.($this->migrations->isExecuted($element->name) ? '<b>DONE</b>' : '<b>TODO</b>').' - '.$migration->getDescription()."\n";
                 }
             }
 

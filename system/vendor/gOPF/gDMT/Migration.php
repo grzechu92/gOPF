@@ -16,5 +16,9 @@
         public function getMigrationNumber() {
             return get_called_class()[strlen(get_called_class()) - 1];
         }
+
+        public static function getDescription() {
+            return '...';
+        }
     }
 ?>
