@@ -79,7 +79,7 @@
 			if ($this->initialized) {
 				return;
 			}
-			
+
 			foreach ($data as $name=>$value) {
 				if (!in_array($name, $this->keys)) {
 					if (!property_exists($this, $name)) {
@@ -93,6 +93,10 @@
 					}
 					
 					$this->identifiers->{$name} = $value;
+
+                    if (property_exists($this, $name)) {
+                        $this->{$name} = $value;    
+                    }
 				}
 			}
 			
