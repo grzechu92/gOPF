@@ -87,7 +87,7 @@
 				preg_match_all(self::RULE_PATTERN, $rule, $names);
 				
 				$values = array();
-				preg_match_all('/'.preg_replace(self::RULE_PATTERN, '(?P<$1>[^\/]+)', $rule).'/', Request::$URL, $values, PREG_SET_ORDER);
+				preg_match_all('#'.preg_replace(self::RULE_PATTERN, '(?P<$1>[^\/]+)', $rule).'#', Request::$URL, $values, PREG_SET_ORDER);
 				
 				foreach ($names[1] as $name) {
 					$this->values->{$name} = trim($values[0][$name]);
