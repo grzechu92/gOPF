@@ -42,6 +42,7 @@
 
             $lines[] = new Line('migration', 'start migration process');
             $lines[] = new Line('migration -status', 'display all migrations status');
+            $lines[] = new Line('migration -initialize', 'initialize migration structure');
 
             $help->addLines($lines);
 
@@ -57,7 +58,11 @@
             if ($this->getParameter('status')) {
                 $session->buffer($this->getMigrationsStatus());
             } else {
-                $this->runMigration();
+                if ($this->getParameter('initialize')) {
+                    $this->migrations->initializeDatabaseStructure();
+                } else {
+                    $this->runMigration();
+                }
             }
         }
 
