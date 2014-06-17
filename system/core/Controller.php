@@ -24,7 +24,7 @@
 		 * @var bool
 		 */
 		public static $DYNAMIC = false;
-		
+
 		/**
 		 * Main controller action
 		 */
@@ -39,5 +39,14 @@
 		public static function factory($name) {
 			return Core::instance()->context->getController($name);
 		}
+
+        /**
+         * Returns request processing context
+         *
+         * @return \System\Dispatcher\ContextInterface
+         */
+        protected static function context() {
+            return Core::instance()->context;
+        }
 	}
 ?>
