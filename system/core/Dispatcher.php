@@ -14,8 +14,8 @@
 		 */
 		public function dispatch() {
 			switch (Request::$context) {
-				case 'ajax':
-					$mode = 'Ajax';
+				case 'rest':
+					$mode = 'Rest';
 					break;
 						
 				case 'cron':

@@ -133,7 +133,9 @@
 		 * @throws \System\Dispatcher\Exception
 		 */
 		protected function checkAction(\System\Controller $controller, $action = 'main') {
-			if (!is_callable(array($controller, $action.'Action'))) {
+            $action .= 'Action';
+
+			if (!is_callable(array($controller, $action))) {
 				throw new Exception(I18n::translate('ACTION_NOT_FOUND', array($action)), 404);
 			}
 		}
@@ -180,12 +182,12 @@
 		}
 		
 		/**
-		 * Prints JSON formatted array
+		 * Prints JSON formatted data
 		 * 
-		 * @param array Array with data
+		 * @param array|\stdClass Data
 		 */
-		protected function toJSON($array) {
-			echo json_encode($array);
-		} 
+		protected function toJSON($data) {
+			echo json_encode($data);
+		}
 	}
 ?>
