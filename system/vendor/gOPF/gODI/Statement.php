@@ -39,7 +39,31 @@
 		 * @var string
 		 */
 		const DESC = 'DESC';
-		
+
+        /**
+         * Inner join
+         * @var string
+         */
+        const INNER_JOIN = 'INNER JOIN';
+
+        /**
+         * Left join
+         * @var string
+         */
+        const LEFT_JOIN = 'LEFT JOIN';
+
+        /**
+         * Right join
+         * @var string
+         */
+        const RIGHT_JOIN = 'RIGHT JOIN';
+
+        /**
+         * Natural join
+         * @var string
+         */
+        const NATURAL_JOIN = 'NATURAL JOIN';
+
 		/**
 		 * PDO connector
 		 * @var \PDO

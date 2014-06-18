@@ -13,6 +13,7 @@
 		use \gOPF\gODI\Traits\SearchTrait;
 		use \gOPF\gODI\Traits\LimitTrait;
 		use \gOPF\gODI\Traits\SortTrait;
+        use \gOPF\gODI\Traits\JoinTrait;
 
         /**
          * @see \gOPF\gODI\Statement::build()
@@ -21,6 +22,7 @@
 			$parts = array(
 				'SELECT '.implode(', ', $this->fields),
 				'FROM '.$this->table,
+                (!empty($this->join) ? implode(' ', $this->join) : ''),
 				(!empty($this->search) ? 'WHERE '.implode(' ', $this->search) : ''),
 				(!empty($this->orderBy) ? 'ORDER BY '.implode(' ', array($this->orderBy, $this->orderType)) : ''),
 				(($this->limit > 0) ? 'LIMIT '.$this->offset.', '.$this->limit : '')
