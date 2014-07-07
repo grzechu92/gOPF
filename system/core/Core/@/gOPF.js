@@ -1,7 +1,7 @@
 /**
  * JavaScript gOPF Plugin for jQuery
  * 
- * @/System/Terminal/gOPF.js
+ * @/System/Core/gOPF.js
  * 
  * Usage:
  * $.gOPF("encodeBase64", string);					encodes string with Base64 algorithm
