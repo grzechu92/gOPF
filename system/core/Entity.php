@@ -13,18 +13,18 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	abstract class Entity implements EntityInterface {
+        /**
+         * Unique entity index keys with values
+         * @var \System\Entity\Identifiers
+         */
+        public $identifiers;
+
 		/**
 		 * Unique entity specified index keys
 		 * @var array
 		 */
 		protected $keys = array();
-		
-		/**
-		 * Unique entity index keys with values
-		 * @var \System\Entity\Identifiers
-		 */
-		protected $identifiers;
-		
+
 		/**
 		 * Entity initialization flag
 		 * @var bool
@@ -52,10 +52,8 @@
 				$entity = new $class();
 				
 				if ($entity instanceof Entity) {
-					if ($data instanceof stdClass) {
-						$entity->initialize($data);
-					}
-					
+                    $entity->initialize($data);
+
 					return $entity;
 				}
 			} catch (\System\Loader\Exception $e) {
@@ -75,31 +73,31 @@
 		/**
 		 * @see \System\Entity\EntityInterface::initialize()
 		 */
-		final public function initialize(stdClass $data) {
+		final public function initialize(stdClass $data = null) {
 			if ($this->initialized) {
 				return;
 			}
 
-			foreach ($data as $name=>$value) {
-				if (!in_array($name, $this->keys)) {
-					if (!property_exists($this, $name)) {
-						throw new Exception(I18n::translate('UNKNOWN_ENTITY_FIELD', array($name, __CLASS__)));
-					}
-					
-					$this->{$name} = $value;
-				} else {
-					if (!$this->identifiers instanceof Identifiers) {
-						$this->identifiers = new Identifiers();
-					}
-					
-					$this->identifiers->{$name} = $value;
+            $this->identifiers = new Identifiers();
 
-                    if (property_exists($this, $name)) {
-                        $this->{$name} = $value;    
+            if ($data instanceof stdClass) {
+                foreach ($data as $name=>$value) {
+                    if (!in_array($name, $this->keys)) {
+                        if (!property_exists($this, $name)) {
+                            throw new Exception(I18n::translate('UNKNOWN_ENTITY_FIELD', array($name, __CLASS__)));
+                        }
+
+                        $this->{$name} = $value;
+                    } else {
+                        $this->identifiers->{$name} = $value;
+
+                        if (property_exists($this, $name)) {
+                            $this->{$name} = $value;
+                        }
                     }
-				}
-			}
-			
+                }
+            }
+
 			$this->initialized = true;
 			$this->checksum = $this->generateChecksum();
 		}
@@ -118,7 +116,7 @@
 					continue;
 				}
 				
-				if (!is_array($value)) {
+				if (is_scalar($value)) {
 					$string .= $field.$value;
 				}
 			}
