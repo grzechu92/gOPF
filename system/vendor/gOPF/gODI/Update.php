@@ -35,7 +35,7 @@
          * @return int Affected rows
          */
 		public function make() {
-			return $this->execute(false);
+			return $this->execute(Statement::RETURN_ROWS);
 		}
 	}
 ?>

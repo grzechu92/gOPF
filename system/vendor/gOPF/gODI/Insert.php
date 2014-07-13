@@ -26,10 +26,10 @@
         /**
          * Execute statement
          *
-         * @return int Affected rows
+         * @return int Last insert ID
          */
         public function make() {
-			return $this->execute(false);
+			return $this->execute(Statement::RETURN_ID);
 		}
 	}
 ?>

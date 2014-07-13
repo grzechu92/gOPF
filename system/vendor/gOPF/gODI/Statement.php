@@ -64,6 +64,24 @@
          */
         const NATURAL_JOIN = 'NATURAL JOIN';
 
+        /**
+         * Return number of modified rows
+         * @var int
+         */
+        const RETURN_ROWS = 0;
+
+        /**
+         * Return insert ID
+         * @var int
+         */
+        const RETURN_ID = 1;
+
+        /**
+         * Return row data
+         * @var int
+         */
+        const RETURN_DATA = 3;
+
 		/**
 		 * PDO connector
 		 * @var \PDO
@@ -114,10 +132,10 @@
         /**
          * Executes statement
          *
-         * @param bool $values Return value or number of affected rows
-         * @return array|int|\stdClass Array of results, affected rows or data object
+         * @param int $mode Return mode (Statement::RETURN_ROWS, Statement::RETURN_ID, Statement::RETURN_DATA, false)
+         * @return array|int|\stdClass|null Array of results, affected rows, ID or data object
          */
-        final protected function execute($values) {
+        final protected function execute($mode = false) {
 			$query = $this->PDO->prepare($this->build());
 
 			foreach ($this->bind as $bind) {
@@ -126,17 +144,19 @@
 
 			$query->execute();
 
-			if ($values) {
-				$result = $query->fetchAll(PDO::FETCH_OBJ);
+            switch ($mode) {
+                case self::RETURN_DATA:
+                    return $query->fetchAll(PDO::FETCH_OBJ);
 
-				if (count($result) == 1) {
-					return $result[0];
-				} else {
-					return $result;
-				}
-			} else {
-				return $query->rowCount();
-			}
+                case self::RETURN_ID:
+                    return $this->PDO->lastInsertId();
+
+                case self::RETURN_ROWS:
+                    return $query->rowCount();
+
+                default:
+                    return null;
+            }
 		}
 
         /**

@@ -37,7 +37,7 @@
          * @return array Query results
          */
         public function all() {
-			return $this->execute(true);
+			return $this->execute(Statement::RETURN_DATA);
 		}
 
         /**
@@ -48,9 +48,10 @@
          * @return array|mixed Result of array of results
          */
         public function get($limit = 1, $offset = 0) {
-			$this->limit($limit, $offset);
-				
-			return $this->execute(true);
+            $this->limit($limit, $offset);
+
+            $result = $this->execute(Statement::RETURN_DATA);
+            return (count($result) == 1) ? $result[0] : $result;
 		}
 	}
 ?>
