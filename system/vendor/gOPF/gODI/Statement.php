@@ -1,6 +1,7 @@
 <?php
 	namespace gOPF\gODI;
 	use \PDO;
+    use \System\Cache;
 	
 	/**
 	 * gODI Statement abstract class
@@ -82,6 +83,16 @@
          */
         const RETURN_DATA = 3;
 
+        /**
+         * @see \System\Cache::USER_CACHE
+         */
+        const USER_CACHE = Cache::USER_CACHE;
+
+        /**
+         * @see \System\Cache::GLOBAL_CACHE
+         */
+        const GLOBAL_CACHE = Cache::GLOBAL_CACHE;
+
 		/**
 		 * PDO connector
 		 * @var \PDO
@@ -130,9 +141,18 @@
 		}
 
         /**
+         * Generates query checksum depends on query body and query bindable values
+         *
+         * @return string Query checksum
+         */
+        final protected function checksum() {
+            return sha1($this->build().implode($this->bind));
+        }
+
+        /**
          * Executes statement
          *
-         * @param int $mode Return mode (Statement::RETURN_ROWS, Statement::RETURN_ID, Statement::RETURN_DATA, false)
+         * @param int|bool $mode Return mode (Statement::RETURN_ROWS, Statement::RETURN_ID, Statement::RETURN_DATA, false)
          * @return array|int|\stdClass|null Array of results, affected rows, ID or data object
          */
         final protected function execute($mode = false) {

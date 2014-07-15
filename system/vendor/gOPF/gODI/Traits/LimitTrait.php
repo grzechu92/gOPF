@@ -1,5 +1,6 @@
 <?php
 	namespace gOPF\gODI\Traits;
+    use gOPF\gODI\Statement\Bind;
 
     /**
      * LimitTrait - allows to limit query results
@@ -10,16 +11,10 @@
      */
 	trait LimitTrait {
         /**
-         * Query results limit
-         * @var int
+         * Is statement limitable
+         * @var bool
          */
-        private $limit = 0;
-
-        /**
-         * Query results offset
-         * @var int
-         */
-        private $offset = 0;
+        private $limitable = false;
 
         /**
          * Allows to limit query results
@@ -29,9 +24,11 @@
          * @return \gOPF\gODI\Statement
          */
         public function limit($limit, $offset = 0) {
-			$this->limit = $limit;
-			$this->offset = $offset;
-				
+            $this->limitable = true;
+
+            $this->bind(new Bind($limit, Bind::INT, '_limit'));
+            $this->bind(new Bind($offset, Bind::INT, '_offset'));
+
 			return $this;
 		}
 	}

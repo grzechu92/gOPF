@@ -48,11 +48,21 @@
          *
          * @param mixed $value Bind value
          * @param int $type Bind type
+         * @param string|bool $name Bind name
          */
-        public function __construct($value, $type = self::INT) {
-			$this->name = ':'.substr(sha1(rand()), 0, 9);
+        public function __construct($value, $type = self::INT, $name = false) {
+			$this->name = ':'.(!$name ? substr(sha1(rand()), 0, 9) : $name);
 			$this->value = $value;
 			$this->type = $type;
 		}
+
+        /**
+         * Generates checksum from bind name, value and type
+         *
+         * @return string Bind checksum
+         */
+        public function __toString() {
+            return sha1($this->name.$this->value.$this->type);
+        }
 	}
 ?>

@@ -14,6 +14,7 @@
 		use \gOPF\gODI\Traits\LimitTrait;
 		use \gOPF\gODI\Traits\SortTrait;
         use \gOPF\gODI\Traits\JoinTrait;
+        use \gOPF\gODI\Traits\CacheTrait;
 
         /**
          * @see \gOPF\gODI\Statement::build()
@@ -25,7 +26,7 @@
                 (!empty($this->join) ? implode(' ', $this->join) : ''),
 				(!empty($this->search) ? 'WHERE '.implode(' ', $this->search) : ''),
 				(!empty($this->orderBy) ? 'ORDER BY '.implode(' ', array($this->orderBy, $this->orderType)) : ''),
-				(($this->limit > 0) ? 'LIMIT '.$this->offset.', '.$this->limit : '')
+				(($this->limitable > 0) ? 'LIMIT :_offset, :_limit' : '')
 			);
 			
 			return trim(implode(' ', $parts));
@@ -37,7 +38,20 @@
          * @return array Query results
          */
         public function all() {
-			return $this->execute(Statement::RETURN_DATA);
+            if ($this->cacheable) {
+                $this->cache->checksum($this->checksum());
+
+                if ($this->cache->isValid()) {
+                    return $this->cache->get();
+                } else {
+                    $result = $this->execute(Statement::RETURN_DATA);
+
+                    $this->cache->set($result);
+                    return $result;
+                }
+            } else {
+                return $this->execute(Statement::RETURN_DATA);
+            }
 		}
 
         /**
@@ -50,8 +64,22 @@
         public function get($limit = 1, $offset = 0) {
             $this->limit($limit, $offset);
 
-            $result = $this->execute(Statement::RETURN_DATA);
-            return (count($result) == 1) ? $result[0] : $result;
+            if ($this->cacheable) {
+                $this->cache->checksum($this->checksum());
+
+                if ($this->cache->isValid()) {
+                    return $this->cache->get();
+                } else {
+                    $result = $this->execute(Statement::RETURN_DATA);
+                    $result = (count($result) == 1) ? $result[0] : $result;
+
+                    $this->cache->set($result);
+                    return $result;
+                }
+            } else {
+                $result = $this->execute(Statement::RETURN_DATA);
+                return (count($result) == 1) ? $result[0] : $result;
+            }
 		}
 	}
 ?>
