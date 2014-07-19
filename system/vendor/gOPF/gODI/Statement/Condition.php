@@ -41,7 +41,7 @@
         private $statement;
 
         /**
-         * Initiates Where statement
+         * Initiates compare statement
          *
          * @param \gOPF\gODI\Statement $statement Parent statement
          * @param string $field Field name
@@ -54,7 +54,7 @@
         }
 
         /**
-         * Creates where string
+         * Creates compare string
          * @return string Where string
          */
         public function __toString() {
