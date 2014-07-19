@@ -15,19 +15,22 @@
 		use \gOPF\gODI\Traits\SortTrait;
         use \gOPF\gODI\Traits\JoinTrait;
         use \gOPF\gODI\Traits\CacheTrait;
+        use \gOPF\gODI\Traits\GroupTrait;
 
         /**
          * @see \gOPF\gODI\Statement::build()
          */
         public function build() {
-			$parts = array(
+			$parts = [
 				'SELECT '.implode(', ', $this->fields),
 				'FROM '.$this->table,
                 (!empty($this->join) ? implode(' ', $this->join) : ''),
 				(!empty($this->search) ? 'WHERE '.implode(' ', $this->search) : ''),
+                (!empty($this->group) ? 'GROUP BY '.$this->group : ''),
+                (!empty($this->having) ? 'HAVING '.implode(' ', $this->having) : ''),
 				(!empty($this->orderBy) ? 'ORDER BY '.implode(' ', array($this->orderBy, $this->orderType)) : ''),
 				(($this->limitable > 0) ? 'LIMIT :_offset, :_limit' : '')
-			);
+			];
 			
 			return trim(implode(' ', $parts));
 		}

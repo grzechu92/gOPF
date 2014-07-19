@@ -1,6 +1,6 @@
 <?php
 	namespace gOPF\gODI\Traits;
-	use \gOPF\gODI\Statement\Where;
+	use \gOPF\gODI\Statement\Condition;
 
     /**
      * SearchTrait - allows to filter query results
@@ -11,39 +11,39 @@
      */
 	trait SearchTrait {
         /**
-         * Where statements array
-         * @var \gOPF\gODI\Statement\Where[]
+         * Condition statements array
+         * @var \gOPF\gODI\Statement\Condition[]
          */
         private $search = array();
 
         /**
-         * Creates Where statement
+         * Creates condition statement
          *
          * @param string $field Compared field name
-         * @return \gOPF\gODI\Statement\Where
+         * @return \gOPF\gODI\Statement\Condition
          */
         public function where($field) {
-			return $this->search[] = new Where($this, $field);
+			return $this->search[] = new Condition($this, $field);
 		}
 
         /**
-         * Creates Where statement with OR prefix
+         * Creates condition statement with OR prefix
          *
          * @param string $field Compared field name
-         * @return \gOPF\gODI\Statement\Where
+         * @return \gOPF\gODI\Statement\Condition
          */
 		public function orWhere($field) {
-			return $this->search[] = new Where($this, $field, 'OR');
+			return $this->search[] = new Condition($this, $field, 'OR');
 		}
 
         /**
-         * Creates Where statement with AND prefix
+         * Creates condition statement with AND prefix
          *
          * @param string $field Compared field name
-         * @return \gOPF\gODI\Statement\Where
+         * @return \gOPF\gODI\Statement\Condition
          */
 		public function andWhere($field) {
-			return $this->search[] = new Where($this, $field, 'AND');
+			return $this->search[] = new Condition($this, $field, 'AND');
 		}
 	}
 ?>

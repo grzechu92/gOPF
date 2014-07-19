@@ -1,15 +1,15 @@
 <?php
-	namespace gOPF\gODI\Statement;
-	use \gOPF\gODI\Statement;
+    namespace gOPF\gODI\Statement;
+    use \gOPF\gODI\Statement;
 
     /**
-     * Where statement
+     * Condition statement
      *
      * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
      * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
      * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
      */
-	class Where {
+    class Condition {
         /**
          * Statement prefix (AND, OR)
          * @var string
@@ -34,11 +34,11 @@
          */
         private $bind;
 
-		/**
-		 * Parent statement object
-		 * @var \gOPF\gODI\Statement
-		 */
-		private $statement;
+        /**
+         * Parent statement object
+         * @var \gOPF\gODI\Statement
+         */
+        private $statement;
 
         /**
          * Initiates Where statement
@@ -48,10 +48,10 @@
          * @param string $prefix Statement prefix (AND, OR)
          */
         public function __construct(Statement $statement, $field, $prefix = null) {
-			$this->statement = $statement;
-			$this->field = $field;
-			$this->prefix = $prefix;
-		}
+            $this->statement = $statement;
+            $this->field = $field;
+            $this->prefix = $prefix;
+        }
 
         /**
          * Creates where string
@@ -69,8 +69,8 @@
          * @return \gOPF\gODI\Statement Fluid interface
          */
         public function eq($value, $type = Statement::INT) {
-			return $this->set('=', $value, $type);
-		}
+            return $this->set('=', $value, $type);
+        }
 
         /**
          * <>
@@ -79,9 +79,9 @@
          * @param int $type Compare value type
          * @return \gOPF\gODI\Statement Fluid interface
          */
-		public function not($value, $type = Statement::INT) {
-			return $this->set('<>', $value, $type);
-		}
+        public function not($value, $type = Statement::INT) {
+            return $this->set('<>', $value, $type);
+        }
 
         /**
          * >
@@ -90,9 +90,9 @@
          * @param int $type Compare value type
          * @return \gOPF\gODI\Statement Fluid interface
          */
-		public function gt($value, $type = Statement::INT) {
-			return $this->set('>', $value, $type);
-		}
+        public function gt($value, $type = Statement::INT) {
+            return $this->set('>', $value, $type);
+        }
 
         /**
          * <
@@ -101,9 +101,9 @@
          * @param int $type Compare value type
          * @return \gOPF\gODI\Statement Fluid interface
          */
-		public function lt($value, $type = Statement::INT) {
-			return $this->set('<', $value, $type);
-		}
+        public function lt($value, $type = Statement::INT) {
+            return $this->set('<', $value, $type);
+        }
 
         /**
          * >=
@@ -112,9 +112,9 @@
          * @param int $type Compare value type
          * @return \gOPF\gODI\Statement Fluid interface
          */
-		public function gte($value, $type = Statement::INT) {
-			return $this->set('>=', $value, $type);
-		}
+        public function gte($value, $type = Statement::INT) {
+            return $this->set('>=', $value, $type);
+        }
 
         /**
          * <=
@@ -123,9 +123,9 @@
          * @param int $type Compare value type
          * @return \gOPF\gODI\Statement Fluid interface
          */
-		public function lte($value, $type = Statement::INT) {
-			return $this->set('<=', $value, $type);
-		}
+        public function lte($value, $type = Statement::INT) {
+            return $this->set('<=', $value, $type);
+        }
 
         /**
          * LIKE
@@ -134,9 +134,9 @@
          * @param int $type Compare value type
          * @return \gOPF\gODI\Statement Fluid interface
          */
-		public function like($value, $type = Statement::STRING) {
-			return $this->set('LIKE', $value, $type);
-		}
+        public function like($value, $type = Statement::STRING) {
+            return $this->set('LIKE', $value, $type);
+        }
 
         /**
          * IS
@@ -145,9 +145,9 @@
          * @param int $type Compare value type
          * @return \gOPF\gODI\Statement Fluid interface
          */
-		public function is($value, $type = Statement::STRING) {
-			return $this->set('IS', $value, $type);
-		}
+        public function is($value, $type = Statement::STRING) {
+            return $this->set('IS', $value, $type);
+        }
 
         /**
          * Set statement parameters
@@ -164,6 +164,6 @@
             $this->statement->bind($this->bind);
 
             return $this->statement;
-		}
-	}
-?>
+        }
+    }
+    ?>
