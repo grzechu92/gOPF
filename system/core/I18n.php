@@ -63,7 +63,7 @@
 		public function __construct() {
 			self::$instance = $this;
 			
-			$this->config = Config::factory('i18n.ini', Config::SYSTEM);
+			$this->config = Config::factory('i18n.ini', Config::APPLICATION);
 			$this->accepted = $this->getAcceptedLanguages();
 		}
 		
