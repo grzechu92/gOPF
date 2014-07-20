@@ -26,15 +26,13 @@
 		 * Constructor of router module
 		 */
 		public function __construct() {
-			$router = Config::factory('router.ini', Config::SYSTEM);
+            $routes = Config::factory('routes.ini', Config::APPLICATION);
 
-			if (!$router->enabled) {
+			if (!$routes->enabled) {
 				exit();
 			}
 			
-			$routes = Config::factory('routes.ini', Config::APPLICATION);
 			$routes = $routes->getContent();
-			
 			$this->match($routes['routes'], $routes['default']);
 		}
 
