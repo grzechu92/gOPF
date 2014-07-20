@@ -14,7 +14,7 @@
 		 * @see \System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
-			$config = Config::factory('terminal.ini', Config::SYSTEM);
+			$config = Config::factory('terminal.ini', Config::APPLICATION);
 			$ip = $config->ip;
 			
 			if (!$config->enabled) {

@@ -54,7 +54,7 @@
 		 * @throws \System\Terminal\Exception
 		 */
 		public static function factory(Command $parsed) {
-			$config = Config::factory('terminal.ini', Config::SYSTEM);
+			$config = Config::factory('terminal.ini', Config::APPLICATION);
 			$commands = $config->get('commands');
 			
 			if ($parsed->name[0] != '\\') {

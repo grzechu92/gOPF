@@ -85,7 +85,7 @@
 		 * @return \System\Terminal\Status Updated terminal status
 		 */
 		private function validate(Status $status) {
-			$config = Config::factory('terminal.ini', Config::SYSTEM);
+			$config = Config::factory('terminal.ini', Config::APPLICATION);
 			
 			$user = $config->getArrayValue('users', $status->user);
 			

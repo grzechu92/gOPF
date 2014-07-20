@@ -91,7 +91,7 @@
 		 */
 		private function changeUserPassword(Status $status, $user) {
 			$error = false;
-			$config = Config::factory('terminal.ini', Config::SYSTEM, true);
+			$config = Config::factory('terminal.ini', Config::APPLICATION, true);
 
             $users = $config->getArrayValue('users', $user);
 

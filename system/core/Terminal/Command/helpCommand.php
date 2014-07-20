@@ -25,7 +25,7 @@
 		public function execute() {
 			$help = new Help('Available commands and a few of important shortcuts');
 			$lines = array();
-			$config = Config::factory('terminal.ini', Config::SYSTEM);
+			$config = Config::factory('terminal.ini', Config::APPLICATION);
 			$commands = $config->get('commands');
 			
 			foreach ($commands as $name => $class) {

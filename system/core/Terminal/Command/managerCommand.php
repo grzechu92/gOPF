@@ -50,7 +50,7 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$config = Config::factory('terminal.ini', Config::SYSTEM, true);
+			$config = Config::factory('terminal.ini', Config::APPLICATION, true);
 			$output = '';
 			
 			if ($this->getParameter('list')) {
