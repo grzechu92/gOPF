@@ -52,7 +52,7 @@
 		 */
 		public function __construct() {
 			self::$instance = $this;
-			$this->config = Config::factory('session.ini', CONFIG::SYSTEM);
+			$this->config = Config::factory('session.ini', Config::APPLICATION);
 			
 			$this->initDriver();
 			
