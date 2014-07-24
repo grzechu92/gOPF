@@ -84,7 +84,7 @@
 			}
 			
 			self::$CLI = isset($_SERVER['argv']) ? $_SERVER['argv'] : array();
-			self::$URL = isset(self::$CLI[1]) ? self::$CLI[1] :$this->parseURL();
+			self::$URL = isset(self::$CLI[1]) ? self::$CLI[1] : $this->parseURL();
 			
 			if (get_magic_quotes_gpc()) {
 				$this->removeMagicQuotes();

@@ -1,7 +1,7 @@
 /**
  * JavaScript Events library
  *
- * @/System/Core/Events.js
+ * @/System/Events/Events.js
  *
  * Version 1.0
  *
