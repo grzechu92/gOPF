@@ -2,9 +2,10 @@
     namespace gOPF;
     use \gOPF\gWSS\Client;
     use \gOPF\gWSS\Config;
+    use \System\Events;
 
     /**
-     * gWSS - grzechu WebSocket Service
+     * gWSS - gWSS WebSocket Service
      *
      * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
      * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -12,10 +13,16 @@
      */
     class gWSS  {
         /**
-         * Events manager
-         * @var \System\Event
+         * Events manager for server events
+         * @var \System\Events
          */
-        public $events;
+        public $server;
+
+        /**
+         * Events manager for client events
+         * @var \System\Events
+         */
+        public $client;
 
         /**
          * Server configuration object
@@ -35,10 +42,16 @@
          */
         private $clients = array();
 
+        /**
+         * Initialize WebSocket server
+         * @param \gOPF\gWSS\Config $config
+         */
         public function __construct(Config $config = null) {
             set_time_limit(0);
 
             $this->config = ($config instanceof Config) ? $config : new Config();
+            $this->server = new Events();
+            $this->client = new Events();
 
             $this->console('Server starting...');
 
@@ -58,9 +71,15 @@
             }
 
             $this->main = $socket;
-            $this->console('Server started on '.$this->config->host.':'.$this->config->port);
+            $this->console('Listening on '.$this->config->host.':'.$this->config->port);
         }
 
+        /**
+         * Print message to console
+         *
+         * @param string $message Message to display
+         * @param \gOPF\gWSS\Client|null $client Client instance, for better information (optional)
+         */
         public function console($message, Client $client = null) {
             $output = date('[Y-m-d H:i:s]');
             $output .= ($client instanceof Client) ? '['.$client->id.']' : str_repeat(' ', 15);
@@ -71,6 +90,9 @@
             }
         }
 
+        /**
+         * Start daemon
+         */
         public function run() {
             $this->console('Daemon started!');
 
@@ -104,11 +126,15 @@
                         }
                     }
                 }
-
-                $this->console('Users: '.count($this->clients));
             }
         }
 
+        /**
+         * Get Client instance by active socket
+         *
+         * @param resource $socket Active
+         * @return bool|\gOPF\gWSS\Client Instance of Client or false when not exists
+         */
         private function getClientBySocket($socket) {
             foreach ($this->clients as $client) {
                 if ($client->socket == $socket) {
@@ -122,43 +148,11 @@
             return false;
         }
 
-        private function action(Client $client, $action) {
-            $action = $this->unmask($action);
-
-            $this->console('Performing action: '.$action);
-
-            if($action == 'CLOSE' || $action == '') {
-                $client->kill($client);
-            }
-        }
-
-
-        private function startProcess(Client $client) {
-            $pid = pcntl_fork();
-
-            if ($pid == -1) {
-                $this->console('Fork create failed!', true);
-            } elseif ($pid) {
-                $client->pid = $pid;
-                $this->console('Fork created!');
-            } else {
-                while (true) {
-                    if ($client->container->counter == null) {
-                        $client->container->counter = 0;
-                    }
-
-                    $this->send($client, $client->container->counter++);
-
-                    if (!$client->alive) {
-                        $this->console('Process '.$client->pid.' killed!');
-                        die();
-                    } else {
-                        usleep(500000);
-                    }
-                }
-            }
-        }
-
+        /**
+         * Terminate daemon
+         *
+         * @param string $message Message when terminating
+         */
         private function terminate($message = '') {
             if (!empty($message)) {
                 $this->console($message);

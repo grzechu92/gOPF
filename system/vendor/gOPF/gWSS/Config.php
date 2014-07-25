@@ -31,6 +31,6 @@
          * Fork refresh time (in microseconds, 1 000 000us = 1s)
          * @var int
          */
-        public $refresh = 1000000;
+        public $refresh = 100000;
     }
 ?>

@@ -46,6 +46,12 @@
         public $container;
 
         /**
+         * Last data from client
+         * @var \stdClass
+         */
+        public $data;
+
+        /**
          * WebSocket server
          * @var \gOPF\gWSS
          */
@@ -64,9 +70,10 @@
          * @param \gOPF\gWSS\Config $config WebSocket server config
          * @param resource $socket Socket resource
          */
-        public function __construct(\gOPF\gWSS $server, \gOPF\gWSS\Config $config, $socket) {
+        public function __construct(\gOPF\gWSS $server, Config $config, $socket) {
             $this->id = uniqid();
             $this->container = new \System\Container();
+
 
             $this->socket = $socket;
             $this->server = $server;
@@ -99,12 +106,39 @@
                 $this->handshake(new Headers($data));
 
                 if ($this->handshake) {
-//                    $this->startProcess($client);
+                    $this->loop();
                 } else {
                     $this->kill();
                 }
             } else {
-//                $this->action($client, $data);
+                $this->server->console('Receiving data...', $this);
+
+                $encoded = Encoder::decodeWebSocket($data);
+
+                if (!empty($encoded)) {
+                    $event = (object) json_decode($encoded);
+                    $this->data = $event->data;
+
+                    $this->server->client->call($event->event, $this);
+                }
+            }
+        }
+
+        /**
+         * Send data to client
+         *
+         * @param \gOPF\gWSS\Response|string $data String with data for client
+         */
+        public function send($data) {
+            $this->server->console('Sending data...', $this);
+
+            if ($data instanceof Response) {
+                $data = Encoder::encodeWebSocket($data->build());
+            }
+
+            if (@socket_write($this->socket, $data, strlen($data)) === false) {
+                $this->server->console('Sending data failed', $this);
+                $this->kill();
             }
         }
 
@@ -155,28 +189,44 @@
                 'Sec-WebSocket-Accept: '.$accept."\r\n".
                 "\r\n";
 
-            $this->send($upgrade, true);
+            $this->send($upgrade);
 
             $this->handshake = true;
             $this->server->console('Handshaking done!', $this);
         }
 
         /**
-         * Send data to client
-         *
-         * @param string $data String with data for client
-         * @param bool $raw Raw response?
+         * Server events loop
          */
-        private function send($data, $raw = false) {
-            $this->server->console('Sending data...', $this);
+        private function loop() {
+            $pid = pcntl_fork();
 
-            if (!$raw) {
-                $data = Encoder::encodeWebSocket($data);
-            }
+            if ($pid == -1) {
+                $this->server->console('Fork create failed!', $this);
+            } elseif ($pid) {
+                $this->pid = $pid;
+                $this->server->console('Fork created!', $this);
+            } else {
+                while (true) {
+                    $events = $this->server->server->get();
 
-            if (@socket_write($this->socket, $data, strlen($data)) === false) {
-                $this->server->console('Sending data failed', $this);
-                $this->kill();
+                    if (count($events) > 0) {
+                        foreach($events as $event) {
+                            $result = $event->closure($this);
+
+                            if ($result instanceof Response) {
+                                $this->send($result);
+                            }
+                        }
+                    }
+
+                    if (!$this->alive) {
+                        $this->server->console('Fork killed!', $this);
+                        die();
+                    } else {
+                        usleep($this->config->refresh);
+                    }
+                }
             }
         }
     }
