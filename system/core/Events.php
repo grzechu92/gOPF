@@ -39,9 +39,9 @@
          * Call event by name
          *
          * @param string $name Event name
-         * @param \stdClass $data Event data (default: null)
+         * @param mixed $data Event data (default: null)
          */
-        public function call($name, \stdClass $data = null) {
+        public function call($name, $data = null) {
             if (isset($this->list[$name])) {
                 /** @var $event \System\Events\Event */
                 foreach ($this->list[$name] as $id=>$event) {
@@ -65,6 +65,23 @@
             foreach ($names as $name) {
                 unset($this->list[$name]);
             }
+        }
+
+        /**
+         * Return all events
+         *
+         * @return \System\Events\Event[]
+         */
+        public function get() {
+            $output = array();
+
+            foreach ($this->list as $events) {
+                foreach ($events as $event) {
+                    $output[] = $event;
+                }
+            }
+
+            return $output;
         }
     }
 ?>
