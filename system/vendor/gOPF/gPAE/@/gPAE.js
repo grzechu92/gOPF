@@ -19,7 +19,11 @@
  * onDisconnect() 			called when client is disconnected from push server
  * onReconnect() 			called when client trying to connect to server
  * onConnectionLost() 		called when client lost connection with server (onDisconnect is called with it)
- * 
+ *
+ * Requires:
+ * @/System/Core/gOPF.js
+ * @/System/Core/jQuery.js
+ *
  * Version 1.0
  * jQuery 1.8
  * 
@@ -55,13 +59,13 @@
 		},
 		
 		encrypt: function(data) {
-			var encoded = jQuery.gOPF('encodeBase64', jQuery.gOPF('encodeJSON', data));
+            var encoded = gOPF.Base64.encode(JSON.parse(data));
 			var offset = 0;
 			var encrypted = '';
 			
 			while (offset <= encoded.length) {
 				var chunk = encoded.substr(offset, 2);
-				var checksum = jQuery.gOPF('encodeBase64', chunk);
+                var checksum = gOPF.Base64.encode(chunk);
 				encrypted += checksum.substr(0, 1)+chunk;
 				
 				offset += 2;
@@ -81,7 +85,7 @@
 				offset += 3;
 			}
 			
-			return jQuery.gOPF('decodeBase64', decoded);
+            return gOPF.Base64.decode(decoded);
 		},
 		
 		action: function(data) {
@@ -133,7 +137,7 @@
 		handler: {connect: null, hold: null, send: null, reconnect: null, disconnect: null},
 		
 		closeHandlers: function() {
-			for (type in this.handler) {
+			for (var type in this.handler) {
 				if (this.handler[type] && this.handler[type].start) {
 					this.handler[type].abort();
 					this.handler[type] = null;
