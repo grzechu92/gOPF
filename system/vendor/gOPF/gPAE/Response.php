@@ -2,7 +2,7 @@
 	namespace gOPF\gPAE;
 	
 	/**
-	 * Response class which builds response for client
+	 * Response class which build JSON response for client
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -17,28 +17,55 @@
 		
 		/**
 		 * Values for client
-		 * @var array
+		 * @var \gOPF\gPAE\Result
 		 */
-		private $values = array();
+		private $result;
+
+        /**
+         * Event to call on client side
+         * @var string
+         */
+        private $event;
 		
 		/**
 		 * Initiates response object
 		 * 
 		 * @param string $command Command for client
-		 * @param array $values Values for client
+		 * @param \gOPF\gPAE\Result $result Data result
+         * @param string|null $event Event to call on client side
 		 */
-		public function __construct($command, $values = array()) {
+		public function __construct($command, Result $result = null, $event = null) {
 			$this->command = $command;
-			$this->values = $values;
+			$this->result = $result;
+            $this->event = $event;
 		}
+
+        /**
+         * @see \gOPF\gPAE\Response::build()
+         */
+        public function __toString() {
+            return $this->build();
+        }
 		
 		/**
 		 * Builds response for client
-		 * 
-		 * @return array Response for client
+         *
+         * @return string JSON response object
 		 */
 		public function build() {
-			return array_merge(array('command' => $this->command, 'time' => microtime(true)-__START_TIME), $this->values);
+            $output = new \stdClass();
+            $output->command = $this->command;
+            $output->time = microtime(true) - __START_TIME;
+
+            if ($this->result instanceof Result) {
+                $output->result = $this->result;
+            }
+
+            if (!empty($this->event)) {
+                $output->event = $this->event;
+            }
+
+			return json_encode($output);
 		}
 	}
 ?>

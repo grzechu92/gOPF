@@ -33,6 +33,7 @@
 			$this->timeout = $timeout;
 			
 			$this->container = Session::get($key);
+
 			Session::set($key, $this->container, $timeout);
 			Session::synchronize();
 		}
@@ -42,6 +43,7 @@
 		 */
 		public function set($offset, $value) {
 			$this->container[$offset] = $value;
+
 			Session::set($this->key, $this->container, $this->timeout);
 			Session::synchronize();
 		}
@@ -51,7 +53,9 @@
 		 */
 		public function get($offset) {
 			Session::synchronize();
+
 			$this->container = Session::get($this->key);
+
 			return isset($this->container[$offset]) ? $this->container[$offset] : null;
 		}
 		
