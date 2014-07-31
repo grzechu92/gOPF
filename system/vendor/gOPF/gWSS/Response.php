@@ -22,14 +22,21 @@
         private $data;
 
         /**
-         * Initialize Resposne object
+         * Initialize response object
          *
          * @param string $event Event name
-         * @param \stdClass $data Event data
+         * @param \stdClass|null  $data Event data
          */
-        public function __construct($event, $data) {
+        public function __construct($event, $data = null) {
             $this->event = $event;
             $this->data = (object) $data;
+        }
+
+        /**
+         * @see \gOPF\gWSS\Response::build()
+         */
+        public function __toString() {
+            return $this->build();
         }
 
         /**
@@ -40,7 +47,10 @@
         public function build() {
             $output = new \stdClass();
             $output->event = $this->event;
-            $output->data = $this->data;
+
+            if ($this->data != new \stdClass()) {
+                $output->data = $this->data;
+            }
 
             return json_encode($output);
         }

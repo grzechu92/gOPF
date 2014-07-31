@@ -2,7 +2,7 @@
     namespace gOPF;
     use \gOPF\gWSS\Client;
     use \gOPF\gWSS\Config;
-    use \System\Events;
+    use \gOPF\gWSS\Events;
 
     /**
      * gWSS - gWSS WebSocket Service
@@ -13,16 +13,10 @@
      */
     class gWSS  {
         /**
-         * Events manager for server events
-         * @var \System\Events
+         * Events for client and server
+         * @var \gOPF\gWSS\Events
          */
-        public $server;
-
-        /**
-         * Events manager for client events
-         * @var \System\Events
-         */
-        public $client;
+        public $events;
 
         /**
          * Server configuration object
@@ -44,14 +38,14 @@
 
         /**
          * Initialize WebSocket server
-         * @param \gOPF\gWSS\Config $config
+         *
+         * @param \gOPF\gWSS\Config|null $config Server config
          */
         public function __construct(Config $config = null) {
             set_time_limit(0);
 
             $this->config = ($config instanceof Config) ? $config : new Config();
-            $this->server = new Events();
-            $this->client = new Events();
+            $this->events = new Events();
 
             $this->console('Server starting...');
 

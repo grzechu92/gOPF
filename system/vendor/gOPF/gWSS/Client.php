@@ -113,13 +113,11 @@
             } else {
                 $this->server->console('Receiving data...', $this);
 
-                $encoded = Encoder::decodeWebSocket($data);
+                $data = (object) json_decode(Encoder::decodeWebSocket($data));
 
-                if (!empty($encoded)) {
-                    $event = (object) json_decode($encoded);
-                    $this->data = $event->data;
-
-                    $this->server->client->call($event->event, $this);
+                if (isset($data->event)) {
+                    $this->data = $data->data;
+                    $this->server->events->client->call($data->event, $this);
                 }
             }
         }
@@ -208,7 +206,7 @@
                 $this->server->console('Fork created!', $this);
             } else {
                 while (true) {
-                    $events = $this->server->server->get();
+                    $events = $this->server->events->server->get();
 
                     if (count($events) > 0) {
                         foreach($events as $event) {
