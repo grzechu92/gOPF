@@ -19,6 +19,10 @@ function gOPF() {
         }, {element: element, property: property, value: value});
     };
 
+    this.microtime = function() {
+        return (new Date().getMilliseconds() / 1000) + new Date().getTime();
+    };
+
     this.console = function(status) {
         if (!status) {
             return;
