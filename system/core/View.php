@@ -29,7 +29,7 @@
 		private $frame;
 		
 		/**
-		 * Rendering staus
+		 * Rendering status
 		 * @var bool
 		 */
 		private $render = true;
@@ -99,7 +99,7 @@
 		/**
 		 * Sets document frame to render
 		 * 
-		 * @param string $name Path to frame
+		 * @param string $name Absolute path to frame
 		 */
 		public static function setFrame($name) {
 			self::$instance->frame = $name;
