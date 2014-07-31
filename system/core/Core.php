@@ -41,16 +41,17 @@
 		public static $UUID;
 		
 		/**
-		 * Array with events
-		 * @var \System\Core\Event[]
+		 * Core events
+		 * @var \System\Events
 		 */
-		private static $events = array();
+		public static $events;
 		
 		/**
 		 * Creates instance of Core class, and loads UUID (Unique User ID)
 		 */
 		public function __construct() {
 			self::$instance = $this;
+            self::$events = new Events();
 			
 			self::getUUID();
 		}
@@ -86,32 +87,6 @@
 			setcookie('__UUID', self::$UUID, time()+24*3600, '/');
 		}
 		
-		/**
-		 * Adds event to core events registry
-		 * 
-		 * @param \System\Core\Event $event Event to add
-		 */
-		public static function addEventListener(\System\Core\Event $event) {
-			if (!is_array(self::$events[$event->name])) {
-				self::$events[$event->name] = array();
-			}
-			
-			self::$events[$event->name][] = $event;
-		}
-		
-		/**
-		 * Calls event from events registry, if exits
-		 * 
-		 * @param string $name Event name
-		 */
-		public static function callEvent($name) {
-			if (isset(self::$events[$name])) {
-				foreach (self::$events[$name] as $event) {
-					$event->closure();
-				}
-			}
-		}
-
 		/**
 		 * Initializes all important core components
 		 */
