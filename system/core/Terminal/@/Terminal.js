@@ -1,8 +1,8 @@
 /**
  * JavaScript gOPF Terminal Plugin object
- * 
+ *
  * @/System/Terminal/Terminal.js
- * 
+ *
  * Usage:
  * Terminal.init();						Initiates terminal connection
  * Terminal.send(command);				Allows to pass command to terminal
@@ -15,15 +15,15 @@
  * Terminal.print(data);				Allows to put data into terminal output
  * Terminal.clear();					Clears terminal output
  * Terminal.upload(id, name, content);	Allows to upload file into terminal gate
- * 
+ *
  * Requires:
+ * @/System/Core/jQuery.js
  * @/System/Core/gOPF.js
- * @/gOPF/gPAE/gPAE.js
  * @/System/Terminal/style.css
- * 
- * 
+ * @/gOPF/gPAE/gPAE.js
+ *
  * Version 1.2
- * 
+ *
  * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>

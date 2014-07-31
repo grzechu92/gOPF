@@ -1,6 +1,6 @@
 <?php
 	namespace System;
-	use gOPF\gPAE\Event;
+    use gOPF\gPAE\Config;
     use gOPF\gPAE;
     use System\Filesystem;
     use System\Terminal\Command;
@@ -57,8 +57,11 @@
 			Command::$terminal = self::$instance;
 			Command::$session = self::$session;
 
+            $config = new Config();
+            $config->interval = 1000;
+
 			$this->parser = new Parser();
-			$this->engine = new gPAE(array(gPAE::INTERVAL => 100));
+			$this->engine = new gPAE($config);
 			$this->registerEvents();
 
 			return $this->engine->run();
