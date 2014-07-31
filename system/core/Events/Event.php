@@ -16,16 +16,16 @@
         public $name;
 
         /**
-         * Event action
-         * @var \Closure
-         */
-        public $closure;
-
-        /**
          * Call event once?
          * @var bool
          */
         public $once;
+
+        /**
+         * Event action
+         * @var \Closure
+         */
+        private $closure;
 
         /**
          * Initialize event object
@@ -41,14 +41,13 @@
         }
 
         /**
-         * Magical method to call closure by calling $this->closure()
+         * Execute function closure
          *
-         * @param string $method Method name
-         * @param array $args Array with arguments
-         * @return mixed Function result
+         * @param mixed
+         * @return mixed Closure execution result
          */
-        public function __call($method, $args) {
-            return call_user_func_array($this->{$method}, $args);
+        public function closure() {
+            return call_user_func_array($this->closure, func_get_args());
         }
     }
 ?>
