@@ -9,9 +9,28 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Storage {
+        /**
+         * APC driver
+         * @var string
+         */
         const APC = 'APCDriver';
+
+        /**
+         * Default driver
+         * @var string
+         */
         const SESSION = 'DefaultDriver';
+
+        /**
+         * Filesystem driver
+         * @var string
+         */
         const FILESYSTEM = 'FilesystemDriver';
+
+        /**
+         * Serialized filesystem driver
+         * @var string
+         */
         const SERIALIZED_FILESYSTEM = 'SerialziedFilesystemDriver';
 
 		/**
