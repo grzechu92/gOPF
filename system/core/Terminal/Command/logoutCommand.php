@@ -1,7 +1,7 @@
 <?php
 	namespace System\Terminal\Command;
-	
-	/**
+
+    /**
 	 * Terminal command: logout (loggs out current user)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -22,15 +22,13 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = self::$session;
-			$status = $session->pull();
-			
-			$status->initialize();
+			$status = new \System\Terminal\Status();
 			$status->clear = true;
 			$status->buffer('Bye!');
 			$status->prompt = '';
+            $status->update();
 			
-			$session->push($status);
+			self::$session->push($status);
 		}
 	}
 ?>

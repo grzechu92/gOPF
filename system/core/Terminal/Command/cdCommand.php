@@ -53,10 +53,11 @@
 		 * @return \System\Terminal\Status Updated terminal status
 		 */
 		private function relativeMoveTo(Status $status) {
-			$path = $status->path.$this->value;
+			$path = $status->path . $this->value;
 			
 			if ($this->checkDirectory($path)) {
 				$status->path = $this->buildPath($path);
+
 				return $status;
 			} else {
 				throw new Exception('Wrong way!');
@@ -73,6 +74,7 @@
 		private function absoluteMoveTo(Status $status) {
 			if ($this->checkDirectory($this->value)) {
 				$status->path = $this->buildPath($this->value);
+
 				return $status;
 			} else {
 				throw new Exception('Wrong way!');

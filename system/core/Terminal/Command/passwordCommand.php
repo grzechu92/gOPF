@@ -34,7 +34,7 @@
 		public function execute() {
 			$initialized = false;
 			
-			$session = Terminal::$session;
+			$session = self::$session;
 			$status = $session->pull();
 			
 			if (!isset($status->storage['user'])) {

@@ -48,11 +48,11 @@
 		 * @return array Array with directory elements
 		 */
 		public function getElements($path) {
-			$iterator = new \DirectoryIterator(__ROOT_PATH.$path);
 			$files = $dirs = array();
 			
-			foreach ($iterator as $element) {
-				if ($element->isDot()) continue;
+			foreach (new \DirectoryIterator(__ROOT_PATH.$path) as $element) {
+                /** @var $element \DirectoryIterator */
+                if ($element->isDot()) continue;
 			
 				if ($element->isFile()) {
 					$files[$element->getFilename()] = clone($element);

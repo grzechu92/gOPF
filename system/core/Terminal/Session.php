@@ -1,5 +1,6 @@
 <?php
 	namespace System\Terminal;
+    use \System\Storage;
 	
 	/**
 	 * Terminal session object
@@ -21,126 +22,108 @@
 		 */
 		private $id;
 		
-		/**
-		 * Terminal session storage
-		 * @var \System\Storage
-		 */
-		private $storage;
-		
-		/**
-		 * Client container from session storage
-		 * @var array
-		 */
-		private $container = array();
+        /**
+         * Terminal sessions storage
+         * @var \System\Storage\Container
+         */
+        private $container;
 		
 		/**
 		 * Initializes terminal session object
 		 */
 		public function __construct() {
 			$this->id = \System\Core::$UUID;
-			$this->storage = new \System\Storage();
-			$this->read();
-		}
-		
-		/**
-		 * Saves terminal session in storage
-		 */
-		public function __destruct() {
-			$this->write();
-		}
-		
-		/**
-		 * Allows to fast pull/set/push action
-		 * 
-		 * @param string $name Variable name
-		 * @param mixed $value Variable value
-		 */
-		public function __set($name, $value) {
-			$status = $this->pull();
-			$status->{$name} = $value;
-			$this->push($status);
-		}
-		
-		/**
-		 * Allows to fast pull/get action
-		 * 
-		 * @param string $name Variable name
-		 * @return mixed Variable value
-		 */
-		public function __get($name) {
-			$status = $this->pull();
-			
-			return $status->{$name}; 
+			$this->container = Storage::factory(self::STORAGE, Storage::APC);
 		}
 		
 		/**
 		 * Updates terminal status object in session storage
-		 * 
-		 * @param \System\Terminal\Status $value Current terminal status
+		 *
+		 * @param \System\Terminal\Status $status Current terminal status
 		 */
-		public function push(Status $value) {
-			$this->container[$this->id] = $value;
-			$this->write();
+		public function push(Status $status) {
+			$this->write($status);
 		}
-		
-		/** 
+
+		/**
 		 * Reads terminal status object from session storage
-		 * 
+		 *
 		 * @return \System\Terminal\Status Current terminal status
 		 */
 		public function pull() {
-			$this->read();
-			return $this->container[$this->id];
+			return $this->read();
 		}
-		
+
 		/**
 		 * Allows to fast pull/buffer/push action
-		 * 
+		 *
 		 * @param string $content Content to buffer
 		 */
 		public function buffer($content) {
-			$status = $this->pull();
+			$status = $this->read();
 			$status->buffer($content);
 			$status->update();
-			$this->push($status);
+
+			$this->write($status);
 		}
-		
+
 		/**
 		 * Allows to add command into history
-		 * 
+		 *
 		 * @param string Command to save in history
 		 */
 		public function history($command) {
-			$status = $this->pull();
-			if (count($status->history) === 0 || $status->history[count($status->history)-1] != $command) {
+			$status = $this->read();
+
+			if (count($status->history) === 0 || $status->history[count($status->history) - 1] != $command) {
 				$status->history[] = $command;
-				$this->push($status);
+
+				$this->write($status);
 			}
 		}
-		
+
 		/**
 		 * Updates time of last status edit
 		 */
 		public function update() {
-			$status = $this->pull();
+			$status = $this->read();
 			$status->update();
-			$this->push($status);
+
+            $this->write($status);
 		}
 		
 		/**
 		 * Reads current terminal session
+         *
+         * @return \System\Terminal\Status Terminal session status
 		 */
-		public function read() {
-			$this->storage->read(self::STORAGE);
-			$this->container = $this->storage->get(self::STORAGE);
-		}
+		private function read() {
+			$this->container->read();
+            $sessions = $this->container->get();
+
+            if (!isset($sessions[$this->id])) {
+                $status = new Status();
+                $this->write($status);
+            } else {
+                $status = $sessions[$this->id];
+            }
+
+            return $status;
+        }
 		
 		/**
 		 * Writes current terminal session
+         *
+         * @param \System\Terminal\Status $status Terminal session status
 		 */
-		public function write() {
-			$this->storage->set(self::STORAGE, $this->container);
-			$this->storage->write(self::STORAGE);
+		private function write(Status $status) {
+            $this->container->read();
+            $sessions = $this->container->get();
+
+            $sessions[$this->id] = $status;
+
+            $this->container->set($sessions);
+            $this->container->write();
 		}
 	}
 ?>

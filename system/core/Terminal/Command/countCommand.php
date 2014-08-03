@@ -32,16 +32,22 @@
 			$session = self::$session;
 			
 			for ($i = 1; $i <= $this->value; $i++) {
-				if ($session->abort) {
+                $status = $session->pull();
+
+				if ($status->abort) {
 					break;
 				}
-				
-				sleep(1);
-				$session->buffer($i);
+
+				$status->buffer($i);
 				
 				if ($this->getParameter('clear')) {
-					$session->clear = true;
+					$status->clear = true;
 				}
+
+                $status->update();
+                $session->push($status);
+
+                sleep(1);
 			}
 		}
 	}

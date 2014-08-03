@@ -20,6 +20,7 @@
  * @/System/Core/jQuery.js
  * @/System/Core/gOPF.js
  * @/System/Terminal/style.css
+ * @/System/Events/Events.js
  * @/gOPF/gPAE/gPAE.js
  *
  * Version 1.2
@@ -75,48 +76,50 @@ Terminal = {
 			}
 		}
 	},
+
+    push: new gPAE("/terminal/connection"),
 	
 	position: 0,
 		
 	init: function() {
-		$.gPAE("connect");
-		
-		$.gPAE("addEvent", "onConnect", function() {
-			$.gPAE("sendEvent", "initialize");
-		});
-		
-		$.gPAE("addEvent", "onDisconnect", function() {
-			$.gPAE("connect");
-		});
-		
-		$.gPAE("addEvent", "stream", function(data) {
-			Terminal.status = data.value;
-			Terminal.check(data.value);
-			Terminal.update(data.value);
-		});
-		
+		Terminal.push.connect();
+
+        Terminal.push.events.on("onConnect", function() {
+            Terminal.push.send("initialize");
+        });
+
+        Terminal.push.events.on("onDisconnect", function() {
+            Terminal.push.connect();
+        });
+
+        Terminal.push.events.on("stream", function(data) {
+            Terminal.status = data.value;
+            Terminal.check(data.value);
+            Terminal.update(data.value);
+        });
+
 		setInterval(Terminal.uploader.upload, 500);
 	},
 	
 	send: function(command) {
 		if (!Terminal.status.processing) {
 			command = (Terminal.status.prefix == null) ? command : Terminal.status.prefix + command;
-			
-			$.gPAE("sendEvent", "command", {command: command, secret: !($("#command").prop("type") == "text")});
+
+            Terminal.push.send("command", {command: command, secret: !($("#command").prop("type") == "text")});
 			Terminal.lock();
 		}
 	},
 	
 	abort: function() {
-		$.gPAE("sendEvent", "abort");
+        Terminal.push.send("abort");
 	},
-	
+
 	debug: function() {
-		$.gPAE("sendEvent", "debug");
+        Terminal.push.send("debug");
 	},
 	
 	reset: function() {
-		$.gPAE("sendEvent", "reset");
+        Terminal.push.send("reset");
 	},
 	
 	complete: function(command) {
@@ -124,7 +127,7 @@ Terminal = {
 			var value = command.val();
 			
 			if (value != "") {
-				$.gPAE("sendEvent", "complete", {command: value, position: command.get(0).selectionStart});
+                Terminal.push.send("complete", {command: value, position: command.get(0).selectionStart});
 			}
 		}
 	},
@@ -165,7 +168,7 @@ Terminal = {
 			var after = command.val().slice(position);
 			var before = command.val().slice(0, position);
 			
-			command = before+data.complete+after;
+			command = before + data.complete + after;
 			
 			if (command != null) {
 				$("#command").val(command);
@@ -202,11 +205,9 @@ Terminal = {
 	},
 	
 	upload: function(id, name, content) {
-		$.gPAE("sendEvent", "upload", {id: id, name: name, content: content});
+        Terminal.push.send("upload", {id: id, name: name, content: content});
 	}
 };
-
-$.gPAE("config", {url: "/terminal/connection", debug: 2});
 
 $(document).ready(function() {
 	$("#command").focus();
@@ -292,8 +293,7 @@ $(document).ready(function() {
 	
 	$("html").on("drop", function(e) {
 		var files = e.originalEvent.dataTransfer.files;
-		console.log("drop", files);
-		
+
 		for (var i = 0; i < files.length; i++) {
 			(function(file) {
 				var id = (Math.random()+"").split(".")[1];

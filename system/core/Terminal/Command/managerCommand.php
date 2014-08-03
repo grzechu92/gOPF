@@ -70,7 +70,7 @@
 			}
 
 			if (!empty($output)) {
-				\System\Terminal::$session->buffer($output);
+				self::$session->buffer($output);
 			}
 		}
 		
@@ -129,8 +129,9 @@
 			if (empty($class)) {
 				return self::COMMAND_NOT_EXISTS;
 			}
-			
-			$object = new $class();
+
+            /** @var $object \System\Terminal\CommandInterface */
+            $object = new $class();
 			$object->onUninstall();
 			
 			$config->removeFromArray('commands', $command);

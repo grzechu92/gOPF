@@ -95,8 +95,6 @@
 				return;
 			}
 
-            $session->clear = true;
-
             if (!$this->getParameter('bare')) {
                 $this->output = $this->output.'/'.$version.' (build '.$build.')';
                 $session->buffer('Creating output directory: '.$this->output);
@@ -124,10 +122,9 @@
 				$context = $this->output;
 			}
 			
-			$iterator = new \RecursiveDirectoryIterator($directory);
-			
-			foreach ($iterator as $file) {
-				if (in_array($file->getFilename(), $this->ignored)) {
+			foreach (new \RecursiveDirectoryIterator($directory) as $file) {
+                /** @var $file \RecursiveDirectoryIterator */
+                if (in_array($file->getFilename(), $this->ignored)) {
 					continue;
 				}
 				

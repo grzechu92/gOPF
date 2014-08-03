@@ -6,6 +6,7 @@
 
 <script src="@/System/Core/jQuery.js"></script>
 <script src="@/System/Core/gOPF.js"></script>
+<script src="@/System/Events/Events.js"></script>
 <script src="@/gOPF/gPAE/gPAE.js"></script>
 <script src="@/System/Terminal/Terminal.js"></script>
 

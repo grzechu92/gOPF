@@ -23,10 +23,10 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = Terminal::$session;
+			$session = self::$session;
 			$status = $session->pull();
+
 			$history = array();
-				
 			foreach ($status->history as $command) {
 				$history[] = $command;
 			}

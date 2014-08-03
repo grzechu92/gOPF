@@ -25,12 +25,15 @@
 		 */
 		public function execute() {
 			$session = self::$session;
+            $status = $session->pull();
 			
 			$message = "\n".str_pad('gOPF Terminal v'.Core::VERSION.' (build '.Core::BUILD.')', 60, ' ', STR_PAD_BOTH)."\n";
 			$message .= "\n".str_pad('Yeap, that\'s it, type help if you want to know more', 60, ' ', STR_PAD_BOTH)."\n";
 			
-			$session->clear = true;
-			$session->buffer($message);
+			$status->clear = true;
+			$status->buffer($message);
+
+            $session->push($status);
 		}
 	}
 ?>

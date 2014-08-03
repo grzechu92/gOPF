@@ -41,22 +41,21 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = \System\Terminal::$session;
+			$session = self::$session;
 			
 			foreach ($this->directories as $directory) {
 				$session->buffer('Cleaning directory '.$directory);
 				
-				$iterator = new \RecursiveDirectoryIterator(__ROOT_PATH.$directory);
-				
-				foreach ($iterator as $file) {
-					if (in_array($file->getFilename(), $this->ignored)) {
+				foreach (new \RecursiveDirectoryIterator(__ROOT_PATH . $directory) as $file) {
+                    /** @var $file \RecursiveDirectoryIterator */
+                    if (in_array($file->getFilename(), $this->ignored)) {
 						continue;
 					}
 					
 					\System\Filesystem::remove($file, $file->isDir());
 				}
 
-				usleep(800*1000);
+				usleep(800 * 1000);
 			}
 		}
 	}

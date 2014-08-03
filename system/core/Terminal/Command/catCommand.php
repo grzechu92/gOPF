@@ -53,7 +53,7 @@
          * @return string Built path
 		 */
 		private function buildPath($file, \System\Terminal\Session $session) {
-			return str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, __ROOT_PATH.$session->path.$file);
+			return str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, __ROOT_PATH . $session->pull()->path . $file);
 		}
 	}
 ?>

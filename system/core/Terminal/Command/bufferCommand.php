@@ -21,9 +21,12 @@
 		 */
 		public function execute() {
 			$session = self::$session;
+            $status = $session->pull();
 			
-			while (!$session->abort) {
+			while (!$status->abort) {
 				$session->buffer(sha1(rand()));
+                usleep(100000);
+                $status = $session->pull();
 			}
 		}
 	}

@@ -100,7 +100,7 @@
 		public $updated;
 		
 		/**
-		 * Prefilled command
+		 * Filled command
 		 * @var string
 		 */
 		public $command = null;
@@ -132,10 +132,10 @@
 		/**
 		 * Initializes and setts required status fields
 		 */
-		public function initialize() {
+		public function __construct() {
 			$this->user = $_SERVER['REMOTE_ADDR'];
 			$this->host = $_SERVER['HTTP_HOST'];
-			$this->initialized = true;
+			$this->initialized = false;
 			$this->path = '/';
 			$this->logged = false;
 			$this->processing = true;

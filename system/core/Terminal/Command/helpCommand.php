@@ -25,6 +25,7 @@
 		public function execute() {
 			$help = new Help('Available commands and a few of important shortcuts');
 			$lines = array();
+
 			$config = Config::factory('terminal.ini', Config::APPLICATION);
 			$commands = $config->get('commands');
 			
@@ -40,7 +41,7 @@
 			$lines[] = new Line('Use CTRL + L when mess on the screen is anoying');
 			
 			$help->addLines($lines);
-			\System\Terminal::$session->buffer($help->build());
+			self::$session->buffer($help->build());
 		}
 	}
 ?>
