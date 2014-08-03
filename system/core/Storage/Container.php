@@ -38,8 +38,7 @@
 		 * @var bool
 		 */
 		public $temporary = false;
-		
-		
+
 		/**
 		 * Initializes container, saves with in requested data
 		 * 
