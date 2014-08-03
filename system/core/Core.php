@@ -14,13 +14,13 @@
 		 * gOPF Core version number
 		 * @var string
 		 */
-		const VERSION = '1.8.4';
+		const VERSION = '2.0.0 alpha';
 		
 		/**
 		 * gOPF Core build time
 		 * @var string
 		 */
-		const BUILD = '140720123630';
+		const BUILD = '140803054215';
 		
 		/**
 		 * gOPF Core stage (__DEVELOPMENT or __PRODUCTION)
