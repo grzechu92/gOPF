@@ -30,8 +30,9 @@
 					$mode = 'Page';
 					break;
 			}
-			
-			$context = '\\System\\Dispatcher\\'.$mode;
+
+            /** @var $context \System\Dispatcher\ContextInterface */
+            $context = '\\System\\Dispatcher\\'.$mode;
 			
 			Core::instance()->context = $context = new $context();
 			$context->process();
