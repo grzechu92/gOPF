@@ -14,7 +14,7 @@
 		 * Rule tag pattern
 		 * @var string
 		 */
-		const RULE_PATTERN = '/\<(\w+)\:(numeric|alpha|alphanumeric|any)\>/';
+		const RULE_PATTERN = '/\<(\w+)\:(numeric|alpha|alphanumeric|any|language)\>/';
 		
 		/**
 		 * Raw URL rule
@@ -48,11 +48,11 @@
 		 */
 		public function __construct($rule, $values) {
 			$this->pattern = preg_replace(
-				array('/@alphanumeric/', '/@numeric/', '/@alpha/', '/@any/'),
-				array('(\w+)', '(\d+)', '(\D+)', '(.+)'),
+				array('/@alphanumeric/', '/@numeric/', '/@alpha/', '/@any/', '/@language/'),
+				array('(\w+)', '(\d+)', '(\D+)', '(.+)', '(\w{2})'),
 				preg_replace(self::RULE_PATTERN, '@$2', str_replace('/', '\\/', $rule))
 			).'(|\/(.*))';
-			
+
 			$this->rule = $rule;
 			$this->raw = $values;
 		}

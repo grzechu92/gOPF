@@ -11,18 +11,6 @@
 	 */
 	class Router {
 		/**
-		 * Available routes
-		 * @var array
-		 */
-		private $routes;
-		
-		/**
-		 * Router status
-		 * @var bool
-		 */
-		private $status = true;
-
-		/**
 		 * Constructor of router module
 		 */
 		public function __construct() {
@@ -61,8 +49,9 @@
 						if (!in_array('System\Router\ValidableInterface', class_implements($class))) {
 							throw new \System\Router\Exception(\System\I18n::translate('ROUTE_NOT_VALIDABLE', array($class)));
 						}
-						
-						if ($class::validate($rule)) {
+
+                        /** @var $class \System\Router\ValidableInterface */
+                        if ($class::validate($rule)) {
 							$matched = $rule;
 							break;
 						}
@@ -78,11 +67,21 @@
 				$matched = new Route('', $default);
 				$matched->parse();
 			}
-			
-			foreach (array('context', 'controller', 'action') as $variable) {
+
+			foreach (array('context', 'controller', 'action', 'language') as $variable) {
 				Request::$$variable = (isset($matched->values->{$variable})) ? $matched->values->{$variable} : null;
 				unset($matched->values->{$variable});
 			}
+
+
+            /** @var $i18n \System\I18n */
+            $i18n = Core::instance()->i18n;
+
+            if (empty(Request::$language)) {
+                Request::$language = $i18n->selected()->application;
+            } else {
+                $i18n->set(Request::$language);
+            }
 			
 			Request::$parameters = new \System\ArrayContainer((array) $matched->values);
 		}

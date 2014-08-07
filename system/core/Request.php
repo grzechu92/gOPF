@@ -26,6 +26,12 @@
 		 * @var string
 		 */
 		public static $action;
+
+        /**
+         * Request language
+         * @var string
+         */
+        public static $language;
 		
 		/**
 		 * Requested URL parameters parsed by router
