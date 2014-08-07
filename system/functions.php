@@ -32,7 +32,7 @@
 	/**
 	 * @see \System\I18n::translate()
 	 */
-	function __($index, $vars) {
+	function __($index, $vars = array()) {
 		return \System\I18n::translate($index, $vars, false);
 	}
 ?>
