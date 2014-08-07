@@ -1,5 +1,6 @@
 <?php
 	namespace System;
+    use \System\I18n\Selected;
 	
 	/**
 	 * Internationalization module of framework
@@ -26,6 +27,12 @@
 		 * @var string
 		 */
 		const APC_PREFIX = 'gOPF-I18N-';
+
+        /**
+         * Session I18n identifier
+         * @var string
+         */
+        const SESSION = '__I18N';
 		
 		/**
 		 * I18n object instance
@@ -46,16 +53,10 @@
 		private $config;
 		
 		/**
-		 * Languages accepted by user
-		 * @var array
-		 */
-		private $accepted = array();
-		
-		/**
 		 * Languages selected by script, depends on user preferences and language file availability
-		 * @var array
+		 * @var \System\I18n\Selected
 		 */
-		private $selected = array();
+		private $selected;
 		
 		/**
 		 * Constructor of internationalization module
@@ -64,8 +65,23 @@
 			self::$instance = $this;
 			
 			$this->config = Config::factory('i18n.ini', Config::APPLICATION);
-			$this->accepted = $this->getAcceptedLanguages();
+            $this->selected = Session::get(self::SESSION);
+
+            if (!($this->selected instanceof Selected)) {
+                $this->selected = new Selected($this->config->system, $this->config->application);
+
+                if ($this->config->preference) {
+                    $this->setPreferredLanguage();
+                }
+            }
 		}
+
+        /**
+         * Save selected language to session
+         */
+        public function __destruct() {
+            Session::set(self::SESSION, $this->selected);
+        }
 		
 		/**
 		 * Static wrapper for I18n::get() method
@@ -88,7 +104,7 @@
 		 */
 		public function get($index, $vars = array(), $bold = true) {
 			if (count($this->strings) === 0) {
-				$this->loadStrings();
+				$this->load();
 			}
 			
 			$string = isset($this->strings[$index]) ? $this->strings[$index] : '???';
@@ -102,106 +118,90 @@
 			
 			return $string;
 		}
+
+        /**
+         * Set selected by user language for application
+         *
+         * @param string $language Selected application language
+         */
+        public function set($language) {
+            if ($this->selected->application != $language) {
+                $this->selected->application = $language;
+                $this->load();
+            }
+        }
+
+        /**
+         * Return selected language object
+         *
+         * @return \System\I18n\Selected
+         */
+        public function selected() {
+            return $this->selected;
+        }
 		
-		/**
-		 * Getting languages accepted by user
-		 * 
-		 * @return array Languages accepted by user
-		 */
-		private function getAcceptedLanguages() {
-			preg_match_all('/[a-z]{2}/i', ((isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']) : ''), $langs);
-			
-			return array_unique($langs[0]);
-		}
-		
-		/**
-		 * Load strings depends on user defined language
-		 */
-		private function loadStrings() {
-			$this->getSystemLanguage();
-			
-			$session = Session::get('__I18N');
-			
-			if (empty($session['system']) && empty($session['application'])) {
-				$this->getAvailableLanguages();
-			} else {
-				$this->getSelectedLanguage();
-			}
-						
-			$this->strings = $this->getStrings();
-		}
-		
-		/**
-		 * Load strings from files selected by script
-		 * 
-		 * @return array Internationalized strings
-		 */
-		private function getStrings() {
-			$strings = array();
-			$paths = array();
-			
-			foreach ($this->selected as $type=>$language) {
-				$paths[$type] = (($type = 'system') ? __SYSTEM_PATH : __APPLICATION_PATH).'/i18n/'.$language.'.json';
-			}
-	
-			foreach ($paths as $type=>$path) {
-				$id = sha1(self::APC_PREFIX.$path);
-				
-				if (self::APC) {
-					if ($cached = apc_fetch($id)) {
-						$strings[$type] = $cached;
-					}
-				}
-				
-				if (!isset($strings[$type]) && Filesystem::checkFile($path)) {
-					$strings[$type] = (array) json_decode(Filesystem::read($path, true));
-					
-					if (self::APC) {
-						apc_store($id, $strings[$type], self::APC_LIFETIME);
-					}
-				}
-			}
-			
-			return array_merge((isset($strings['application']) ? $strings['application'] : array()), $strings['system']);
-		}
-		
-		/**
-		 * When user has defined own language, use it to internationalize
-		 */
-		private function getSelectedLanguage() {
-			$session = Session::get('__I18N');
-			
-			if (isset($session['system'])) {
-				$this->selected['system'] = $session['system'];
-			}
-			
-			$this->selected['application'] = $session['application'];
-		}
-		
-		/**
-		 * When user hasn't defined own language, script will select best language depends on web browser headers
-		 */
-		private function getAvailableLanguages() {
-			$selected = $this->config->application;
-			
-			if ($this->config->dynamic) {
-				foreach ($this->accepted as $language) {
-					if (Filesystem::checkFile(__APPLICATION_PATH.'/i18n/'.$language.'.json')) {
-						$selected = $language;
-						
-						break;
-					}
-				}
-			}
-						
-			$this->selected['application'] = $selected;
-		}
-		
-		/**
-		 * Sets system language, depends on configuration
-		 */
-		private function getSystemLanguage() {
-			$this->selected['system'] = $this->config->system;
-		}
+        /**
+         * Load selected language strings
+         */
+        private function load() {
+            $this->strings = array();
+
+            foreach ($this->selected as $type => $language) {
+                $path = (($type == 'system') ? __SYSTEM_PATH : __APPLICATION_PATH).'/i18n/'.$language.'.json';
+                $id = sha1(self::APC_PREFIX.__ID.$path);
+
+                if (self::APC) {
+                    if ($cached = apc_fetch($id)) {
+                        $this->strings = array_merge($this->strings, $cached);
+                        continue;
+                    }
+                }
+
+                $strings = (array) json_decode(Filesystem::read($path, true));
+
+                if (self::APC) {
+                    apc_store($id, $strings, self::APC_LIFETIME);
+                }
+
+                $this->strings = array_merge($this->strings, $strings);
+            }
+        }
+
+        /**
+         * Select available and most preferred application language for user
+         */
+        private function setPreferredLanguage() {
+            $preferred = $this->getPreferredLanguages();
+
+            if (count($preferred) > 0) {
+                foreach ($preferred as $language) {
+                    if ($this->isLanguageAvailable($language)) {
+                        $this->set($language);
+                        break;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Getting languages preferred by user
+         *
+         * @return array Languages preferred by user
+         */
+        private function getPreferredLanguages() {
+            preg_match_all('/[a-z]{2}/i', ((isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']) : ''), $preferred);
+
+            return array_unique($preferred[0]);
+        }
+
+        /**
+         * Is language available?
+         *
+         * @param string $language Language code
+         * @return bool Is language available?
+         */
+        private function isLanguageAvailable($language) {
+            return Filesystem::checkFile(__APPLICATION_PATH.'/i18n/'.$language.'.json');
+        }
 	}
 ?>
