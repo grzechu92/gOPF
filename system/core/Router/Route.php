@@ -1,6 +1,6 @@
 <?php
 	namespace System\Router;
-	use \System\Request;
+    use \System\Request;
 	
 	/**
 	 * Router route object and parser
@@ -39,7 +39,7 @@
 		 * @var string
 		 */
 		private $pattern;
-		
+
 		/**
 		 * Create route object, parse URL pattern
 		 * 
@@ -75,6 +75,23 @@
 			$this->parseValues($this->raw);
 			$this->parseRoute($this->rule);
 		}
+
+        /**
+         * Translate path
+         *
+         * @param array $i18n URL translate map
+         */
+        public function translate($i18n) {
+            $this->values->i18n = urldecode($this->values->i18n);
+
+            if (!isset($i18n[$this->values->i18n])) {
+                throw new Exception(\System\I18n::translate('ROUTE_I18N_NOT_FOUND', array($this->values->i18n)));
+            }
+
+            foreach (explode(',', $i18n[$this->values->i18n]) as $string) {
+                $this->parseValueString($string);
+            }
+        }
 		
 		/**
 		 * Parses URL with parsed pattern
@@ -101,14 +118,21 @@
 		 * @param string $raw Value string
 		 */
 		private function parseValues($raw) {
-			$exploded = explode(',', $raw);
-			
-			foreach ($exploded as $part) {
-				$separated = explode(':', $part);
-				$value = trim($separated[1]);
-				
-				$this->values->{trim($separated[0])} = (strpos($value, ' ') > 0) ? explode(' ', $value) : $value;
+			foreach (explode(',', $raw) as $string) {
+                $this->parseValueString($string);
 			}
 		}
+
+        /**
+         * Parse value string (key:value)
+         *
+         * @param string $string Value string
+         */
+        private function parseValueString($string) {
+            $separated = explode(':', $string);
+            $value = trim($separated[1]);
+
+            $this->values->{trim($separated[0])} = (strpos($value, ' ') > 0) ? explode(' ', $value) : $value;
+        }
 	}
 ?>

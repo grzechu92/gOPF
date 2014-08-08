@@ -10,17 +10,31 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Router {
+        /**
+         * Router configuration
+         * @var \System\Config
+         */
+        private $config;
+
+        /**
+         * Internationalization module
+         * @var \System\I18n
+         */
+        private $i18n;
+
 		/**
 		 * Constructor of router module
 		 */
 		public function __construct() {
-            $routes = Config::factory('routes.ini', Config::APPLICATION);
+            $this->config = Config::factory('routes.ini', Config::APPLICATION);
+            $this->i18n = \System\Core::instance()->i18n;
 
-			if (!$routes->enabled) {
+			if (!$this->config->enabled) {
 				exit();
 			}
 			
-			$routes = $routes->getContent();
+			$routes = $this->config->getContent();
+
 			$this->match($routes['routes'], $routes['default']);
 		}
 
@@ -68,21 +82,22 @@
 				$matched->parse();
 			}
 
-			foreach (array('context', 'controller', 'action', 'language') as $variable) {
+            if (isset($matched->values->language)) {
+                $this->i18n->set($matched->values->language);
+            } else {
+                $matched->values->language = $this->i18n->selected()->application;
+            }
+
+            if (isset($matched->values->i18n)) {
+                $i18n = $this->config->getContent()['i18n:'.$this->i18n->selected()->application];
+                $matched->translate($i18n);
+            }
+
+			foreach (array('i18n', 'language', 'context', 'controller', 'action') as $variable) {
 				Request::$$variable = (isset($matched->values->{$variable})) ? $matched->values->{$variable} : null;
 				unset($matched->values->{$variable});
 			}
 
-
-            /** @var $i18n \System\I18n */
-            $i18n = Core::instance()->i18n;
-
-            if (empty(Request::$language)) {
-                Request::$language = $i18n->selected()->application;
-            } else {
-                $i18n->set(Request::$language);
-            }
-			
 			Request::$parameters = new \System\ArrayContainer((array) $matched->values);
 		}
 	}

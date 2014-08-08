@@ -32,6 +32,12 @@
          * @var string
          */
         public static $language;
+
+        /**
+         * Internationalized request ID
+         * @var string
+         */
+        public static $i18n;
 		
 		/**
 		 * Requested URL parameters parsed by router
