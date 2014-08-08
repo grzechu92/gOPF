@@ -11,6 +11,12 @@
 	 */
 	class Router {
         /**
+         * Router instance
+         * @var \System\Router
+         */
+        public static $instance;
+
+        /**
          * Router configuration
          * @var \System\Config
          */
@@ -26,61 +32,42 @@
 		 * Constructor of router module
 		 */
 		public function __construct() {
+            self::$instance = $this;
             $this->config = Config::factory('routes.ini', Config::APPLICATION);
-            $this->i18n = \System\Core::instance()->i18n;
+            $this->i18n = Core::instance()->i18n;
 
 			if (!$this->config->enabled) {
 				exit();
 			}
-			
-			$routes = $this->config->getContent();
 
-			$this->match($routes['routes'], $routes['default']);
+			$this->match();
 		}
+
+        /**
+         * Get Router instance
+         *
+         * @return \System\Router
+         */
+        public static function instance() {
+            return self::$instance;
+        }
+
+        /**
+         * Generate translated URL for specified controller and action
+         *
+         * @param string $controller Controller name
+         * @param string $action Controller action
+         * @return string Generated translated URL
+         */
+        public static function generate($controller, $action = 'main') {
+
+        }
 
 		/**
 		 * Matches route for requested URL
-		 *
-		 * @param array $routes Available routes
-		 * @param string $default Default route, selected when no available routes is matched
 		 */
-		private function match($routes, $default) {
-			$matched = false;
-			
-			foreach ($routes as $rule => $values) {
-				$rule = new Route($rule, $values);
-				
-				if (!$rule->match()) {
-					continue;
-				}
-				
-				$rule->parse();
-				
-				if (isset($rule->values->validate)) {
-					foreach ($rule->values->validate as $controller) {
-						$class = '\\Controllers\\'.trim($controller).'Controller';
-												
-						if (!in_array('System\Router\ValidableInterface', class_implements($class))) {
-							throw new \System\Router\Exception(\System\I18n::translate('ROUTE_NOT_VALIDABLE', array($class)));
-						}
-
-                        /** @var $class \System\Router\ValidableInterface */
-                        if ($class::validate($rule)) {
-							$matched = $rule;
-							break;
-						}
-					}
-				} else {
-					$matched = $rule;
-				}
-				
-				break;
-			}
-			
-			if (!($matched instanceof Route)) {
-				$matched = new Route('', $default);
-				$matched->parse();
-			}
+		private function match() {
+            $route = $this->findRoute($this->config->routes);
 
             if (isset($matched->values->language)) {
                 $this->i18n->set($matched->values->language);
@@ -100,5 +87,52 @@
 
 			Request::$parameters = new \System\ArrayContainer((array) $matched->values);
 		}
+
+        /**
+         * Find route matching URL request
+         *
+         * @param array $routes Available routes
+         * @return \System\Router\Route Matching route
+         */
+        private function findRoute($routes = array()) {
+            $found = null;
+
+            if (count($routes) > 0) {
+                foreach ($routes as $rule => $values) {
+                    $rule = new Route($rule, $values);
+
+                    if (!$rule->match()) {
+                        continue;
+                    }
+
+                    $rule->parse();
+
+                    if (isset($rule->values->validate)) {
+                        foreach ($rule->values->validate as $controller) {
+                            $class = '\\Controllers\\'.trim($controller).'Controller';
+
+                            if (!in_array('System\Router\ValidableInterface', class_implements($class))) {
+                                throw new \System\Router\Exception(I18n::translate('ROUTE_NOT_VALIDABLE', array($class)));
+                            }
+
+                            /** @var $class \System\Router\ValidableInterface */
+                            if ($class::validate($rule)) {
+                                $matched = $rule;
+                                break;
+                            }
+                        }
+                    } else {
+                        $matched = $rule;
+                    }
+
+                    break;
+                }
+            }
+
+            if (!($route instanceof Route)) {
+                $route = new Route('', $default);
+                $route->parse();
+            }
+        }
 	}
 ?>
