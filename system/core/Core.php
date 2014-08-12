@@ -116,9 +116,9 @@
 		 * Initializes all important core components
 		 */
 		public function initialize() {
-			$this->i18n = new I18n();
-			$this->request = new Request();
-			$this->session = new Session();
+            $this->session = new Session();
+            $this->i18n = new I18n();
+            $this->request = new Request();
 			$this->user = new User();
 			$this->database = new Database();
 			$this->router = new Router();
