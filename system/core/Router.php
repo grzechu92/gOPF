@@ -1,6 +1,7 @@
 <?php
 	namespace System;
 	use \System\Router\Route;
+    use \System\Router\Exception;
 		
 	/**
 	 * Matches request to matching bootstrap, and starts request processing procedure
@@ -46,7 +47,7 @@
         /**
          * Get Router instance
          *
-         * @return \System\Router
+         * @return \System\Router Router instance
          */
         public static function instance() {
             return self::$instance;
@@ -57,10 +58,18 @@
          *
          * @param string $controller Controller name
          * @param string $action Controller action
+         * @throws \System\Router\Exception
          * @return string Generated translated URL
          */
         public static function generate($controller, $action = 'main') {
+            $urls = array_flip(self::instance()->config->{'i18n:'.Request::$language});
+            $target = $controller.':'.$action;
 
+            if (isset($urls[$target])) {
+                return $urls[$target];
+            } else {
+                throw new Exception(I18n::translate('ROUTE_I18N_NOT_FOUND', array($target)));
+            }
         }
 
 		/**
@@ -69,29 +78,30 @@
 		private function match() {
             $route = $this->findRoute($this->config->routes);
 
-            if (isset($matched->values->language)) {
-                $this->i18n->set($matched->values->language);
+            if (isset($route->values->language)) {
+                $this->i18n->set($route->values->language);
             } else {
-                $matched->values->language = $this->i18n->selected()->application;
+                $route->values->language = $this->i18n->selected()->application;
             }
 
-            if (isset($matched->values->i18n)) {
+            if (isset($route->values->i18n)) {
                 $i18n = $this->config->getContent()['i18n:'.$this->i18n->selected()->application];
-                $matched->translate($i18n);
+                $route->translate($i18n);
             }
 
 			foreach (array('i18n', 'language', 'context', 'controller', 'action') as $variable) {
-				Request::$$variable = (isset($matched->values->{$variable})) ? $matched->values->{$variable} : null;
-				unset($matched->values->{$variable});
+				Request::$$variable = (isset($route->values->{$variable})) ? $route->values->{$variable} : null;
+				unset($route->values->{$variable});
 			}
 
-			Request::$parameters = new \System\ArrayContainer((array) $matched->values);
+			Request::$parameters = new \System\ArrayContainer((array) $route->values);
 		}
 
         /**
          * Find route matching URL request
          *
          * @param array $routes Available routes
+         * @throws \System\Router\Exception
          * @return \System\Router\Route Matching route
          */
         private function findRoute($routes = array()) {
@@ -112,27 +122,29 @@
                             $class = '\\Controllers\\'.trim($controller).'Controller';
 
                             if (!in_array('System\Router\ValidableInterface', class_implements($class))) {
-                                throw new \System\Router\Exception(I18n::translate('ROUTE_NOT_VALIDABLE', array($class)));
+                                throw new Exception(I18n::translate('ROUTE_NOT_VALIDABLE', array($class)));
                             }
 
                             /** @var $class \System\Router\ValidableInterface */
                             if ($class::validate($rule)) {
-                                $matched = $rule;
+                                $found = null;
                                 break;
                             }
                         }
                     } else {
-                        $matched = $rule;
+                        $found = $rule;
                     }
 
                     break;
                 }
             }
 
-            if (!($route instanceof Route)) {
-                $route = new Route('', $default);
-                $route->parse();
+            if (!($found instanceof Route)) {
+                $found = new Route('', $this->config->default);
+                $found->parse();
             }
+
+            return $found;
         }
 	}
 ?>
