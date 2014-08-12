@@ -26,6 +26,18 @@
 		 * @var string
 		 */
 		public static $action;
+
+        /**
+         * Request language
+         * @var string
+         */
+        public static $language;
+
+        /**
+         * Internationalized request ID
+         * @var string
+         */
+        public static $i18n;
 		
 		/**
 		 * Requested URL parameters parsed by router
@@ -76,7 +88,7 @@
 		public static $CLI = array();
 		
 		/**
-		 * Filters global varialbe contents
+		 * Filters global variables content
 		 */
 		public function __construct() {
 			if (self::$instance instanceof Request) {

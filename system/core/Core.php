@@ -15,13 +15,13 @@
 		 * @var string
 		 */
 		const VERSION = '2.0.0 alpha';
-		
+
 		/**
 		 * gOPF Core build time
 		 * @var string
 		 */
-		const BUILD = '140803054215';
-		
+		const BUILD = '140812120632';
+
 		/**
 		 * gOPF Core stage (__DEVELOPMENT or __PRODUCTION)
 		 * @var int
@@ -91,9 +91,9 @@
 		 * Initializes all important core components
 		 */
 		public function initialize() {
-			$this->i18n = new I18n();
-			$this->request = new Request();
-			$this->session = new Session();
+            $this->session = new Session();
+            $this->i18n = new I18n();
+            $this->request = new Request();
 			$this->user = new User();
 			$this->database = new Database();
 			$this->router = new Router();

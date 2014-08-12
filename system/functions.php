@@ -32,7 +32,14 @@
 	/**
 	 * @see \System\I18n::translate()
 	 */
-	function __($index, $vars) {
+	function __($index, $vars = array()) {
 		return \System\I18n::translate($index, $vars, false);
 	}
+
+    /**
+     * @see \System\Router::generate()
+     */
+    function ___($controller, $action = 'main') {
+        return \System\Router::generate($controller, $action);
+    }
 ?>

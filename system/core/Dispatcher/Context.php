@@ -142,11 +142,13 @@
 		
 		/**
 		 * Checks access to requested controller and action
-		 * 
+		 *
+         * @param string $controller Controller name
+         * @param string $action Action name
 		 * @throws \System\Dispatcher\Exception
 		 */
-		protected function checkAccess($name, $action) {
-			if (!$this->isAllowed(Request::$controller, Request::$action)) {
+		protected function checkAccess($controller, $action) {
+			if (!$this->isAllowed($controller, $action)) {
 				throw new Exception(I18n::translate('ACCESS_DENIED'), 401);
 			}
 		}
