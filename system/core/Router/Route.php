@@ -80,6 +80,7 @@
          * Translate path
          *
          * @param array $i18n URL translate map
+         * @throws \System\Router\Exception
          */
         public function translate($i18n) {
             $this->values->i18n = urldecode($this->values->i18n);
@@ -88,9 +89,9 @@
                 throw new Exception(\System\I18n::translate('ROUTE_I18N_NOT_FOUND', array($this->values->i18n)));
             }
 
-            foreach (explode(',', $i18n[$this->values->i18n]) as $string) {
-                $this->parseValueString($string);
-            }
+            $translated = explode(':', $i18n[$this->values->i18n]);
+            $this->values->controller = $translated[0];
+            $this->values->action = $translated[1];
         }
 		
 		/**

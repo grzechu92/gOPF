@@ -88,7 +88,7 @@
 		public static $CLI = array();
 		
 		/**
-		 * Filters global varialbe contents
+		 * Filters global variables content
 		 */
 		public function __construct() {
 			if (self::$instance instanceof Request) {
