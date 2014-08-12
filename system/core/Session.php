@@ -143,8 +143,7 @@
 			
 			$session =& self::$instance;
 			$data = array();
-			$synchronized = array();
-			
+
 			$data['before'] = isset($session->data['__ELEMENTS']) ? $session->data['__ELEMENTS'] : array();
 			$session->load();
 			
