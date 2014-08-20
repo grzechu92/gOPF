@@ -12,6 +12,24 @@
 	 */
 	class Loader {
         /**
+         * APC internationalized file caching, hidden feature
+         * @var bool
+         */
+        const APC = __TURBO_MODE;
+
+        /**
+         * APC internationalized file caching lifetime, in seconds
+         * @var int
+         */
+        const APC_LIFETIME = 600;
+
+        /**
+         * APC internationalized file caching prefix
+         * @var string
+         */
+        const APC_PREFIX = 'gOPF-LOADER-';
+
+        /**
          * Reserved namespaces
          * @var \System\Loader\NS[]
          */
@@ -23,7 +41,7 @@
 		public function __construct() {
             self::registerCoreNamespaces();
 
-			spl_autoload_register(array($this, 'loadClass'));
+			spl_autoload_register(array($this, 'load'));
 		}
 
         /**
@@ -58,7 +76,16 @@
 		 * @param string $class Class name to load
 		 * @throws \System\Loader\Exception
 		 */
-		public function loadClass($class) {
+		public function load($class) {
+            if (self::APC) {
+                $cache = sha1(self::APC_PREFIX.__ID.$class);
+
+                if ($cached = apc_fetch($cache)) {
+                    require $cached;
+                    return;
+                }
+            }
+
             $class = ltrim($class, '\\');
             $path = '';
 			
@@ -93,6 +120,10 @@
 			$path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
 
 			if (__STAGE == __PRODUCTION || Filesystem::checkFile($path)) {
+                if (self::APC) {
+                    apc_store($cache, $path, self::APC_LIFETIME);
+                }
+
 				require $path;
 			} else {
 				throw new \System\Loader\Exception(\System\I18n::translate('LOADER_UNABLE', array($path)));
