@@ -9,16 +9,10 @@
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class View {
-		/**
-		 * View object instance
-		 * @var \System\View
-		 */
-		private static $instance;
-		
+	class View extends Singleton {
 		/**
 		 * Holds all view sections
-		 * @var array
+		 * @var \System\View\Section[]
 		 */
 		private $sections = array();
 		
@@ -26,20 +20,13 @@
 		 * Path to page frame
 		 * @var string
 		 */
-		private $frame;
+		public $frame;
 		
 		/**
 		 * Rendering status
 		 * @var bool
 		 */
-		private $render = true;
-		
-		/**
-		 * Creates object instance for static access
-		 */
-		public function __construct() {
-			self::$instance = $this;
-		}
+		public $render = true;
 		
 		/**
 		 * Creates section slot in frame
@@ -50,11 +37,11 @@
          * @return bool Section rendering status
 		 */
 		public static function sectionSlot($name, $action = 'main') {
-			if (empty(self::$instance->sections[$name])) {
+			if (empty(self::instance()->sections[$name])) {
 				try {
 					Core::instance()->context->callController($name, $action);
 					
-					if (empty(self::$instance->sections[$name])) {
+					if (empty(self::instance()->sections[$name])) {
 						return false;
 					}
 				} catch (\System\Dispatcher\Exception $e) {					
@@ -62,12 +49,10 @@
 				}
 			}
 			
-			if (count(self::$instance->sections[$name]) > 0) {
-				foreach (self::$instance->sections[$name] as $key=>$section) {
-					if (empty(self::$instance->buffer[$name])) {
-						echo $section->getContent();
-                        return true;
-					}
+			if (count(self::instance()->sections[$name]) > 0) {
+                /** @var $section \System\View\Section */
+                foreach (self::instance()->sections[$name] as $key => $section) {
+                    echo $section->getContent();
 				}
 			}
 		}
@@ -82,7 +67,7 @@
 		 * @return \System\View\Section
 		 */
 		public static function factorySection($name, $file, $expires = 0, $type = \System\Cache::GLOBAL_CACHE) {
-			return self::$instance->sections[$name][] = new Section($name, $file, $expires, $type);
+			return self::instance()->sections[$name][] = new Section($name, $file, $expires, $type);
 		}
 		
 		/**
@@ -91,8 +76,8 @@
 		 * @param string $name Section name to remove
 		 */
 		public static function removeSection($name) {
-			if (isset(self::$instance->sections[$name])) {
-				unset(self::$instance->sections[$name]);
+			if (isset(self::instance()->sections[$name])) {
+				unset(self::instance()->sections[$name]);
 			}
 		}
 		
@@ -101,8 +86,8 @@
 		 * 
 		 * @param string $name Absolute path to frame
 		 */
-		public static function setFrame($name) {
-			self::$instance->frame = $name;
+		public function setFrame($name) {
+			$this->frame = $name;
 		}
 		
 		/**
@@ -110,8 +95,8 @@
 		 * 
 		 * @param bool $status Rendering status
 		 */
-		public static function setRenderStatus($status) {
-			self::$instance->render = $status;	
+		public function setRenderStatus($status) {
+			$this->render = $status;
 		}
 		
 		/**

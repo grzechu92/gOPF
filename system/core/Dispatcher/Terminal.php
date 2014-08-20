@@ -46,9 +46,9 @@
 		 * Display terminal client template
 		 */
 		private function displayTerminal() {
-			$view = \System\Core::instance()->view = new \System\View();
+            $view = \System\View::instance();
+
 			$view->setFrame(__SYSTEM_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'terminal.php');
-			
 			$view->render();
 		}
 		

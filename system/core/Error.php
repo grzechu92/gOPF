@@ -63,7 +63,7 @@
 		 * Displays framework error page
 		 */
 		private function displayFrameworkErrorPage() {
-			$view = \System\Core::instance()->view = new \System\View();
+			$view = \System\View::instance();
 			$view->setFrame(__SYSTEM_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'error.php');
 			
 			$this->fillTemplate();

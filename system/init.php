@@ -20,17 +20,14 @@
 	require __CORE_PATH.'/Filesystem.php';
 	require __CORE_PATH.'/Loader.php';
     require __CORE_PATH.'/Loader/NS.php';
-	new Loader();
+    new Loader();
 	
 	/**
 	 * Run framework system
 	 */
 	try {
-		$core = new Core();
-		
-		$core->initialize();
-		$core->run();
-	} catch (\Exception $exception) {
+        Core::instance()->run();
+    } catch (\Exception $exception) {
 		new Error($exception);
 	}
 ?>

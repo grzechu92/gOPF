@@ -10,13 +10,7 @@
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class Router {
-        /**
-         * Router instance
-         * @var \System\Router
-         */
-        public static $instance;
-
+	class Router extends Singleton {
         /**
          * Router configuration
          * @var \System\Config
@@ -32,10 +26,9 @@
 		/**
 		 * Constructor of router module
 		 */
-		public function __construct() {
-            self::$instance = $this;
+		protected function __construct() {
             $this->config = Config::factory('routes.ini', Config::APPLICATION);
-            $this->i18n = Core::instance()->i18n;
+            $this->i18n = I18n::instance();
 
 			if (!$this->config->enabled) {
 				exit();
@@ -43,15 +36,6 @@
 
 			$this->match();
 		}
-
-        /**
-         * Get Router instance
-         *
-         * @return \System\Router Router instance
-         */
-        public static function instance() {
-            return self::$instance;
-        }
 
         /**
          * Generate translated URL for specified controller and action

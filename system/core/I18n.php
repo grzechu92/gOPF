@@ -8,8 +8,9 @@
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+     *
 	 */
-	class I18n {
+	class I18n extends Singleton {
 		/**
 		 * APC internationalized file caching, hidden feature
 		 * @var bool
@@ -35,12 +36,6 @@
         const SESSION = '__I18N';
 		
 		/**
-		 * I18n object instance
-		 * @var \System\I18n
-		 */
-		private static $instance;
-		
-		/**
 		 * Array of available language strings
 		 * @var array
 		 */
@@ -61,9 +56,7 @@
 		/**
 		 * Constructor of internationalization module
 		 */
-		public function __construct() {
-			self::$instance = $this;
-			
+		protected function __construct() {
 			$this->config = Config::factory('i18n.ini', Config::APPLICATION);
             $this->selected = Session::get(self::SESSION);
 
@@ -91,7 +84,7 @@
 		 * @return string Internationalized string
 		 */
 		public static function translate($index, $vars = array()) {
-			return self::$instance->get($index, $vars);
+			return self::instance()->get($index, $vars);
 		}
 		
 		/**

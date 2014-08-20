@@ -8,7 +8,7 @@
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class Storage {
+	class Storage extends Singleton {
         /**
          * APC driver
          * @var string
@@ -60,7 +60,7 @@
          * @return \System\Storage\Container Container instance
          */
         public static function factory($name, $type) {
-            return self::initContainer($name, $type);
+            return self::initializeContainer($name, $type);
         }
 		
 		/**
@@ -70,7 +70,7 @@
 		 * @param mixed $value Storage container value
 		 */
 		public static function set($name, $value) {
-			self::initContainer($name);
+			self::initializeContainer($name);
 			
 			self::$containers[$name]->set($value);
 		}
@@ -82,7 +82,7 @@
 		 * @return mixed Storage container value
 		 */
 		public static function get($name) {
-			self::initContainer($name);
+			self::initializeContainer($name);
 			
 			return self::$containers[$name]->get();
 		}
@@ -106,7 +106,7 @@
 		 * @param string $name Storage container name
 		 */
 		public static function read($name) {
-			self::initContainer($name);
+			self::initializeContainer($name);
 			
 			self::$containers[$name]->read();
 		}
@@ -127,7 +127,7 @@
 		 * @param bool $temp Is temporary?
 		 */
 		public static function temporary($name, $temp = true) {
-			self::initContainer($name);
+			self::initializeContainer($name);
 			
 			self::$containers[$name]->temporary = $temp;
 		}
@@ -139,7 +139,11 @@
          * @param string $driver Driver name
          * @return \System\Storage\Container Storage element
          */
-		private static function initContainer($name, $driver = '') {
+		private static function initializeContainer($name, $driver = '') {
+            if (!self::hasInstance()) {
+                self::instance();
+            }
+
             if (empty($driver)) {
                 $driver = self::$config->driver;
             }

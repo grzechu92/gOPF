@@ -10,18 +10,12 @@
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class Session {
+	class Session extends Singleton {
 		/**
 		 * Session synchronization status
 		 * @var bool
 		 */
-		public static $sync = false;
-		
-		/**
-		 * Session instance
-		 * @var Session
-		 */
-		private static $instance;
+		public $sync = false;
 		
 		/**
 		 * Session data store driver
@@ -50,8 +44,7 @@
 		/**
 		 * Initiates session module
 		 */
-		public function __construct() {
-			self::$instance = $this;
+		protected function __construct() {
 			$this->config = Config::factory('session.ini', Config::APPLICATION);
 			
 			$this->initDriver();
@@ -71,9 +64,9 @@
 		 */
 		public function __destruct() {
 			$this->cleanSession();
-			
+
 			if (count($this->data['__ELEMENTS']) > 0 || $this->data['__COUNT'] !== count($this->data['__ELEMENTS'])) {
-				if (self::$sync) {
+				if ($this->sync) {
 					$this->synchronize();
 				} else {
 					$this->save();
@@ -82,7 +75,7 @@
 				$this->driver->remove();
 			}
 		}
-		
+
 		/**
 		 * Returns session element value
 		 * 
@@ -90,8 +83,8 @@
 		 * @return mixed Element value (returns null when session element is expired)
 		 */
 		public static function get($name) {
-			if (isset(self::$instance->data['__ELEMENTS'][$name])) {
-				$element = self::$instance->data['__ELEMENTS'][$name];
+			if (isset(self::instance()->data['__ELEMENTS'][$name])) {
+				$element = self::instance()->data['__ELEMENTS'][$name];
 				
 				if ($element->expires === 0 || $element->expires > time()) {
 					return $element->value;
@@ -109,7 +102,7 @@
 		 * @param int $lifetime Element lifetime (optional)
 		 */
 		public static function set($name, $value, $lifetime = 0) {
-			self::$instance->data['__ELEMENTS'][$name] = new Element($name, $value, $lifetime);
+			self::instance()->data['__ELEMENTS'][$name] = new Element($name, $value, $lifetime);
 		}
 		
 		/**
@@ -118,30 +111,30 @@
 		 * @param string $name Element name
 		 */
 		public static function remove($name) {
-			unset(self::$instance->data['__ELEMENTS'][$name]);
+			unset(self::instance()->data['__ELEMENTS'][$name]);
 		}
 		
 		/**
 		 * Clears container content
 		 */
 		public static function clear() {
-			self::$instance->data['__ELEMENTS'] = array();
+			self::instance()->data['__ELEMENTS'] = array();
 		}
 		
 		/**
 		 * Prints current container content, like print_r()
 		 */
 		public static function debug($return = false) {
-			return print_r(self::$instance->data['__ELEMENTS'], $return);
+			return print_r(self::instance()->data['__ELEMENTS'], $return);
 		}
 		
 		/**
 		 * Synchronizes session elements between opened session
 		 */
 		public static function synchronize() {
-			self::$sync = true;
-			
-			$session =& self::$instance;
+			$session = self::instance();
+            $session->sync = true;
+
 			$data = array();
 
 			$data['before'] = isset($session->data['__ELEMENTS']) ? $session->data['__ELEMENTS'] : array();
@@ -177,7 +170,7 @@
 		 * @return array Array with elements
 		 */
 		public static function getElements() {
-			$elements = self::$instance->data['__ELEMENTS'];
+			$elements = self::instance()->data['__ELEMENTS'];
 			
 			if (count($elements) > 0) {
 				$return = array();
@@ -199,8 +192,8 @@
 		 * @param int $lifetime Element lifetime
 		 */
 		public static function extend($name, $lifetime) {
-			if (isset(self::$instance->data['__ELEMENTS'][$name])) {
-				self::$instance->data['__ELEMENTS'][$name]->extend($lifetime);
+			if (isset(self::instance()->data['__ELEMENTS'][$name])) {
+				self::instance()->data['__ELEMENTS'][$name]->extend($lifetime);
 			}
 		}
 		
@@ -229,7 +222,7 @@
 		 */
 		private function protectSession() {
 			if ($this->data['__PROTECTED'] !== $this->generateProtectKey()) {
-				Core::generateUUID();
+				Core::dropUUID();
 				unset($this->data);
 				$this->initSession();
 				

@@ -33,7 +33,7 @@
 		 * @param bool $dynamic Dynamic call
 		 * @return mixed Request result
 		 */
-		public function callController($name, $action, $dynamic);
+		public function callController($name,  $action = 'main', $dynamic = false);
 		
 		/**
 		 * Processes user request in selected request

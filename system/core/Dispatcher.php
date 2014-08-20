@@ -31,10 +31,13 @@
 					break;
 			}
 
+
+            $class = '\\System\\Dispatcher\\'.$mode;
+
             /** @var $context \System\Dispatcher\ContextInterface */
-            $context = '\\System\\Dispatcher\\'.$mode;
-			
-			Core::instance()->context = $context = new $context();
+            $context = new $class();
+
+			Core::instance()->context = $context;
 			$context->process();
 		}
 	}

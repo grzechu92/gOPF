@@ -1,6 +1,6 @@
 <?php
 	namespace System\Dispatcher;
-	use System\Request;
+	use \System\Request;
 	
 	/**
 	 * Page request processing context
@@ -14,12 +14,11 @@
 		 * @see \System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
-			$view = \System\Core::instance()->view = new \System\View();
-			$view->setFrame(__APPLICATION_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'default.php');
-			
-			$this->callController(Request::$controller, Request::$action, true);
-			
-			$view->render();
-		}
+            $view = \System\View::instance();
+
+            $view->setFrame(__APPLICATION_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'default.php');
+            $this->callController(Request::$controller, Request::$action, true);
+            $view->render();
+        }
 	}
 ?>

@@ -10,7 +10,7 @@
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class Cache {
+	class Cache extends Singleton {
 		/**
 		 * Element which you want to cache is private (only for one user)
 		 * @var int
@@ -22,12 +22,6 @@
 		 * @var int
 		 */
 		const GLOBAL_CACHE = 2;
-		
-		/**
-		 * Cache object instance
-		 * @var \System\Cache
-		 */
-		private static $instance;
 		
 		/**
 		 * Holds all loaded cache elements
@@ -64,7 +58,7 @@
 			self::USER_CACHE => false,
 			self::GLOBAL_CACHE => false
 		);
-		
+
 		/**
 		 * Cache module configuration
 		 * @var \System\Config
@@ -74,9 +68,7 @@
 		/**
 		 * Initiates Cache module and loads user cache data
 		 */
-		public function __construct() {
-			self::$instance = $this;
-			
+		protected function __construct() {
 			$this->config = Config::factory('cache.ini', Config::APPLICATION);
 			$this->initDrivers();
 		}
@@ -159,6 +151,10 @@
 		 * @param int $type Cache type
 		 */
 		private static function isLoaded($type) {
+            if (!self::hasInstance()) {
+                self::instance();
+            }
+
 			if (isset(self::$loaded[$type]) && !self::$loaded[$type]) {
 				self::load($type);
 			}
