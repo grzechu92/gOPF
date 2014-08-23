@@ -222,7 +222,7 @@
 		 */
 		private function protectSession() {
 			if ($this->data['__PROTECTED'] !== $this->generateProtectKey()) {
-				Core::dropUUID();
+				Core::resetUUID();
 				unset($this->data);
 				$this->initSession();
 				

@@ -50,7 +50,8 @@
             $UUID = isset($_COOKIE['__UUID']) ? $_COOKIE['__UUID'] : false;
 
             if (!$UUID || !preg_match('#([0-9a-f]{40})#', $UUID)) {
-                self::generateUUID();
+                self::$UUID = self::generateUUID();
+                self::setUUID();
             } else {
                 self::$UUID = $UUID;
             }
@@ -84,18 +85,26 @@
         /**
          * Drop client UUID
          */
-        public static function dropUUID() {
-            self::generateUUID();
+        public static function resetUUID() {
+            self::$UUID = self::generateUUID();
+            self::setUUID();
         }
 		
 		/**
 		 * Generates new UUID
+         *
+         * @return string Generated UUID
 		 */
 		private static function generateUUID() {
-			self::$UUID = sha1('gOPF-UUID'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '') . rand(1, 1000000));
-			
-			setcookie('__UUID', self::$UUID, time() + 24 * 3600, '/');
+			return sha1('gOPF-UUID'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '') . rand(1, 1000000));
 		}
+
+        /**
+         * Set UUID
+         */
+        private static function setUUID() {
+            setcookie('__UUID', self::$UUID, time() + 24 * 3600, '/');
+        }
 		
 		/**
 		 * Starts request processing
