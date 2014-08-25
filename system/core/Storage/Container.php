@@ -23,7 +23,7 @@
 		
 		/**
 		 * Element driver
-		 * @var \System\Drivers\DriverInterface
+		 * @var \System\Driver\DriverInterface
 		 */
 		private $driver;
 		
@@ -44,9 +44,9 @@
 		 * 
 		 * @param string $name Storage element name
 		 * @param mixed $value Storage element value
-		 * @param \System\Drivers\DriverInterface $driver Storage element driver
+		 * @param \System\Driver\DriverInterface $driver Storage element driver
 		 */
-		public function __construct($name, $value, \System\Drivers\DriverInterface $driver) {
+		public function __construct($name, $value, \System\Driver\DriverInterface $driver) {
 			$this->name = $name;
 			$this->value = $value;
 			$this->driver = $driver;

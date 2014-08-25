@@ -10,35 +10,42 @@
 	 */
 	class Storage extends Singleton {
         /**
-         * APC driver
-         * @var string
+         * @see \System\Driver::APC
          */
-        const APC = 'APCDriver';
+        const APC = Driver::APC;
 
         /**
-         * Default driver
-         * @var string
+         * @see \System\Driver::SESSION
          */
-        const SESSION = 'DefaultDriver';
+        const SESSION = Driver::SESSION;
 
         /**
-         * Filesystem driver
-         * @var string
+         * @see \System\Driver::FILESYSTEM
          */
-        const FILESYSTEM = 'FilesystemDriver';
+        const FILESYSTEM = Driver::FILESYSTEM;
 
         /**
-         * Serialized filesystem driver
+         * @see \System\Driver::SERIALIZED_FILESYSTEM
+         */
+        const SERIALIZED_FILESYSTEM = Driver::SERIALIZED_FILESYSTEM;
+
+        /**
+         * @see \System\Driver::MEMCACHED
+         */
+        const MEMCACHED = Driver::MEMCACHED;
+
+        /**
+         * Shared container name
          * @var string
          */
-        const SERIALIZED_FILESYSTEM = 'SerialziedFilesystemDriver';
+        const SHARED = '__SHARED';
 
 		/**
 		 * Storage containers
 		 * @var \System\Storage\Container[]
 		 */
 		private static $containers = array();
-		
+
 		/**
 		 * Storage module configuration
 		 * @var \System\Config
@@ -56,90 +63,10 @@
          * Returns custom parameters container
          *
          * @param string $name Container name
-         * @param string $type Container driver type
+         * @param string $driver Container driver type
          * @return \System\Storage\Container Container instance
          */
-        public static function factory($name, $type) {
-            return self::initializeContainer($name, $type);
-        }
-		
-		/**
-		 * Sets value into storage container
-		 * 
-		 * @param string $name Storage container name
-		 * @param mixed $value Storage container value
-		 */
-		public static function set($name, $value) {
-			self::initializeContainer($name);
-			
-			self::$containers[$name]->set($value);
-		}
-		
-		/**
-		 * Returns value of storage container
-		 * 
-		 * @param string $name Storage container name
-		 * @return mixed Storage container value
-		 */
-		public static function get($name) {
-			self::initializeContainer($name);
-			
-			return self::$containers[$name]->get();
-		}
-		
-		/**
-		 * Removes storage container
-		 * 
-		 * @param string $name Storage container name
-		 */
-		public static function delete($name) {
-			if (!empty(self::$containers[$name])) {
-				self::$containers[$name]->remove();
-
-				unset(self::$containers[$name]);
-			}
-		}
-		
-		/**
-		 * Reads value of container from driver
-		 * 
-		 * @param string $name Storage container name
-		 */
-		public static function read($name) {
-			self::initializeContainer($name);
-			
-			self::$containers[$name]->read();
-		}
-		
-		/**
-		 * Saves value of container into driver
-		 * 
-		 * @param string $name Storage container name
-		 */
-		public static function write($name) {
-			self::$containers[$name]->write();
-		}
-		
-		/**
-		 * Marks storage container, as temporary
-		 * 
-		 * @param string $name Storage container name
-		 * @param bool $temp Is temporary?
-		 */
-		public static function temporary($name, $temp = true) {
-			self::initializeContainer($name);
-			
-			self::$containers[$name]->temporary = $temp;
-		}
-
-        /**
-         * Initiates storage container with specified name and driver
-         *
-         * @param string $name Storage name
-         * @param string $driver Driver name
-         * @return \System\Storage\Container Storage element
-         */
-		private static function initializeContainer($name, $driver = '') {
+        public static function factory($name, $driver = '') {
             if (!self::hasInstance()) {
                 self::instance();
             }
@@ -148,13 +75,83 @@
                 $driver = self::$config->driver;
             }
 
-			if (!isset(self::$containers[$name])) {
-				$driver = '\\System\\Storage\\'.$driver;
-				
-				return self::$containers[$name] = new \System\Storage\Container($name, null, new $driver(sha1($name), 0));
-			} else {
-                return self::$containers[$name];
+            if (!isset(self::$containers[$name])) {
+                $value = self::SHARED ? new \stdClass() : null;
+                self::$containers[$name] = new \System\Storage\Container($name, $value, Driver::factory($driver, 'STORAGE'.$name, 0));
+            }
+
+            return self::$containers[$name];
+        }
+		
+		/**
+		 * Sets value into shared storage container
+		 * 
+		 * @param string $name Shared storage field name
+		 * @param mixed $value Shared storage field value
+		 */
+		public static function set($name, $value) {
+            $container = self::getSharedContainer();
+
+            $content = $container->get();
+            $content->$name = $value;
+
+			$container->set($content);
+		}
+
+		/**
+		 * Returns value of shared storage container
+		 *
+		 * @param string $name Shared storage field name
+		 * @return mixed Shared storage field value
+		 */
+		public static function get($name) {
+			$content = self::getSharedContainer()->get();
+
+            if (isset($content->$name)) {
+                return $content->$name;
+            } else {
+                return null;
             }
 		}
+
+		/**
+		 * Removes shared storage field
+		 *
+		 * @param string $name Shared storage field name
+		 */
+		public static function delete($name) {
+            $container = self::getSharedContainer();
+
+            $content = $container->get();
+
+			if (isset($content->$name)) {
+                unset($content->$name);
+            }
+
+            $container->set($content);
+		}
+
+		/**
+		 * Reads value of shared container from driver
+		 */
+		public static function read() {
+			self::getSharedContainer()->read();
+		}
+
+		/**
+		 * Saves value of shared container into driver
+		 */
+		public static function write() {
+            self::getSharedContainer()->write();
+		}
+
+        /**
+         * Returns initialized shared container
+         *
+         * @return \System\Storage\Container Initialized shared container
+         */
+        private static function getSharedContainer() {
+            return self::factory(self::SHARED);
+        }
 	}
 ?>
