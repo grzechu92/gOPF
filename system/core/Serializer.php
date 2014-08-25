@@ -51,15 +51,14 @@
 		 * @return mixed Unserialized data
 		 * @throws \System\Serializer\Exception
 		 */
-		public static function readFile($path, $attempt = 100, $interval = 0) {
+		public static function read($path, $attempt = 100, $interval = 0) {
 			while ($attempt-- > 0) {
 				try {
 					return self::unserialize(Filesystem::read($path, true));
 				} catch (\System\Filesystem\Exception $exception) {
-					continue;
+                    usleep(1000 * $interval);
+                    continue;
 				}
-				
-				usleep(1000 * $interval);
 			}
 			
 			throw new Exception(I18n::translate('SAFE_SERIALIZE_ERROR'));
@@ -73,7 +72,7 @@
 		 * @return mixed Unserialized data
 		 * @throws \System\Filesystem\Exception
 		 */
-		public static function writeFile($path, $value) {
+		public static function write($path, $value) {
 			Filesystem::write($path, self::serialize($value), true);
 		}
 	}

@@ -19,7 +19,7 @@
 		
 		/**
 		 * Session data store driver
-		 * @var mixed
+		 * @var \System\Driver\Driver
 		 */
 		private $driver;
 		
@@ -28,7 +28,6 @@
 		 * @var \System\Config
 		 */
 		private $config;
-		
 		/**
 		 * Session data container
 		 * @var array
@@ -47,10 +46,10 @@
 		protected function __construct() {
 			$this->config = Config::factory('session.ini', Config::APPLICATION);
 			
-			$this->initDriver();
+			$this->driver = Driver::factory($this->config->driver, 'SESSION', $this->config->lifetime, true);
 			
 			$this->load();
-			$this->initSession();
+			$this->initialize();
 			
 			if ($this->config->protected) {
 				$this->protectSession();
@@ -224,7 +223,7 @@
 			if ($this->data['__PROTECTED'] !== $this->generateProtectKey()) {
 				Core::resetUUID();
 				unset($this->data);
-				$this->initSession();
+				$this->initialize();
 				
 				if ($this->config->error) {
 					throw new Exception(I18n::translate('SESSION_HIJACKING'));
@@ -235,7 +234,7 @@
 		/**
 		 * Initiates empty session
 		 */
-		private function initSession() {
+		private function initialize() {
 			$this->data['__UUID'] =& Core::$UUID;
 			
 			if (!isset($this->data['__PROTECTED'])) {
@@ -243,14 +242,6 @@
 				$this->data['__ELEMENTS'] = array();
 				$this->data['__COUNT'] = 0;
 			}
-		}
-		
-		/**
-		 * Initiates selected session driver
-		 */
-		private function initDriver() {
-			$className = '\\System\\Session\\'.$this->config->driver;
-			$this->driver = new $className(Core::$UUID, $this->config->lifetime);
 		}
 		
 		/**

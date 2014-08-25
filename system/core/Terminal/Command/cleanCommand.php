@@ -21,9 +21,6 @@
 		 */
 		private $directories = array(
 			'/application/log',
-			'/application/var/cache',
-			'/application/var/session',
-			'/application/var/storage',
 			'/system/log',
 			'/system/var'
 		);

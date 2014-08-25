@@ -1,5 +1,5 @@
 <?php
-	namespace System\Drivers;
+	namespace System\Driver;
 	use System\Filesystem as FS;
 	
 	/**
@@ -9,7 +9,7 @@
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0> 
 	 */
-	class Filesystem implements DriverInterface {
+	class Filesystem extends Driver implements DriverInterface {
 		/**
 		 * Lifetime metadata pad size
 		 * @var int
@@ -17,36 +17,34 @@
 		const PAD_SIZE = 15;
 		
 		/**
-		 * Filesystem container lifetime
-		 * @var int
-		 */
-		public $lifetime = 86400;
-		
-		/**
 		 * Filesystem container name
 	 	 * @var string
 		 */
 		protected $filename;
-		
-		/**
-		 * Path to data storage path
-		 * @var string
-		 */
-		protected $path = __VARIABLE_PATH;
+
+        /**
+         * Filesystem directory
+         * @var
+         */
+        private $path;
 		
 		/**
 		 * @see \System\Drivers\DriverInterface::__construct()
 		 */
-		public function __construct($id, $lifetime = 0) {
-			$this->filename = $this->path.DIRECTORY_SEPARATOR.$id;
-			$this->lifetime = $lifetime;
-		}
-		
+        public function __construct($name, $lifetime = 0, $user = false) {
+            $this->name = $name;
+            $this->lifetime = $lifetime;
+            $this->user = $user;
+
+            $this->path = __VARIABLE_PATH.DIRECTORY_SEPARATOR;
+            $this->filename = $this->path.$this->UID();
+        }
+
 		/**
 		 * @see \System\Drivers\DriverInterface::set()
 		 */
 		public function set($content) {
-			FS::write($this->filename, str_pad((($this->lifetime > 0) ? time()+$this->lifetime : 0), self::PAD_SIZE, 0, STR_PAD_LEFT).serialize($content), true);
+			FS::write($this->filename, str_pad((($this->lifetime > 0) ? time() + $this->lifetime : 0), self::PAD_SIZE, 0, STR_PAD_LEFT).serialize($content), true);
 		}
 		
 		/**

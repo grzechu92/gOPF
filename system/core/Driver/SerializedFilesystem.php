@@ -1,5 +1,5 @@
 <?php
-	namespace System\Drivers;
+	namespace System\Driver;
 	use System\Filesystem as FS;
 	use System\Serializer;
 	use System\Serializer\Exception;
@@ -16,7 +16,7 @@
 		 * @see \System\Drivers\DriverInterface::set()
 		 */
 		public function set($content) {
-			Serializer::writeFile($this->filename, str_pad(time()+$this->lifetime, self::PAD_SIZE, 0, STR_PAD_LEFT).serialize($content));
+			Serializer::write($this->filename, str_pad((($this->lifetime > 0) ? time() + $this->lifetime : 0), self::PAD_SIZE, 0, STR_PAD_LEFT).serialize($content));
 		}
 		
 		/**
@@ -24,15 +24,15 @@
 		 */
 		public function get() {
 			try {
-				$content = Serializer::readFile($this->filename);
-					
+				$content = Serializer::read($this->filename);
+
 				$lifetime = substr($content, 0, self::PAD_SIZE);
 				$data = substr($content, self::PAD_SIZE);
-					
-				if ($lifetime >= time() && !empty($data)) {
+
+                if ($lifetime == 0 || $lifetime >= time() && !empty($data)) {
 					return unserialize($data);
 				}
-					
+
 				return null;
 			} catch (Exception $exception) {
 				return null;

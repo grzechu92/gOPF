@@ -1,5 +1,5 @@
 <?php
-	namespace System\Drivers;
+	namespace System\Driver;
 	
 	/**
 	 * Interface which describes how to write drivers for framework modules
@@ -12,10 +12,10 @@
 		/**
 		 * Saves data into driver
 		 * 
-		 * @param string $id Data identificator
-		 * @param int $lifetime Data lifetime
+		 * @param string $name Driver container name
+		 * @param int $lifetime Driver container lifetime
 		 */
-		public function __construct($id, $lifetime);
+		public function __construct($name, $lifetime = 0, $user = false);
 		
 		/**
 		 * Saves data under selected ID by driver

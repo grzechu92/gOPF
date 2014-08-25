@@ -1,5 +1,5 @@
 <?php
-    namespace System\Drivers;
+    namespace System\Driver;
 
     /**
      * Memcached driver
@@ -8,7 +8,7 @@
      * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
      * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
      */
-    class Memcached implements DriverInterface {
+    class Memcached extends Driver implements DriverInterface {
         /**
          * Memcached default port
          * @var int
@@ -22,24 +22,6 @@
         const HOST = '127.0.0.1';
 
         /**
-         * Memcached container lifetime
-         * @var int
-         */
-        public $lifetime = 86400;
-
-        /**
-         * Memcached container name prefix
-         * @var string
-         */
-        protected $prefix = 'gOPF-';
-
-        /**
-         * Memcached container name
-         * @var string
-         */
-        protected $name;
-
-        /**
          * Memcached core
          * @var \Memcached
          */
@@ -48,9 +30,10 @@
         /**
          * @see \System\Drivers\DriverInterface::__construct()
          */
-        public function __construct($id, $lifetime = 0) {
-            $this->name = $this->prefix.$id;
+        public function __construct($name, $lifetime = 0, $user = false) {
+            $this->name = $name;
             $this->lifetime = $lifetime;
+            $this->user = $user;
 
             $this->memcached = new \Memcached();
             $this->memcached->addServer(self::HOST, self::PORT);
@@ -60,21 +43,21 @@
          * @see \System\Drivers\DriverInterface::set()
          */
         public function set($content) {
-            $this->memcached->set($this->name, $content, $this->lifetime);
+            $this->memcached->set($this->UID(), $content, $this->lifetime);
         }
 
         /**
          * @see \System\Drivers\DriverInterface::get()
          */
         public function get() {
-            $this->memcached->get($this->name);
+            return $this->memcached->get($this->UID());
         }
 
         /**
          * @see \System\Drivers\DriverInterface::remove()
          */
         public function remove() {
-            $this->memcached->delete($this->name);
+            $this->memcached->delete($this->UID());
         }
 
         /**

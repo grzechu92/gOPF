@@ -1,28 +1,23 @@
 <?php
-	namespace System\Drivers;
+	namespace System\Driver;
+    use \stdClass;
 	
 	/**
-	 * Default driver based on PHP Sessions
+	 * Diver based on PHP Sessions
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0> 
 	 */
-	class DefaultDriver implements DriverInterface {		
+	class Session implements DriverInterface {
 		/**
-		 * Session container lifetime
+		 * Session lifetime
 		 * @var int
 		 */
 		public $lifetime = 86400;
 		
 		/**
-		 * Data container name in Session variable
-		 * @var string
-		 */
-		protected $prefix = 'gOPF-';
-		
-		/**
-	 	 * Session container name
+	 	 * Container name in session
 		 * @var string
 		 */
 		protected $name;
@@ -36,27 +31,30 @@
 			ini_set('session.gc_maxlifetime', $lifetime);
 			
 			if (session_status() == PHP_SESSION_NONE) {
-				session_id($this->name);
 				session_start();
 			}
 			
 			if (empty($_SESSION)) {
-				$_SESSION = null;
+				$_SESSION = new stdClass();
 			}
+
+            if (!isset($_SESSION->$id)) {
+                $_SESSION->$id = new stdClass();
+            }
 		}
 		
 		/**
 		 * @see \System\Drivers\DriverInterface::set()
 		 */
 		public function set($content) {
-			$_SESSION = $content;
+			$_SESSION->{$this->name} = $content;
 		}
 		
 		/**
 		 * @see \System\Drivers\DriverInterface::get()
 		 */
 		public function get() {
-			return $_SESSION;
+			return $_SESSION->{$this->name};
 		}
 		
 		/**
