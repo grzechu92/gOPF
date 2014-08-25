@@ -4,6 +4,7 @@ RewriteEngine On
 RewriteBase /
 
 RewriteRule ^(js|graphics|media|css)/(.+)$  application/web/$1/$2 [L]
+RewriteRule ^favicon.ico$ application/web/graphics/$1 [L]
 RewriteRule ^@/System/(.*)/(.*)$ system/core/$1/@/$2 [L]
 RewriteRule ^@/(.*)/(.*)/(.*)$ system/vendor/$1/$2/@/$3 [L]
 
