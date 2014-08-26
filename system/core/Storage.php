@@ -15,11 +15,6 @@
         const APC = Driver::APC;
 
         /**
-         * @see \System\Driver::SESSION
-         */
-        const SESSION = Driver::SESSION;
-
-        /**
          * @see \System\Driver::FILESYSTEM
          */
         const FILESYSTEM = Driver::FILESYSTEM;
