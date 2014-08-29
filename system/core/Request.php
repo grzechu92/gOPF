@@ -137,8 +137,13 @@
 				process(self::$$variable, $content);
 			}
 		}
-		
-		private function parseURL() {
+
+        /**
+         * Parse request URL
+         *
+         * @return string Parsed URL
+         */
+        private function parseURL() {
 			$url = explode('?', $_SERVER['REQUEST_URI']);
 			
 			return substr($url[0], 1);
