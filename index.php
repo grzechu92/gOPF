@@ -95,11 +95,14 @@
 	define('__START_TIME', microtime(true));
 	
 	/**
-	 * Enable hidden features to speed up framework core
+	 * Enable hidden features to speed up framework core (requires APC)
 	 * @var bool
 	 */
 	define('__TURBO_MODE', false);
-	
+
 	require __APPLICATION_PATH.'/init.php';
 	require __SYSTEM_PATH.'/init.php';
+
+    echo 'Time: '.(microtime(true) - __START_TIME).'s<br>';
+    echo 'Memory usage: '.convertBytes(memory_get_peak_usage());
 ?>
