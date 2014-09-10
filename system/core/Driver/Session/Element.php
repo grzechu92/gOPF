@@ -62,7 +62,7 @@
          * @return bool Is valid?
          */
         public function isValid() {
-            return $this->lifetime >= time();
+            return $this->lifetime == 0 || $this->lifetime >= time();
         }
     }
 ?>

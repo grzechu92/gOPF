@@ -102,7 +102,4 @@
 
 	require __APPLICATION_PATH.'/init.php';
 	require __SYSTEM_PATH.'/init.php';
-
-    echo 'Time: '.(microtime(true) - __START_TIME).'s<br>';
-    echo 'Memory usage: '.convertBytes(memory_get_peak_usage());
 ?>

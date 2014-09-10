@@ -10,18 +10,22 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Session extends Driver implements DriverInterface {
+        /**
+         * Is session initialized?
+         * @var bool
+         */
+        private static $initialized = false;
+
 		/**
 		 * @see \System\Drivers\DriverInterface::__construct()
 		 */
 		public function __construct($name, $lifetime = 0, $user = false) {
-            session_id(\System\Core::$UUID);
+            if (!self::$initialized) {
+                session_id(\System\Core::$UUID);
+                session_start();
 
-            if (!isset($_SESSION['raw'])) {
-                $_SESSION['raw'] = 1;
+                self::$initialized = true;
             }
-
-            $_SESSION['raw']++;
-
 
             $this->name = $name;
 
@@ -30,15 +34,14 @@
             }
 
             if (!isset($_SESSION[$name])) {
-                $_SESSION[$name] = new Element($name, $lifetime + time());
+                if ($lifetime != 0) {
+                    $lifetime += time();
+                }
+
+                $_SESSION[$name] = new Element($name, $lifetime);
             }
 		}
 
-        public function __destruct() {
-            session_write_close();
-            var_dump('__destruct()', $_SESSION);
-        }
-		
 		/**
 		 * @see \System\Drivers\DriverInterface::set()
 		 */
@@ -97,7 +100,7 @@
          *
          * @return \System\Driver\Session\Element
          */
-        private function getElement() {
+        private function &getElement() {
             return $_SESSION[$this->name];
         }
 	}
