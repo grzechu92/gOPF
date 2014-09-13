@@ -2,8 +2,7 @@
 	namespace System\Filesystem;
 	use System\Filesystem;
 	use System\I18n;
-	use System\Filesystem\Exception;
-	
+
 	/**
 	 * File class for Filesystem managing class
 	 * 
@@ -28,7 +27,7 @@
 		 * Open file for reading
 		 * @var string
 		 */
-		const READ = 'a+';
+		const READ = 'r';
 		
 		/**
 		 * Lock file for reading purpose
@@ -53,6 +52,12 @@
 		 * @var string
 		 */
 		private $path;
+
+        /**
+         * File oppened mode
+         * @var string
+         */
+        private $mode;
 		
 		/**
 		 * Creates file handler and sets required data into object
@@ -63,6 +68,7 @@
 		 */
 		public function __construct($path, $mode, $lock = false) {
 			$this->path = $path;
+            $this->mode = $mode;
 			$this->handle = $this->getFileHandle($mode);
 		}
 		
@@ -118,6 +124,10 @@
 		 * @throws \System\Filesystem\Exception
 		 */
 		public function setContent($content) {
+            if ($this->mode == self::READ) {
+                $this->handle = $this->getFileHandle(self::APPEND);
+            }
+
 			if (fwrite($this->handle, $content) === false) {
 				throw new Exception(I18n::translate('FILESYSTEM_UNABLE_WRITE', array($this->path)), $this->path);
 			}
