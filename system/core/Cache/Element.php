@@ -37,7 +37,7 @@
 		public function __construct($name, $value, $lifetime) {
 			$this->name = $name;
 			$this->value = $value;
-			$this->expires = $lifetime+time();
+			$this->expires = $lifetime + time();
 		}
 	}
 ?>

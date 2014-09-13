@@ -1,7 +1,7 @@
 <?php
 	namespace System;
-	use System\Cache\Exception;
-	use System\Cache\Element;
+    use \System\Container as SystemContainer;
+    use \System\Cache\Container;
 	
 	/**
 	 * Cache module of framework
@@ -11,74 +11,38 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Cache extends Singleton {
-		/**
-		 * Element which you want to cache is private (only for one user)
-		 * @var int
-		 */
-		const USER_CACHE = 1;
+        /**
+         * @see \System\Cache\Type::USER
+         */
+		const USER = Container::USER;
+
+        /**
+         * @see \System\Cache\Type::COMMON
+         */
+		const COMMON = Container::COMMON;
+
+        /**
+         * @see \System\Cache\Type::RUNTIME
+         */
+        const RUNTIME = Container::RUNTIME;
 		
 		/**
-		 * Element which you want to cache is public (anyone)
-		 * @var int
+		 * Loaded cache containers
+		 * @var \System\Cache\Container[]
 		 */
-		const GLOBAL_CACHE = 2;
-		
-		/**
-		 * Holds all loaded cache elements
-		 * @var array
-		 */
-		private static $elements = array(
-			self::USER_CACHE => array(),
-			self::GLOBAL_CACHE => array()
-		);
-		
-		/**
-		 * Loaded status flags of each cache type
-		 * @var array
-		 */
-		private static $loaded = array(
-			self::USER_CACHE => false,
-			self::GLOBAL_CACHE => false
-		);
-		
-		/**
-		 * Cache module drivers
-		 * @var array
-		 */
-		private static $driver = array(
-			self::USER_CACHE => null,
-			self::GLOBAL_CACHE => null
-		);
-		
-		/**
-		 * Save status of cache types
-		 * @var array
-		 */
-		private static $save = array(
-			self::USER_CACHE => false,
-			self::GLOBAL_CACHE => false
-		);
+        private static $containers = array();
 
 		/**
 		 * Cache module configuration
 		 * @var \System\Config
 		 */
-		private $config;
+		private static $config;
 		
 		/**
 		 * Initiates Cache module and loads user cache data
 		 */
 		protected function __construct() {
-			$this->config = Config::factory('cache.ini', Config::APPLICATION);
-			$this->initDrivers();
-		}
-		
-		/**
-		 * Cleans and saves cache via selected driver
-		 */
-		public function __destruct() {
-			$this->cleanCache();
-			self::save();
+			self::$config = Config::factory('cache.ini', Config::APPLICATION);
 		}
 		
 		/**
@@ -87,62 +51,61 @@
 		 * @param string $name Name of cached value
 		 * @param mixed $value Value to cache 
 		 * @param int $expires Lifetime of cached value
-		 * @param int $type Cache type (Cache::GLOBAL_CACHE or Cache::USER_CACHE)
+		 * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
 		 */
-		public static function set($name, $value, $expires, $type = self::USER_CACHE) {
+		public static function set($name, $value, $expires, $type = self::USER) {
 			self::isLoaded($type);
-			
-			self::$elements[$type][$name] = new Element($name, $value, $expires);
-			self::$save[$type] = true;
+
+			self::$containers[$type]->set($name, $value, $expires);
 		}
 		
 		/**
 		 * Returns value of cached element if valid
 		 *
 		 * @param string $name Cached value name
-		 * @param int $type Cache type (Cache::GLOBAL_CACHE or Cache::USER_CACHE)
+		 * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
 		 * @return mixed Cached value (returns null when cache element is expired)
 		 */
-		public static function get($name, $type = self::USER_CACHE) {
+		public static function get($name, $type = self::USER) {
 			self::isLoaded($type);
 			
-			if (self::isValid($name, $type)) {
-				return self::$elements[$type][$name]->value;
-			}
-			
-			return null;
+			return self::$containers[$type]->get($name);
 		}
 		
 		/**
 		 * Removes selected cache element
 		 * 
 		 * @param string $name Cached value name
-		 * @param int $type Cache type (Cache::GLOBAL_CACHE or Cache::USER_CACHE)
+		 * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
 		 */
-		public static function remove($name, $type = self::USER_CACHE) {
+		public static function remove($name, $type = self::USER) {
 			self::isLoaded($type);
 			
-			if (self::isValid($name, $type)) {
-				unset(self::$elements[$type][$name]);
-				self::$save[$type] = true;
-			}
+			self::$containers[$type]->remove($name);
 		}
+
+        /**
+         * Clear cache container
+         *
+         * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
+         */
+        public static function clear($type = self::USER) {
+            self::isLoaded($type);
+
+            self::$containers[$type]->clear();
+        }
 		
 		/**
 		 * Checks element if is valid
 		 * 
 		 * @param string $name Cached value name
-		 * @param int $type Cache type (Cache::GLOBAL_CACHE or Cache::USER_CACHE)
+		 * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
 		 * @return bool Is valid?
 		 */
-		public static function isValid($name, $type = self::USER_CACHE) {
-			self::isLoaded($type);
-			
-			if (!empty(self::$elements[$type][$name]) && self::$elements[$type][$name]->expires > time()) {
-				return true;
-			}
-			
-			return false;
+		public static function isValid($name, $type = self::USER) {
+            self::isLoaded($type);
+
+            return self::$containers[$type]->isValid($name);
 		}
 		
 		/**
@@ -155,61 +118,9 @@
                 self::instance();
             }
 
-			if (isset(self::$loaded[$type]) && !self::$loaded[$type]) {
-				self::load($type);
-			}
-		}
-		
-		/**
-		 * Loads cache data of selected type
-		 * 
-		 * @param int $type Cache type
-		 */
-		private static function load($type) {
-			self::$elements[$type] = self::$driver[$type]->get();
-			self::$loaded[$type] = true;
-		}
-		
-		/**
-		 * Saves user cache data into driver
-		 */
-		private static function save() {
-			foreach (self::$loaded as $type=>$status) {
-				if ($status) {
-					if (empty(self::$elements[$type])) {
-						self::$driver[$type]->remove();
-					} else {
-						if (self::$save[$type]) {
-							self::$driver[$type]->set(self::$elements[$type]);
-						}
-					}
-				}
-			}
-		}
-		
-		/**
-		* Initiates cache drivers
-		*/
-		private function initDrivers() {
-			$className = '\\System\\Cache\\'.$this->config->driver;
-				
-			self::$driver[self::USER_CACHE] = new $className(Core::$UUID, $this->config->lifetime);
-			self::$driver[self::GLOBAL_CACHE] = new $className('0000000000000000000000000000000000000000', $this->config->lifetime);
-		}
-		
-		/**
-		 * Cleans cache from expired elements
-		 */
-		private function cleanCache() {
-			foreach (self::$elements as $type=>$elements) {
-				if (!empty($elements)) {
-					foreach ($elements as $id=>$element) {
-						if ($element->expires < time()) {
-							unset(self::$elements[$type][$id]);
-						}
-					}
-				}
-			}
+            if (!isset(self::$containers[$type])) {
+                self::$containers[$type] = new Container($type, self::$config);
+            }
 		}
 	}
 ?>
