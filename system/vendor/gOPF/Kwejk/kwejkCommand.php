@@ -133,11 +133,12 @@
 			
 			return new Kwejk(__VARIABLE_PATH.DIRECTORY_SEPARATOR.self::COOKIE_NAME, $proxy, false, false, true);
 		}
-		
+
 		/**
 		 * Generate captcha from storage
-		 * 
+		 *
 		 * @return \gOPF\Kwejk\Captcha Solved captcha
+         * @throws \System\Terminal\Exception
 		 */
 		private function getCaptcha() {
 			if (count($this->storage['captchas']) == 0) {

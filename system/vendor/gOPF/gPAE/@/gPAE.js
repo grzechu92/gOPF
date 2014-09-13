@@ -76,7 +76,7 @@ function gPAE(url, debug) {
     this.send = function(event, data) {
         self._pipe.send({command: "ACTION", event: event, data: data, key: self._connection.key, ping: self._connection.ping}, false);
         self._debug("sending data...", 2);
-    }
+    };
 
     this._debug = function(message, level) {
         if (self._config.debug >= level) {

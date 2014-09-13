@@ -49,7 +49,7 @@
 				$element = new Element($name, $line);
 				
 				if ($group) {
-					$content = $this->elements->get($group)->push($element);
+					$this->elements->get($group)->push($element);
 				} else {
 					$this->elements->push($element);
 				}
@@ -75,8 +75,8 @@
 					if ($line instanceof Group) {
 						$group = $line;
 												
-						foreach ($group as $line) {
-							$line = $line->value;
+						foreach ($group as $row) {
+							$line = $row->value;
 							
 							if ($line->value != Line::REMOVE) {
 								$content[] = $line->build();

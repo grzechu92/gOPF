@@ -1,6 +1,5 @@
 <?php
 	namespace System\Dispatcher;
-	use System\Request;
 	use System\Filesystem;
 	use System\I18n;
 	use System\Core;

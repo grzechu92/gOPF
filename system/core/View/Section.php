@@ -171,11 +171,12 @@
 			
 			return $this->content = $this->render();
 		}
-		
+
 		/**
 		 * Renders section and returns content
-		 * 
+		 *
 		 * @return string Rendered section content
+         * @throws \System\View\Exception
 		 */
 		private function render() {
 			if (\System\Core::STAGE == __DEVELOPMENT) {

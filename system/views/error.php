@@ -9,8 +9,8 @@
 		<meta charset="UTF-8">
 		
 		<style>
-			* {margin: 0px; padding: 0px;}
-			body {background: #00a; color: #fff; font-family: courier; font-size: 17px; text-align: center; margin: 100px auto 0px auto; width: 1000px; line-height: 25px;} 
+			* {margin: 0; padding: 0;}
+			body {background: #00a; color: #fff; font-family: courier; font-size: 17px; text-align: center; margin: 100px auto 0 auto; width: 1000px; line-height: 25px;}
 			.negative {background:#fff; color:#00a; padding: 3px 8px;}
 			.bold {font-weight: bold;}
 			.rightSpace {margin-right: 30px;}

@@ -51,7 +51,7 @@
 			
 			if (count(self::instance()->sections[$name]) > 0) {
                 /** @var $section \System\View\Section */
-                foreach (self::instance()->sections[$name] as $key => $section) {
+                foreach (self::instance()->sections[$name] as $section) {
                     echo $section->getContent();
 				}
 			}

@@ -1,5 +1,5 @@
 body {background: black;}
-* {margin: 0px; padding: 0px;}
+* {margin: 0; padding: 0;}
 
 .consoleFont {white-space: pre; font-family: monospace; display: block; font-size: 13px; background: #000000; color: silver;}
 .expand {width: 100%;}
@@ -9,8 +9,8 @@ body {background: black;}
 form {display: none;}
 
 table tr {width: 100%; display: block;}
-table {border-spacing: 0px;}
+table {border-spacing: 0;}
 
-#terminal, #command {background: black; border: 0px; width: 100%;}
-#command:focus {outline: 0px;}
+#terminal, #command {background: black; border: 0; width: 100%;}
+#command:focus {outline: 0;}
 #command[type=password] {color: transparent;}
