@@ -63,10 +63,10 @@
 		 * @param string $name Section name
 		 * @param string $file Section filename (/application/views/)
 		 * @param int $expires Cache expire time (if more than 0, cache is automaticly enabled)
-		 * @param int $type Cache type (Cache::GLOBAL_CACHE or Cache::USER_CACHE)
+		 * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
 		 * @return \System\View\Section
 		 */
-		public static function factorySection($name, $file, $expires = 0, $type = \System\Cache::GLOBAL_CACHE) {
+		public static function factorySection($name, $file, $expires = 0, $type = \System\Cache::COMMON) {
 			return self::instance()->sections[$name][] = new Section($name, $file, $expires, $type);
 		}
 		

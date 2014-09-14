@@ -37,7 +37,7 @@
          * Initializes cache statement
          *
          * @param int $expires Cache expire time (in seconds)
-         * @param int $type Cache type (Statement::GLOBAL_CACHE || Statement::USER_CACHE)
+         * @param int $type Cache type (Statement::COMMON, Statement::USER, Statement::RUNTIME)
          */
         public function __construct($expires, $type) {
             $this->expires = $expires;

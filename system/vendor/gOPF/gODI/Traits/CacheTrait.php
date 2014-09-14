@@ -26,10 +26,10 @@
          * Initialize cache statement
          *
          * @param int $expires Cache element expire time (in seconds)
-         * @param int $type Cache type (Statement::GLOBAL_CACHE || Statement::USER_CACHE)
+         * @param int $type Cache type (Statement::COMMON, Statement::USER, Statement::RUNTIME)
          * @return \gOPF\gODI\Statement
          */
-        public function cache($expires, $type = Statement::GLOBAL_CACHE) {
+        public function cache($expires, $type = Statement::COMMON) {
             $this->cache = new Cache($expires, $type);
             $this->cacheable = true;
 

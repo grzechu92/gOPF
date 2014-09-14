@@ -94,9 +94,9 @@
 		 * @param string $name Section name
 		 * @param string $file Section filename (/application/views/)
 		 * @param int $expires Cache expire time (if more than 0, cache is automaticly enabled)
-		 * @param int $type Cache type (Cache::GLOBAL_CACHE or Cache::USER_CACHE)
+		 * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
 		 */
-		public function __construct($name, $file, $expires = 0, $type = Cache::GLOBAL_CACHE) {
+		public function __construct($name, $file, $expires = 0, $type = Cache::COMMON) {
 			$this->container = new \System\ArrayContainer();
 			
 			$this->name = $name;

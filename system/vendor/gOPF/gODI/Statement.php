@@ -84,14 +84,19 @@
         const RETURN_DATA = 3;
 
         /**
-         * @see \System\Cache::USER_CACHE
+         * @see \System\Cache::USER
          */
-        const USER_CACHE = Cache::USER_CACHE;
+        const USER = Cache::USER;
 
         /**
-         * @see \System\Cache::GLOBAL_CACHE
+         * @see \System\Cache::COMMON
          */
-        const GLOBAL_CACHE = Cache::GLOBAL_CACHE;
+        const COMMON = Cache::COMMON;
+
+        /**
+         * @see \System\Cache::RUNTIME
+         */
+        const RUNTIME = Cache::RUNTIME;
 
 		/**
 		 * PDO connector
