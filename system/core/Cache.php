@@ -1,8 +1,7 @@
 <?php
 	namespace System;
-    use \System\Container as SystemContainer;
-    use \System\Cache\Container;
-	
+    use \System\Cache\Container as CacheContainer;
+
 	/**
 	 * Cache module of framework
 	 * 
@@ -12,19 +11,19 @@
 	 */
 	class Cache extends Singleton {
         /**
-         * @see \System\Cache\Type::USER
+         * @see \System\Cache\Container::USER
          */
-		const USER = Container::USER;
+		const USER = CacheContainer::USER;
 
         /**
-         * @see \System\Cache\Type::COMMON
+         * @see \System\Cache\Container::COMMON
          */
-		const COMMON = Container::COMMON;
+		const COMMON = CacheContainer::COMMON;
 
         /**
-         * @see \System\Cache\Type::RUNTIME
+         * @see \System\Cache\Container::RUNTIME
          */
-        const RUNTIME = Container::RUNTIME;
+        const RUNTIME = CacheContainer::RUNTIME;
 		
 		/**
 		 * Loaded cache containers
@@ -119,7 +118,7 @@
             }
 
             if (!isset(self::$containers[$type])) {
-                self::$containers[$type] = new Container($type, self::$config);
+                self::$containers[$type] = new CacheContainer($type, self::$config);
             }
 		}
 	}
