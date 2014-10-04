@@ -35,9 +35,15 @@
 
         /**
          * Serialized filesystem based driver
-         * @string
+         * @var string
          */
         const SERIALIZED_FILESYSTEM = 'SerializedFilesystem';
+
+        /**
+         * Database based driver
+         * @var string
+         */
+        const DATABASE = 'Database';
 
         /**
          * Create specified driver instance

@@ -30,6 +30,11 @@
         const MEMCACHED = Driver::MEMCACHED;
 
         /**
+         * @see \System\Driver::MEMCACHED
+         */
+        const DATABASE = Driver::DATABASE;
+
+        /**
          * Shared container name
          * @var string
          */
