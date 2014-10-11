@@ -1,8 +1,9 @@
 <?php
 	namespace System\Dispatcher;
-	use System\Filesystem;
-	use System\I18n;
-	use System\Core;
+	use \System\Filesystem;
+	use \System\I18n;
+	use \System\Core;
+    use \System\Request;
 	
 	/**
 	 * Abstract class of contexts which request might be processed
@@ -14,13 +15,13 @@
 	abstract class Context {
 		/**
 		 * Array of loaded controllers
-		 * @var array
+		 * @var \System\Controller[]
 		 */
 		private $controllers = array();
 		
 		/**
 		 * Array of loaded models
-		 * @var array
+		 * @var \System\Model[]
 		 */
 		private $models = array();
 		
@@ -28,7 +29,7 @@
 		 * @see \System\Dispatcher\ContextInterface::getController()
 		 */
 		public function getController($name) {
-			if (!in_array($name, $this->controllers)) {
+			if (!isset($this->controllers[$name])) {
 				$this->loadController($name);
 			}
 			
@@ -45,10 +46,9 @@
 				$this->checkState($name);
 			}
 			
-			$this->checkAction($controller, $action);
 			$this->checkAccess($name, $action);
 			
-			return $controller->{$action.'Action'}();
+			return $this->callAction($controller, $action.'Action');
 		}
 		
 		/**
@@ -73,6 +73,46 @@
 			$class = '\\Controllers\\'.$name.'Controller';
 			$this->controllers[$name] = new $class();
 		}
+
+        /**
+         * Request and fill requested by action method parameters
+         *
+         * @param \System\Controller $controller Loaded controller
+         * @param string $action Requested action
+         * @return mixed Controller action result
+         * @throws \System\Dispatcher\Exception
+         */
+        protected function callAction(\System\Controller $controller, $action) {
+            $reflection = new \ReflectionClass($controller);
+            $params = array();
+
+            if (!$reflection->hasMethod($action)) {
+                throw new Exception(I18n::translate('ACTION_NOT_FOUND', array($action)), 404);
+            }
+
+            $method = $reflection->getMethod($action);
+            $parameters = $method->getParameters();
+
+            if (!empty($parameters)) {
+                foreach ($parameters as $parameter) {
+                    $found = false;
+
+                    foreach (array(Request::$parameters, Request::$post, Request::$get) as $array) {
+                        if (isset($array[$parameter->name])) {
+                            $params[] = $array[$parameter->name];
+                            $found = true;
+                            break;
+                        }
+                    }
+
+                    if (!$found && !$parameter->isOptional()) {
+                        throw new Exception(I18n::translate('ACTION_NOT_FOUND', array($action)), 404);
+                    }
+                }
+            }
+
+            return call_user_func_array(array($controller, $action), $params);
+        }
 		
 		/**
 		 * Loads requested model into registry
@@ -121,21 +161,6 @@
 		protected function checkModel($name) {
 			if (!Filesystem::checkFile(__APPLICATION_PATH.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$name.'Model.php')) {
 				throw new Exception(I18n::translate('MODEL_NOT_FOUND', array($name)), 404);
-			}
-		}
-		
-		/**
-		 * Checks if action exists in controller
-		 * 
-		 * @param \System\Controller $controller Controller to check
-		 * @param string $action Method name
-		 * @throws \System\Dispatcher\Exception
-		 */
-		protected function checkAction(\System\Controller $controller, $action = 'main') {
-            $action .= 'Action';
-
-			if (!is_callable(array($controller, $action))) {
-				throw new Exception(I18n::translate('ACTION_NOT_FOUND', array($action)), 404);
 			}
 		}
 		
