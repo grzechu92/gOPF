@@ -4,6 +4,7 @@
 	use \System\I18n;
 	use \System\Core;
     use \System\Request;
+    use \ReflectionClass;
 	
 	/**
 	 * Abstract class of contexts which request might be processed
@@ -41,6 +42,9 @@
 		 */
 		public function callController($name, $action = 'main', $dynamic = false) {
 			$controller = $this->getController($name);
+            $reflection = new ReflectionClass($controller);
+
+            var_dump($reflection);
 			
 			if ($dynamic) {
 				$this->checkState($name);
@@ -83,7 +87,7 @@
          * @throws \System\Dispatcher\Exception
          */
         protected function callAction(\System\Controller $controller, $action) {
-            $reflection = new \ReflectionClass($controller);
+            $reflection = new ReflectionClass($controller);
             $params = array();
 
             if (!$reflection->hasMethod($action)) {

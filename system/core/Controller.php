@@ -10,23 +10,9 @@
 	 */
 	abstract class Controller {
 		/**
-		 * Defines users class which have access to controller
-		 * 
-		 * scheme: array('userClass', array('actionName' => 'userClass'))
-		 * example: array('guest', array('logout' => 'userClass'))
-		 * 
-		 * @var array
-		 */
-		public static $ACL = array('guest');
-		
-		/**
-		 * Controller can be called directly by calling it from URL?
-		 * @var bool
-		 */
-		public static $DYNAMIC = false;
-
-		/**
 		 * Main controller action
+         *
+         * @gOPF-Access guest
 		 */
 		public function mainAction() {}
 		
