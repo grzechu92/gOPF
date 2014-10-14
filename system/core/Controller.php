@@ -13,6 +13,7 @@
 		 * Main controller action
          *
          * @gOPF-Access guest
+         * @gOPF-State dynamic
 		 */
 		public function mainAction() {}
 		

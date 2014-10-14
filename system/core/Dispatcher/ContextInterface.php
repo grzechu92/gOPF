@@ -35,14 +35,6 @@
         public function isAccessible($controller, $action);
 
         /**
-         * Checks if controller is dynamic
-         *
-         * @param string $controller Controller name
-         * @return bool Is dynamic
-         */
-        public function isDynamic($controller);
-
-        /**
          * Call action with parameter binding
          *
          * @param string $controller Controller name

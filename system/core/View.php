@@ -39,7 +39,7 @@
 		public static function sectionSlot($name, $action = 'main') {
 			if (empty(self::instance()->sections[$name])) {
 				try {
-					Core::instance()->context->callController($name, $action);
+					Core::instance()->context->callAction($name, $action);
 					
 					if (empty(self::instance()->sections[$name])) {
 						return false;

@@ -4,7 +4,6 @@
 	use \System\I18n;
 	use \System\Core;
     use \System\Request;
-    use \ReflectionClass;
     use \System\Loader\Exception as LoaderException;
 	
 	/**
@@ -15,6 +14,18 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	abstract class Context {
+        /**
+         * Models namespace
+         * @var string
+         */
+        const MODELS_NAMESPACE = '\\Models\\';
+
+        /**
+         * Controllers namespace
+         * @var string
+         */
+        const CONTROLLERS_NAMESPACE = '\\Controllers\\';
+
 		/**
 		 * Array of loaded controllers
 		 * @var \System\Controller[]
@@ -37,6 +48,8 @@
 		 * @see \System\Dispatcher\ContextInterface::getController()
 		 */
 		final public function getController($name) {
+            $name .= 'Controller';
+
 			if (!isset($this->controllers[$name])) {
 				$this->loadController($name);
 			}
@@ -48,6 +61,8 @@
          * @see \System\Dispatcher\ContextInterface::getModel()
          */
         final public function getModel($name) {
+            $name .= 'Model';
+
             if (!isset($this->models[$name])) {
                 $this->loadModel($name);
             }
@@ -59,15 +74,35 @@
          * @see \System\Dispatcher\ContextInterface::isAccessible()
          */
         final public function isAccessible($controller, $action) {
-            $reflection = $this->getReflection($controller);
-            $annotation = $reflection->getDocComment();
+            $reflection = $this->getReflection(self::CONTROLLERS_NAMESPACE.$controller.'Controller');
+            $annotation = new Annotation($reflection->getMethod($action.'Action')->getDocComment());
+
+            $acl = $annotation->get(Annotation::ACL);
+
+            if ($annotation->get(Annotation::STATE == 'static')) {
+                throw new Exception(I18n::translate('STATIC_CONTROLLER', array($controller)), 404);
+            }
+
+            if (!$acl) {
+                return true;
+            } else {
+                foreach (explode(' ', $acl) as $level) {
+                    if (Core::instance()->user->is($level)) {
+                        return true;
+                    }
+                }
+
+                throw new Exception(I18n::translate('ACCESS_DENIED'), 401);
+            }
         }
 		
         /**
          * @see \System\Dispatcher\ContextInterface::callAction()
          */
         final public function callAction($controller, $action) {
-            $reflection = $this->getReflection($controller);
+            $action .= 'Action';
+
+            $reflection = $this->getReflection(self::CONTROLLERS_NAMESPACE.$controller.'Controller');
             $params = array();
 
             if (!$reflection->hasMethod($action)) {
@@ -97,65 +132,8 @@
                 }
             }
 
-            return call_user_func_array(array($controller, $action), $params);
+            return call_user_func_array(array($this->getController($controller), $action), $params);
         }
-
-        /**
-		 * Checks if controller is static or dynamic
-		 *
-		 * @param string $name Name of controller
-		 * @throws \System\Dispatcher\Exception
-		 */
-		final protected function checkState($name) {
-			$class = '\\Controllers\\'.$name.'Controller';
-
-			if (!$class::$DYNAMIC) {
-				throw new Exception(I18n::translate('STATIC_CONTROLLER', array($name)), 404);
-			}
-		}
-
-        /**
-		 * Checks access to requested controller and action
-		 *
-         * @param string $controller Controller name
-         * @param string $action Action name
-		 * @throws \System\Dispatcher\Exception
-		 */
-		final protected function checkAccess($controller, $action) {
-			if (!$this->isAllowed($controller, $action)) {
-				throw new Exception(I18n::translate('ACCESS_DENIED'), 401);
-			}
-		}
-
-        /**
-		 * Checks if user has permission to run selected action in requested controller
-		 *
-		 * @param string $controller Controller name
-		 * @param string $action Action name
-		 * @return bool User is allowed to access action
-		 */
-		final protected function isAllowed($controller, $action) {
-			$class = '\\Controllers\\'.$controller.'Controller';
-
-			$list = $class::$ACL;
-			rsort($list);
-
-			foreach ($list as $class) {
-				if (is_array($class)) {
-					$key = key($class);
-
-					if ($key == $action) {
-						return Core::instance()->user->is($class[$key]);
-					}
-				} else {
-					if (Core::instance()->user->is($class)) {
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
 
         /**
 		 * Prints JSON formatted data
@@ -188,7 +166,7 @@
          */
         final private function loadModel($name) {
             try {
-                $class = '\\Models\\'.$name.'Model';
+                $class = self::MODELS_NAMESPACE.$name;
                 $this->models[$name] = new $class();
             } catch (LoaderException $e) {
                 throw new Exception(I18n::translate('MODEL_NOT_FOUND', array($name)), 404);
@@ -203,7 +181,7 @@
          */
         final private function loadController($name) {
             try {
-                $class = '\\Controllers\\'.$name.'Controller';
+                $class = self::CONTROLLERS_NAMESPACE.$name;
                 $this->controllers[$name] = new $class();
             } catch (LoaderException $e) {
                 throw new Exception(I18n::translate('CONTROLLER_NOT_FOUND', array($name)), 404);

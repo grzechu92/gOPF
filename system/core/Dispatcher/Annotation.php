@@ -10,16 +10,16 @@
      */
     class Annotation {
         /**
-         * Annotation for ACL
+         * Annotation for ACL (user levels separated by space)
          * @var string
          */
         const ACL = 'gOPF-Access';
 
         /**
-         * Annotation for defining callable controller
+         * Annotation for defining state of controller (static or dynamic)
          * @var string
          */
-        const DYNAMIC = 'gOPF-Callable';
+        const STATE = 'gOPF-State';
 
         /**
          * Parsed values
