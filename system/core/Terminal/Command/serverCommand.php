@@ -22,8 +22,7 @@
 		 * Default server-status page URL address
 		 * @var string
 		 */
-		//const URL = 'http://localhost/server-status';
-        const URL = 'http://grze.ch/server-status';
+		const URL = 'http://localhost/server-status';
 
 		/**
 		 * Column margin
