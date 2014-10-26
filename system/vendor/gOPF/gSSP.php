@@ -114,6 +114,15 @@
 		public function getServer() {
 			return $this->server;
 		}
+
+        /**
+         * Return server stats
+         *
+         * @return \gOPF\gSSP\Stats Server slots stats
+         */
+        public function getSlotStats() {
+            return new gSSP\Stats($this->getSlots(false, 86400));
+        }
 		
 		/**
 		 * Parses data with server status

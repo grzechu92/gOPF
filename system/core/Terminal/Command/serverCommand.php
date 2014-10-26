@@ -2,6 +2,7 @@
 	namespace System\Terminal\Command;
 	use \System\Terminal\Help\Line;
 	use \gOPF\gSSP;
+    use \gOPF\gSSP\Slot;
 	
 	/**
 	 * Terminal command: server (read information about server)
@@ -21,14 +22,15 @@
 		 * Default server-status page URL address
 		 * @var string
 		 */
-		const URL = 'http://localhost/server-status';
-		
+		//const URL = 'http://localhost/server-status';
+        const URL = 'http://grze.ch/server-status';
+
 		/**
 		 * Column margin
 		 * @var int
 		 */
 		const MARGIN = 2;
-		
+
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
@@ -50,7 +52,7 @@
 		 */
 		public function execute() {
 			$running = true;
-			$interval = $this->getParameter('interval') ? $this->getParameter('interval')*1000 : self::INTERVAL;
+			$interval = $this->getParameter('interval') ? $this->getParameter('interval') * 1000 : self::INTERVAL;
 			
 			while ($running) {
 				usleep($interval);
@@ -95,18 +97,30 @@
 			foreach ($parser->getServer() as $line) {
 				$return .= $line."\n";
 			}
-				
+
+            $return .= "\n";
+            $stats = $parser->getSlotStats();
+
+            $return .= '<bold>[';
+            $return .= '<red>'.str_repeat('-', $stats->get(Slot::READING)).'</red>';
+            $return .= '<red>'.str_repeat('-', $stats->get(Slot::SENDING)).'</red>';
+            $return .= '<yellow>'.str_repeat('-', $stats->get(Slot::CLOSING)).'</yellow>';
+            $return .= '<yellow>'.str_repeat('-', $stats->get(Slot::ALIVE)).'</yellow>';
+            $return .= '<green>'.str_repeat('-', $stats->get(Slot::OPENED)).'</green>';
+            $return .= str_repeat('-', $stats->get(Slot::CLOSED));
+            $return .= ']</bold>';
+
 			return $return;
 		}
 		
 		/**
-		 * Returns generated slos info page
+		 * Returns generated slots info page
 		 * 
 		 * @return string Generated page
 		 */
 		private function displaySlotsInfo() {
 			$parser = new gSSP(self::URL);
-			$slots = $parser->getSlots(false, time()-60);
+			$slots = $parser->getSlots(false, time() - 60);
 			
 			$head = array(
 				'pid' => 'Process ID',
@@ -116,7 +130,6 @@
 				'host' => 'Request host',
 				'request' => 'Request content'
 			);
-			
 			
 			$rows = array();
 			$rows[] = $head;

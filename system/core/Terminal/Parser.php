@@ -16,6 +16,8 @@
 		private $tags = array(
 			'red' => 'color: red !important',
 			'green' => 'color: green !important',
+            'yellow' => 'color: yellow !important',
+            'blue' => 'color: blue !important',
 			'bold' => 'font-weight: bold'
 		);
 		

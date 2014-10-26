@@ -32,6 +32,12 @@
 		 * @var string
 		 */
 		const SENDING = 'W';
+
+        /**
+         * Status for closing slot - closing slot
+         * @var string
+         */
+        const CLOSING = 'C';
 		
 		/**
 		 * Status for keepalive slot - waiting for another client request
@@ -40,7 +46,7 @@
 		const ALIVE = 'K';
 		
 		/**
-		 * Unknown statusstrong
+		 * Unknown status
 		 * @var string
 		 */
 		const UNKNOWN = '';
@@ -139,7 +145,7 @@
 		 */
 		private static function getStatus($slot) {
 			$slot = trim($slot);
-			$statuses = array(self::OPENED, self::CLOSED, self::READING, self::SENDING, self::ALIVE);
+			$statuses = array(self::OPENED, self::CLOSED, self::READING, self::SENDING, self::ALIVE, self::CLOSING);
 			
 			foreach ($statuses as $status) {
 				if ($slot == $status) {
@@ -162,7 +168,8 @@
 				self::CLOSED => 'CLOSED',
 				self::READING => 'READING',
 				self::SENDING => 'SENDING',
-				self::ALIVE => 'ALIVE'
+				self::ALIVE => 'ALIVE',
+                self::CLOSING => 'CLOSING'
 			);
 			
 			if (isset($list[$status])) {
