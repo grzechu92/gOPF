@@ -124,11 +124,13 @@
                         }
                     }
 
-                    if (!$found && !$parameter->isOptional()) {
-                        throw new Exception(I18n::translate('ACTION_NOT_FOUND', array($action)), 404);
+                    if (!$found) {
+                        if (!$parameter->isOptional()) {
+                            throw new Exception(I18n::translate('ACTION_NOT_FOUND', array($action)), 404);
+                        } else {
+                            $params[] = null;
+                        }
                     }
-
-                    $params[] = null;
                 }
             }
 
