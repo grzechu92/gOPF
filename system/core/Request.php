@@ -144,6 +144,10 @@
          * @return string Parsed URL
          */
         private function parseURL() {
+            if (!isset($_SERVER['REQUEST_URI'])) {
+                return '';
+            }
+
 			$url = explode('?', $_SERVER['REQUEST_URI']);
 			
 			return substr($url[0], 1);

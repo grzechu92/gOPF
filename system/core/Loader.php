@@ -88,6 +88,10 @@
 
             $class = ltrim($class, '\\');
             $path = '';
+
+            if (strpos($class, 'PHPUnit') === 0) {
+                return;
+            }
 			
 			if ($separator = strripos($class, '\\')) {
 				$namespace = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $separator));

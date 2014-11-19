@@ -8,7 +8,7 @@
 	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class Container implements \Countable, \IteratorAggregate, \Serializable {
+	class Container implements \Countable, \IteratorAggregate {
 		/**
 		 * Holds content of container
 		 * @var array
@@ -71,24 +71,6 @@
 			return count($this->container);
 		}
 		
-		/**
-		 * Serializes container content
-		 *
-		 * @return string Serialized content
-		 */
-		public function serialize() {
-			return serialize($this->container);
-		}
-		
-		/**
-		 * Unserializes and writes content into container
-		 *
-		 * @param string $data Serialized content
-		 */
-		public function unserialize($data) {
-			$this->contaniner = unserialize($data);
-		}
-		 
 		/**
 		 * @see IteratorAggregate::getIterator()
 		 */

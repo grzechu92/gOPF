@@ -18,12 +18,20 @@
 	 * @var int
 	 */
 	define('__DEVELOPMENT', 2);
+
+    /**
+     * Test stage
+     * @var int
+     */
+    define('__TEST', 3);
 	
 	/**
 	 * Selected stage (__PRODUCTION or __DEVELOPMENT)
 	 * @var int
 	 */
-	define('__STAGE', __DEVELOPMENT);
+    if (!defined('__STAGE')) {
+        define('__STAGE', __DEVELOPMENT);
+    }
 
 	/**
 	 * Set error reporting level
