@@ -20,7 +20,10 @@
 		 * @see \System\Drivers\DriverInterface::get()
 		 */
 		public function get() {
-			return apc_fetch($this->UID());
+			$success = false;
+			$data = apc_fetch($this->UID(), $success);
+
+			return $success ? $data : null;
 		}
 		
 		/**

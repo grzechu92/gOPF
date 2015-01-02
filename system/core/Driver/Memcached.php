@@ -50,7 +50,13 @@
          * @see \System\Drivers\DriverInterface::get()
          */
         public function get() {
-            return $this->memcached->get($this->UID());
+            $data = $this->memcached->get($this->UID());
+
+            if ($this->memcached->getResultCode() == \Memcached::RES_NOTFOUND) {
+                return null;
+            } else {
+                return $data;
+            }
         }
 
         /**

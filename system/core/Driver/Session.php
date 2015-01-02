@@ -22,7 +22,7 @@
 		public function __construct($name, $lifetime = 0, $user = false) {
             if (!self::$initialized) {
                 session_id(\System\Core::$UUID);
-                session_start();
+                @session_start();
 
                 self::$initialized = true;
             }
@@ -55,7 +55,7 @@
 		public function get() {
             $element = $this->getElement();
 
-            if ($element->isValid()) {
+            if ($element instanceof Element && $element->isValid()) {
                 return $this->getElement()->get();
             } else {
                 return null;

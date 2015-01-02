@@ -51,16 +51,20 @@
 		 * @see \System\Drivers\DriverInterface::get()
 		 */
 		public function get() {
-			$content = FS::read($this->filename, true);
-			
-			$lifetime = substr($content, 0, self::PAD_SIZE);
-			$data = substr($content, self::PAD_SIZE);
-			
-			if ($lifetime == 0 || $lifetime >= time() && !empty($data)) {
-				return unserialize($data);
+			try {
+				$content = FS::read($this->filename, true);
+
+				$lifetime = substr($content, 0, self::PAD_SIZE);
+				$data = substr($content, self::PAD_SIZE);
+
+				if ($lifetime == 0 || $lifetime >= time() && !empty($data)) {
+					return unserialize($data);
+				} else {
+					return null;
+				}
+			} catch (\System\Filesystem\Exception $e) {
+				return null;
 			}
-			
-			return null;
 		}
 		
 		/**
