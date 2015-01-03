@@ -33,8 +33,13 @@
 
         private function checkSpecifiedDriver($type) {
             $container = Driver::factory($type, 'foo');
+
             $preserve = Driver::factory($type, 'test');
             $preserve->set('test');
+
+            $time = Driver::factory($type, 'time', 1);
+            $time->set('time');
+
 
             $this->assertTrue($container instanceof \System\Driver\DriverInterface, 'instance was created successfully');
 
@@ -44,7 +49,12 @@
             $this->assertNull($container->remove(), 'container has been removed');
             $this->assertNull($container->get(), 'container has expected value after removing');
 
-            $this->assertEquals('test', $preserve->get(), 'another container preserves value');
+            $this->assertEquals('time', $time->get(), 'container value is valid');
+
+            if ($type != Driver::APC) {
+                sleep(2);
+                $this->assertNull($time->get(), 'container value expired');
+            }
 
             try {
                 $this->assertNull($container->clear(), 'remove all driver containers');
