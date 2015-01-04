@@ -18,6 +18,7 @@
     <testsuites>
         <testsuite name="Framework Tests">
             <directory>./system/test</directory>
+            <directory>./application/test</directory>
         </testsuite>
     </testsuites>
 </phpunit>
