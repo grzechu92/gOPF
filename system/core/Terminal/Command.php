@@ -1,6 +1,7 @@
 <?php 
 	namespace System\Terminal;
 	use \System\Config;
+	use \System\Storage;
 	
 	/**
 	 * Base terminal command object
@@ -10,6 +11,12 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Command {
+		/**
+		 * Storage key for terminal asking service
+		 * @var string
+		 */
+		const ANSWER_CONTAINER_NAME = '__TERMINAL_ANSWER';
+
 		/**
 		 * Terminal instance
 		 * @var \System\Terminal
@@ -160,6 +167,46 @@
 				}
 			} else {
 				return false;
+			}
+		}
+
+		/**
+		 * Ask client with a question and receive his answer
+		 *
+		 * @param string $question Question content
+		 * @param array $answers Possible answers
+		 * @return string Client answer
+		 */
+		protected function ask($question, array $answers = array()) {
+			$session = self::$session;
+
+			$status = $session->pull();
+			$status->prompt = $question.' '.(!empty($answers) ? '['.implode('/', $answers).'] ' : '');
+			$status->processing = false;
+			$status->prefix = 'answer ';
+			$status->update();
+
+			$session->push($status);
+
+			while (true) {
+				Storage::read();
+				$answer = Storage::get(self::ANSWER_CONTAINER_NAME);
+
+				if (!empty($answer)) {
+					Storage::delete(self::ANSWER_CONTAINER_NAME);
+
+					$status = $session->pull();
+					$status->processing = true;
+					$status->prompt = null;
+					$status->prefix = null;
+					$status->update();
+
+					$session->push($status);
+
+					return $answer;
+				}
+
+				usleep(100000);
 			}
 		}
 	}
