@@ -1,6 +1,6 @@
 <?php
 	namespace System\Terminal\Command;
-	
+
 	/**
 	 * Terminal command: clean (cleans various files in framework)
 	 *
@@ -13,7 +13,7 @@
 		 * Array with ignored filenames
 		 * @var array
 		 */
-		private $ignored = array('.', '..', '.git', '.gitignore', '.settings', '.project', '.buildpath');
+		private $ignored = array('.', '..', '.git', '.gitignore', '.settings', '.project', '.buildpath', '.keep');
 		
 		/**
 		 * Array with directories to clean
@@ -30,6 +30,7 @@
 		 */
 		public function help() {
 			$help = new \System\Terminal\Help('Prepare to build, remove session files, logs etc.');
+			$help->add(new \System\Terminal\Help\Line('clean -force', 'clean without asking'));
 			
 			return $help;
 		}
@@ -39,6 +40,8 @@
 		 */
 		public function execute() {
 			$session = self::$session;
+
+			$force = $this->getParameter('force');
 			
 			foreach ($this->directories as $directory) {
 				$session->buffer('Cleaning directory '.$directory);
@@ -48,11 +51,14 @@
                     if (in_array($file->getFilename(), $this->ignored)) {
 						continue;
 					}
-					
-					\System\Filesystem::remove($file, $file->isDir());
+
+					if ($force || $this->ask('Remove '.$file.'?', ['y', 'n']) == 'y') {
+						\System\Filesystem::remove($file, $file->isDir());
+						$session->buffer(' - '.$file);
+					}
 				}
 
-				usleep(800 * 1000);
+				usleep(100000);
 			}
 		}
 	}

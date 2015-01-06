@@ -15,9 +15,7 @@
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
 		public function help() {
-			$help = new Help(Help::INTERNAL);
-		
-			return $help;
+			return new Help(Help::INTERNAL);
 		}
 		
 		/**
