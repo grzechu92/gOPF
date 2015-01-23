@@ -1,6 +1,6 @@
 <?php
 	namespace System\Terminal;
-    use \System\Storage;
+	use \System\Storage;
 	
 	/**
 	 * Terminal session object
@@ -22,11 +22,11 @@
 		 */
 		private $id;
 		
-        /**
-         * Terminal sessions storage
-         * @var \System\Storage\Container
-         */
-        private $container;
+		/**
+		 * Terminal sessions storage
+		 * @var \System\Storage\Container
+		 */
+		private $container;
 		
 		/**
 		 * Initializes terminal session object
@@ -89,41 +89,41 @@
 			$status = $this->read();
 			$status->update();
 
-            $this->write($status);
+			$this->write($status);
 		}
 		
 		/**
 		 * Reads current terminal session
-         *
-         * @return \System\Terminal\Status Terminal session status
+		 *
+		 * @return \System\Terminal\Status Terminal session status
 		 */
 		private function read() {
 			$this->container->read();
-            $sessions = $this->container->get();
+			$sessions = $this->container->get();
 
-            if (!isset($sessions[$this->id])) {
-                $status = new Status();
-                $this->write($status);
-            } else {
-                $status = $sessions[$this->id];
-            }
+			if (!isset($sessions[$this->id])) {
+				$status = new Status();
+				$this->write($status);
+			} else {
+				$status = $sessions[$this->id];
+			}
 
-            return $status;
-        }
+			return $status;
+		}
 		
 		/**
 		 * Writes current terminal session
-         *
-         * @param \System\Terminal\Status $status Terminal session status
+		 *
+		 * @param \System\Terminal\Status $status Terminal session status
 		 */
 		private function write(Status $status) {
-            $this->container->read();
-            $sessions = $this->container->get();
+			$this->container->read();
+			$sessions = $this->container->get();
 
-            $sessions[$this->id] = $status;
+			$sessions[$this->id] = $status;
 
-            $this->container->set($sessions);
-            $this->container->write();
+			$this->container->set($sessions);
+			$this->container->write();
 		}
 	}
 ?>

@@ -11,9 +11,9 @@
 	abstract class Controller {
 		/**
 		 * Main controller action
-         *
-         * @gOPF-Access guest
-         * @gOPF-State dynamic
+		 *
+		 * @gOPF-Access guest
+		 * @gOPF-State dynamic
 		 */
 		public function mainAction() {}
 		
@@ -27,13 +27,13 @@
 			return Core::instance()->context->getController($name);
 		}
 
-        /**
-         * Returns request processing context
-         *
-         * @return \System\Dispatcher\ContextInterface
-         */
-        protected static function context() {
-            return Core::instance()->context;
-        }
+		/**
+		 * Returns request processing context
+		 *
+		 * @return \System\Dispatcher\ContextInterface
+		 */
+		protected static function context() {
+			return Core::instance()->context;
+		}
 	}
 ?>

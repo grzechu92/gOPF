@@ -82,7 +82,7 @@
 		 * 
 		 * @param \System\Config\File $new New file which you want to merge into older
 		 * @param \System\Config\File $old Older file
-         * @param bool $removes Allow to fill with null
+		 * @param bool $removes Allow to fill with null
 		 **/
 		public static function merge(File $new, File $old, $removes = false) {
 			$old->merge($new, $removes);
@@ -135,7 +135,7 @@
 					break;
 			
 				case self::CUSTOM:
-                default:
+				default:
 					$path = $filename;
 					break;
 			}

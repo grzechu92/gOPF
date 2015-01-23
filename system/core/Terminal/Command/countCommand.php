@@ -32,7 +32,7 @@
 			$session = self::$session;
 			
 			for ($i = 1; $i <= $this->value; $i++) {
-                $status = $session->pull();
+				$status = $session->pull();
 
 				if ($status->abort) {
 					break;
@@ -44,10 +44,10 @@
 					$status->clear = true;
 				}
 
-                $status->update();
-                $session->push($status);
+				$status->update();
+				$session->push($status);
 
-                sleep(1);
+				sleep(1);
 			}
 		}
 	}

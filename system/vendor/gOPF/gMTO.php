@@ -151,7 +151,7 @@
 		/**
 		 * Returns synchronized data from thread
 		 * @param string $id Thread ID
-         * @return mixed Unserialized data
+		 * @return mixed Unserialized data
 		 */
 		private function getThread($id) {
 			Storage::read($id);

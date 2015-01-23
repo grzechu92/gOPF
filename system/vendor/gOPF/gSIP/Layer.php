@@ -323,7 +323,7 @@
 		 * @param \gOPF\gSIP\Color $color Color of text
 		 * @param string $fontFile Path to TTF font file
 		 * @param int $angle Angle of text
-         * @return \gOPF\gSIP\Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function putText($text, Position $position, $size = 5, Color $color, $fontFile = '', $angle = 0) {
 			$color = $this->allocateColor($color);

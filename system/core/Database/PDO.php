@@ -1,7 +1,7 @@
 <?php
 	namespace System\Database;
 
-    /**
+	/**
 	 * PDO database engine
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -9,11 +9,11 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class PDO extends Engine implements EngineInterface {
-        /**
-         * @see \System\Database\Engine::$handler
-         * @var \PDO
-         */
-        protected $handler;
+		/**
+		 * @see \System\Database\Engine::$handler
+		 * @var \PDO
+		 */
+		protected $handler;
 
 		/**
 		 * @see \System\Database\EngineInterface::__construct()
@@ -29,20 +29,20 @@
 			$this->handler = $handler;
 		}
 
-        /**
-         * @see \System\Database\EngineInterface::query()
-         */
-        public function query($query, $result = false) {
-            $return = $this->handler->query($query);
+		/**
+		 * @see \System\Database\EngineInterface::query()
+		 */
+		public function query($query, $result = false) {
+			$return = $this->handler->query($query);
 
-            return $result ? $return->fetch(\PDO::FETCH_OBJ) : null;
-        }
+			return $result ? $return->fetch(\PDO::FETCH_OBJ) : null;
+		}
 
-        /**
-         * @see \System\Database\EngineInterface::transaction()
-         */
-        public function transaction() {
-            return new \System\Database\PDO\Transaction($this->handler);
-        }
-    }
+		/**
+		 * @see \System\Database\EngineInterface::transaction()
+		 */
+		public function transaction() {
+			return new \System\Database\PDO\Transaction($this->handler);
+		}
+	}
 ?>

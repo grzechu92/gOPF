@@ -11,33 +11,33 @@
  */
 
 function Events() {
-    this._list = {};
+	this._list = {};
 
-    this.on = function(event, closure, once) {
-        event.split(" ").map(function(value) {
-            if (this._list[value] == undefined) {
-                this._list[value] = [];
-            }
+	this.on = function(event, closure, once) {
+		event.split(" ").map(function(value) {
+			if (this._list[value] == undefined) {
+				this._list[value] = [];
+			}
 
-            this._list[value].push({closure: closure, once: (once == undefined ? false : once)});
-        }, this);
-    };
+			this._list[value].push({closure: closure, once: (once == undefined ? false : once)});
+		}, this);
+	};
 
-    this.call = function(event, data) {
-        if (typeof this._list[event] == "object") {
-            this._list[event].map(function(value, index) {
-                value.closure(data);
+	this.call = function(event, data) {
+		if (typeof this._list[event] == "object") {
+			this._list[event].map(function(value, index) {
+				value.closure(data);
 
-                if (value.once) {
-                    delete this._list[event][index];
-                }
-            }, this);
-        }
-    };
+				if (value.once) {
+					delete this._list[event][index];
+				}
+			}, this);
+		}
+	};
 
-    this.remove = function(event) {
-        event.split(" ").map(function(value) {
-            delete this._list[value];
-        }, this);
-    };
+	this.remove = function(event) {
+		event.split(" ").map(function(value) {
+			delete this._list[value];
+		}, this);
+	};
 }

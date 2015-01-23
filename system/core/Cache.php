@@ -1,6 +1,6 @@
 <?php
 	namespace System;
-    use \System\Cache\Container as CacheContainer;
+	use \System\Cache\Container as CacheContainer;
 
 	/**
 	 * Cache module of framework
@@ -10,26 +10,26 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Cache extends Singleton {
-        /**
-         * @see \System\Cache\Container::USER
-         */
+		/**
+		 * @see \System\Cache\Container::USER
+		 */
 		const USER = CacheContainer::USER;
 
-        /**
-         * @see \System\Cache\Container::COMMON
-         */
+		/**
+		 * @see \System\Cache\Container::COMMON
+		 */
 		const COMMON = CacheContainer::COMMON;
 
-        /**
-         * @see \System\Cache\Container::RUNTIME
-         */
-        const RUNTIME = CacheContainer::RUNTIME;
+		/**
+		 * @see \System\Cache\Container::RUNTIME
+		 */
+		const RUNTIME = CacheContainer::RUNTIME;
 		
 		/**
 		 * Loaded cache containers
 		 * @var \System\Cache\Container[]
 		 */
-        private static $containers = array();
+		private static $containers = array();
 
 		/**
 		 * Cache module configuration
@@ -83,16 +83,16 @@
 			self::$containers[$type]->remove($name);
 		}
 
-        /**
-         * Clear cache container
-         *
-         * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
-         */
-        public static function clear($type = self::USER) {
-            self::isLoaded($type);
+		/**
+		 * Clear cache container
+		 *
+		 * @param int $type Cache type (Cache::COMMON, Cache::USER, Cache::RUNTIME)
+		 */
+		public static function clear($type = self::USER) {
+			self::isLoaded($type);
 
-            self::$containers[$type]->clear();
-        }
+			self::$containers[$type]->clear();
+		}
 		
 		/**
 		 * Checks element if is valid
@@ -102,9 +102,9 @@
 		 * @return bool Is valid?
 		 */
 		public static function isValid($name, $type = self::USER) {
-            self::isLoaded($type);
+			self::isLoaded($type);
 
-            return self::$containers[$type]->isValid($name);
+			return self::$containers[$type]->isValid($name);
 		}
 		
 		/**
@@ -113,13 +113,13 @@
 		 * @param int $type Cache type
 		 */
 		private static function isLoaded($type) {
-            if (!self::hasInstance()) {
-                self::instance();
-            }
+			if (!self::hasInstance()) {
+				self::instance();
+			}
 
-            if (!isset(self::$containers[$type])) {
-                self::$containers[$type] = new CacheContainer($type, self::$config);
-            }
+			if (!isset(self::$containers[$type])) {
+				self::$containers[$type] = new CacheContainer($type, self::$config);
+			}
 		}
 	}
 ?>

@@ -43,5 +43,5 @@
 	"ENTITY_PARAMETERS": "Parametry encji nie mogą być puste",
 	
 	"ROUTE_NOT_VALIDABLE": "Klasa $1 nie implementuje interfejsu ValidateInterface",
-    "ROUTE_I18N_NOT_FOUND": "Nie odnaleziono zinternacjonalizowanej trasy dla klucza: $1"
+	"ROUTE_I18N_NOT_FOUND": "Nie odnaleziono zinternacjonalizowanej trasy dla klucza: $1"
 }

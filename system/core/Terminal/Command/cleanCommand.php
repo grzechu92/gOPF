@@ -47,8 +47,8 @@
 				$session->buffer('Cleaning directory '.$directory);
 				
 				foreach (new \RecursiveDirectoryIterator(__ROOT_PATH . $directory) as $file) {
-                    /** @var $file \RecursiveDirectoryIterator */
-                    if (in_array($file->getFilename(), $this->ignored)) {
+					/** @var $file \RecursiveDirectoryIterator */
+					if (in_array($file->getFilename(), $this->ignored)) {
 						continue;
 					}
 

@@ -3,9 +3,9 @@
 	use \System\Request;
 	use \gOPF\gPAE\Events;
 	use \gOPF\gPAE\Response;
-    use \gOPF\gPAE\Config;
-    use \gOPF\gPAE\Client;
-    use \gOPF\gPAE\Command;
+	use \gOPF\gPAE\Config;
+	use \gOPF\gPAE\Client;
+	use \gOPF\gPAE\Command;
 	
 	/**
 	 * gPAE - gPAE Push AJAX Engine
@@ -15,11 +15,11 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class gPAE {
-        /**
-         * System and client events
-         * @var \gOPF\gPAE\Events
-         */
-        public $events;
+		/**
+		 * System and client events
+		 * @var \gOPF\gPAE\Events
+		 */
+		public $events;
 		
 		/**
 		 * Push server configuration
@@ -27,11 +27,11 @@
 		 */
 		private $config;
 
-        /**
-         * Client session object
-         * @var \gOPF\gPAE\Client
-         */
-        private $client;
+		/**
+		 * Client session object
+		 * @var \gOPF\gPAE\Client
+		 */
+		private $client;
 		
 		/**
 		 * Initiates Push module, loads config
@@ -39,8 +39,8 @@
 		 * @param \gOPF\gPAE\Config $config PUSH server config
 		 */
 		public function __construct(Config $config = null) {
-            $this->config = (!($config instanceof Config)) ? new Config() : $config;
-            $this->events = new Events();
+			$this->config = (!($config instanceof Config)) ? new Config() : $config;
+			$this->events = new Events();
 
 			if (isset(Request::$post['encrypted'])) {
 				foreach(self::decrypt(Request::$post['encrypted']) as $variable => $value) {
@@ -50,12 +50,12 @@
 			
 			set_time_limit(0);
 
-            $key = isset(Request::$post['key']) ? Request::$post['key'] : self::generateUniqueKey();
+			$key = isset(Request::$post['key']) ? Request::$post['key'] : self::generateUniqueKey();
 
-            $client = new Client($key, $this->config, $this->events);
+			$client = new Client($key, $this->config, $this->events);
 			$client->ping = (empty(Request::$post['ping'])) ? 0 : Request::$post['ping'];
 
-            $this->client = $client;
+			$this->client = $client;
 		}
 		
 		/**
@@ -64,27 +64,27 @@
 		 * @return string JSON response
 		 */
 		public function run() {
-            $result = null;
+			$result = null;
 
 			switch (isset(Request::$post['command']) ? Request::$post['command'] : Command::DISCONNECT) {
-                case Command::CONNECT:
+				case Command::CONNECT:
 					$result = $this->client->connect();
 					break;
 					
-                case Command::HOLD:
+				case Command::HOLD:
 					$result = $this->client->loop();
 					break;
 					
-                case Command::ACTION:
-                    $event = isset(Request::$post['event']) ? Request::$post['event'] : '';
-                    $data = isset(Request::$post['data']) ? (object) Request::$post['data'] : new \stdClass();
+				case Command::ACTION:
+					$event = isset(Request::$post['event']) ? Request::$post['event'] : '';
+					$data = isset(Request::$post['data']) ? (object) Request::$post['data'] : new \stdClass();
 
 					$this->client->action($event, $data);
 					break;
 
-                case Command::DISCONNECT:
-                    $this->client->disconnect();
-                    break;
+				case Command::DISCONNECT:
+					$this->client->disconnect();
+					break;
 			}
 
 			if ($result instanceof Response) {
@@ -94,10 +94,10 @@
 					$result = self::encrypt($result);
 				}
 
-                die($result);
+				die($result);
 			}
 
-            die();
+			die();
 		}
 
 		/**

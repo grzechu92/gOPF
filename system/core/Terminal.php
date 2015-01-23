@@ -1,14 +1,14 @@
 <?php
 	namespace System;
-    use \gOPF\gPAE\Client;
-    use \gOPF\gPAE\Result;
-    use \gOPF\gPAE;
-    use \System\Filesystem;
-    use \System\Terminal\Command;
-    use \System\Terminal\Parser;
-    use \System\Terminal\Status;
+	use \gOPF\gPAE\Client;
+	use \gOPF\gPAE\Result;
+	use \gOPF\gPAE;
+	use \System\Filesystem;
+	use \System\Terminal\Command;
+	use \System\Terminal\Parser;
+	use \System\Terminal\Status;
 
-    /**
+	/**
 	 * Terminal main initialization and router object
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -16,11 +16,11 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Terminal {
-        /**
-         * Terminal command suffix
-         * @var string
-         */
-        const COMMAND_SUFFIX = 'Command';
+		/**
+		 * Terminal command suffix
+		 * @var string
+		 */
+		const COMMAND_SUFFIX = 'Command';
 
 		/**
 		 * Terminal instance handler
@@ -70,50 +70,50 @@
 		 * Registers terminal events
 		 */
 		private function registerEvents() {
-            $this->engine->events->client->on('initialize', function(Client $client) {
-                $session = Terminal::$session;
-                $status = $session->pull();
+			$this->engine->events->client->on('initialize', function(Client $client) {
+				$session = Terminal::$session;
+				$status = $session->pull();
 
-                if ($status->initialized) {
-                    return;
-                }
+				if ($status->initialized) {
+					return;
+				}
 
-                if (!$status->logged) {
-                    $this->execute('login -initialize');
-                    $status = $session->pull();
-                }
+				if (!$status->logged) {
+					$this->execute('login -initialize');
+					$status = $session->pull();
+				}
 
-                $status->processing = false;
-                $status->initialized = true;
-                $session->push($status);
-            });
+				$status->processing = false;
+				$status->initialized = true;
+				$session->push($status);
+			});
 
-            $this->engine->events->server->on('stream', function(Client $client) {
-                $session = Terminal::$session;
-                $status = $session->pull();
+			$this->engine->events->server->on('stream', function(Client $client) {
+				$session = Terminal::$session;
+				$status = $session->pull();
 
-                if ($status->updated != $client->container->session) {
-                    $value = clone($status);
-                    $value->buffer = $this->parser->parse($value->buffer);
+				if ($status->updated != $client->container->session) {
+					$value = clone($status);
+					$value->buffer = $this->parser->parse($value->buffer);
 
-                    $status->buffer = '';
-                    $status->command = '';
-                    $status->complete = '';
-                    $status->clear = false;
+					$status->buffer = '';
+					$status->command = '';
+					$status->complete = '';
+					$status->clear = false;
 
-                    $client->container->session = $status->updated;
-                    $session->push($status);
+					$client->container->session = $status->updated;
+					$session->push($status);
 
-                    $output = new \stdClass();
-                    $output->value = $value;
+					$output = new \stdClass();
+					$output->value = $value;
 
-                    return new Result('stream', $output);
-                }
-            });
+					return new Result('stream', $output);
+				}
+			});
 
-            $this->engine->events->client->on('command', function(Client $client) {
-                $this->execute($client->data->command, !($client->data->secret == 'true'));
-            });
+			$this->engine->events->client->on('command', function(Client $client) {
+				$this->execute($client->data->command, !($client->data->secret == 'true'));
+			});
 
 			$this->engine->events->client->on('reset', function(Client $client) {
 				$session = Terminal::$session;
@@ -122,24 +122,24 @@
 				$this->execute('login -initialize');
 			});
 
-            $this->engine->events->client->on('abort', function(Client $client) {
+			$this->engine->events->client->on('abort', function(Client $client) {
 				$session = Terminal::$session;
-                $status = $session->pull();
+				$status = $session->pull();
 
 				if ($status->processing) {
 					$status->abort = true;
 				}
 
-                $session->push($status);
+				$session->push($status);
 			});
 
-            $this->engine->events->client->on('debug', function(Client $client) {
+			$this->engine->events->client->on('debug', function(Client $client) {
 				$session = Terminal::$session;
 
 				$session->buffer(print_r($session->pull(), true));
 			});
 
-            $this->engine->events->client->on('upload', function(Client $client) {
+			$this->engine->events->client->on('upload', function(Client $client) {
 				sleep(1);
 
 				$session = Terminal::$session;
@@ -167,9 +167,9 @@
 				$session->push($status);
 			});
 
-            $this->engine->events->client->on('complete', function(Client $client) {
+			$this->engine->events->client->on('complete', function(Client $client) {
 				$session = Terminal::$session;
-                $status = $session->pull();
+				$status = $session->pull();
 
 				if (!$status->logged) {
 					return;
@@ -204,13 +204,13 @@
 				}
 
 				foreach (new \DirectoryIterator($path) as $file) {
-                    /** @var $file \SplFileInfo */
-                    if (strpos($file->getPathname(), $path.($extended ? DIRECTORY_SEPARATOR : '').$location) === 0) {
+					/** @var $file \SplFileInfo */
+					if (strpos($file->getPathname(), $path.($extended ? DIRECTORY_SEPARATOR : '').$location) === 0) {
 						$matched[$file->getFilename()] = $file->getFilename().($file->isDir() ? DIRECTORY_SEPARATOR : '');
 					}
 				}
 
-                ksort($matched);
+				ksort($matched);
 
 				switch (count($matched)) {
 					case 0:
@@ -218,9 +218,9 @@
 
 					case 1:
 						$status->complete = str_replace($location, '', array_pop($matched));
-                        $status->update();
+						$status->update();
 
-                        $session->push($status);
+						$session->push($status);
 						return;
 				}
 
@@ -229,9 +229,9 @@
 				}
 
 				$status->buffer($buffer);
-                $status->update();
+				$status->update();
 
-                $session->push($status);
+				$session->push($status);
 			});
 		}
 
@@ -248,8 +248,8 @@
 
 			$parsed = Command::parse($command);
 
-            $status->processing = true;
-            $session->push($status);
+			$status->processing = true;
+			$session->push($status);
 
 			if (!$status->logged && $parsed->name != 'login') {
 				$this->execute('login -initialize');
@@ -278,12 +278,12 @@
 				$session->buffer('Unknown error:'."\n".$e->getMessage());
 			}
 
-            $status = $session->pull();
+			$status = $session->pull();
 
-            $status->processing = false;
-            $status->abort = false;
+			$status->processing = false;
+			$status->abort = false;
 
-            $session->push($status);
+			$session->push($status);
 
 			if (!$silent) {
 				$session->update();

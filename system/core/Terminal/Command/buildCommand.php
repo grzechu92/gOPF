@@ -34,7 +34,7 @@
 			$help = new \System\Terminal\Help('Build framework version');
 			$lines[] = new Line('build', 'upgrades build value in Core class');
 			$lines[] = new Line('build -output [path]', 'creates clean instance of framework in specified directory');
-            $lines[] = new Line('build -output [path] -bare', 'creates clean and bare instance of framework in specified directory');
+			$lines[] = new Line('build -output [path] -bare', 'creates clean and bare instance of framework in specified directory');
 			$lines[] = new Line('build -version [version]', 'upgrades build value and version in Core class');
 			
 			$help->addLines($lines);
@@ -95,13 +95,13 @@
 				return;
 			}
 
-            if (!$this->getParameter('bare')) {
-                $this->output = $this->output.'/'.$version.' (build '.$build.')';
-                $session->buffer('Creating output directory: '.$this->output);
-                Filesystem::mkdir($this->output);
-            } else {
-                $session->buffer('Creating bare instance of gOPF '.$version.' (build '.$build.')');
-            }
+			if (!$this->getParameter('bare')) {
+				$this->output = $this->output.'/'.$version.' (build '.$build.')';
+				$session->buffer('Creating output directory: '.$this->output);
+				Filesystem::mkdir($this->output);
+			} else {
+				$session->buffer('Creating bare instance of gOPF '.$version.' (build '.$build.')');
+			}
 
 			sleep(2);
 			$this->iterate($session, __ROOT_PATH);
@@ -123,8 +123,8 @@
 			}
 			
 			foreach (new \RecursiveDirectoryIterator($directory) as $file) {
-                /** @var $file \RecursiveDirectoryIterator */
-                if (in_array($file->getFilename(), $this->ignored)) {
+				/** @var $file \RecursiveDirectoryIterator */
+				if (in_array($file->getFilename(), $this->ignored)) {
 					continue;
 				}
 				

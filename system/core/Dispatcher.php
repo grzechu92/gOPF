@@ -32,10 +32,10 @@
 			}
 
 
-            $class = '\\System\\Dispatcher\\'.$mode;
+			$class = '\\System\\Dispatcher\\'.$mode;
 
-            /** @var $context \System\Dispatcher\ContextInterface */
-            $context = new $class();
+			/** @var $context \System\Dispatcher\ContextInterface */
+			$context = new $class();
 
 			Core::instance()->context = $context;
 			$context->process();

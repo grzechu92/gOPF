@@ -31,11 +31,11 @@
 		 */
 		public function onUninstall();
 
-        /**
-         * Return command name
-         *
-         * @return string Command name
-         */
-        public function getName();
+		/**
+		 * Return command name
+		 *
+		 * @return string Command name
+		 */
+		public function getName();
 	}
 ?>

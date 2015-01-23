@@ -115,14 +115,14 @@
 			return $this->server;
 		}
 
-        /**
-         * Return server stats
-         *
-         * @return \gOPF\gSSP\Stats Server slots stats
-         */
-        public function getSlotStats() {
-            return new gSSP\Stats($this->getSlots(false, 86400));
-        }
+		/**
+		 * Return server stats
+		 *
+		 * @return \gOPF\gSSP\Stats Server slots stats
+		 */
+		public function getSlotStats() {
+			return new gSSP\Stats($this->getSlots(false, 86400));
+		}
 		
 		/**
 		 * Parses data with server status
@@ -170,7 +170,7 @@
 		/**
 		 * Groups slots by selected field
 		 *
-         * @param string $property Return only matching slots by property
+		 * @param string $property Return only matching slots by property
 		 * @param bool $working Return only currently working slots
 		 * @param int $time Returns slots which changes their status from selected timestamp
 		 * @return array Array with grouped slots

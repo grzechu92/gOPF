@@ -53,11 +53,11 @@
 		 */
 		private $path;
 
-        /**
-         * File oppened mode
-         * @var string
-         */
-        private $mode;
+		/**
+		 * File oppened mode
+		 * @var string
+		 */
+		private $mode;
 		
 		/**
 		 * Creates file handler and sets required data into object
@@ -68,7 +68,7 @@
 		 */
 		public function __construct($path, $mode, $lock = false) {
 			$this->path = $path;
-            $this->mode = $mode;
+			$this->mode = $mode;
 			$this->handle = $this->getFileHandle($mode);
 		}
 		
@@ -124,9 +124,9 @@
 		 * @throws \System\Filesystem\Exception
 		 */
 		public function setContent($content) {
-            if ($this->mode == self::READ) {
-                $this->handle = $this->getFileHandle(self::APPEND);
-            }
+			if ($this->mode == self::READ) {
+				$this->handle = $this->getFileHandle(self::APPEND);
+			}
 
 			if (fwrite($this->handle, $content) === false) {
 				throw new Exception(I18n::translate('FILESYSTEM_UNABLE_WRITE', array($this->path)), $this->path);

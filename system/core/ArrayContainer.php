@@ -17,35 +17,35 @@
 		 */
 		public function offsetSet($offset, $value) {
 			$this->set($offset, $value);	
-	    }
-	    
-	    /**
+		}
+
+		/**
 		 * Array wrapper for get() method
 		 * 
 		 * @param string $offset Variable name
 		 * @return mixed Variable value
 		 */
 	 	public function offsetGet($offset) {
-	        return $this->get($offset);
-	    }
-	    
-	    /**
-	     * Checks if any variable with specified name exists in container
-	     * 
-	     * @param string $offset Variable name
-	     * @return bool Exist or not
-	     */
-	    public function offsetExists($offset) {
-	        return isset($this->container[$offset]);
-	    }
-	    
-	    /**
-	     * Deletes specified variable from container
-	     * 
-	     * @param string $offset Variable name
-	     */
-	    public function offsetUnset($offset) {
-	        unset($this->container[$offset]);
-	    }
+			return $this->get($offset);
+		}
+
+		/**
+		 * Checks if any variable with specified name exists in container
+		 *
+		 * @param string $offset Variable name
+		 * @return bool Exist or not
+		 */
+		public function offsetExists($offset) {
+			return isset($this->container[$offset]);
+		}
+
+		/**
+		 * Deletes specified variable from container
+		 *
+		 * @param string $offset Variable name
+		 */
+		public function offsetUnset($offset) {
+			unset($this->container[$offset]);
+		}
 	}
 ?>

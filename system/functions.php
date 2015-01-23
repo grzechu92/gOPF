@@ -36,10 +36,10 @@
 		return \System\I18n::translate($index, $vars, false);
 	}
 
-    /**
-     * @see \System\Router::generate()
-     */
-    function ___($controller, $action = 'main') {
-        return \System\Router::generate($controller, $action);
-    }
+	/**
+	 * @see \System\Router::generate()
+	 */
+	function ___($controller, $action = 'main') {
+		return \System\Router::generate($controller, $action);
+	}
 ?>

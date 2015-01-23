@@ -21,49 +21,49 @@
 		 */
 		private $result;
 
-        /**
-         * Event to call on client side
-         * @var string
-         */
-        private $event;
+		/**
+		 * Event to call on client side
+		 * @var string
+		 */
+		private $event;
 		
 		/**
 		 * Initiates response object
 		 * 
 		 * @param string $command Command for client
 		 * @param \gOPF\gPAE\Result $result Data result
-         * @param string|null $event Event to call on client side
+		 * @param string|null $event Event to call on client side
 		 */
 		public function __construct($command, Result $result = null, $event = null) {
 			$this->command = $command;
 			$this->result = $result;
-            $this->event = $event;
+			$this->event = $event;
 		}
 
-        /**
-         * @see \gOPF\gPAE\Response::build()
-         */
-        public function __toString() {
-            return $this->build();
-        }
+		/**
+		 * @see \gOPF\gPAE\Response::build()
+		 */
+		public function __toString() {
+			return $this->build();
+		}
 		
 		/**
 		 * Builds response for client
-         *
-         * @return string JSON response object
+		 *
+		 * @return string JSON response object
 		 */
 		public function build() {
-            $output = new \stdClass();
-            $output->command = $this->command;
-            $output->time = microtime(true) - __START_TIME;
+			$output = new \stdClass();
+			$output->command = $this->command;
+			$output->time = microtime(true) - __START_TIME;
 
-            if ($this->result instanceof Result) {
-                $output->result = $this->result;
-            }
+			if ($this->result instanceof Result) {
+				$output->result = $this->result;
+			}
 
-            if (!empty($this->event)) {
-                $output->event = $this->event;
-            }
+			if (!empty($this->event)) {
+				$output->event = $this->event;
+			}
 
 			return json_encode($output);
 		}

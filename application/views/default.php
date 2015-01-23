@@ -6,5 +6,5 @@
 <script src="@/System/Core/gOPF.js"></script>
 
 <script>
-    gOPF.console(true)
+	gOPF.console(true)
 </script>

@@ -1,7 +1,7 @@
 <?php
 	namespace gOPF;
 
-    /**
+	/**
 	 * gODI - gODI Object Database Interface
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -23,20 +23,20 @@
 			return $this->statement;
 		}
 
-        /**
-         * @see \System\Database\EngineInterface::query()
-         */
-        public function query($query, $result = false) {
-            $return = $this->statement->raw()->query($query);
+		/**
+		 * @see \System\Database\EngineInterface::query()
+		 */
+		public function query($query, $result = false) {
+			$return = $this->statement->raw()->query($query);
 
-            return $result ? $return->fetch(\PDO::FETCH_OBJ) : null;
-        }
+			return $result ? $return->fetch(\PDO::FETCH_OBJ) : null;
+		}
 
-        /**
-         * @see \System\Database\EngineInterface::transaction();
-         */
-        public function transaction() {
-            return $this->statement->transaction();
-        }
-    }
+		/**
+		 * @see \System\Database\EngineInterface::transaction();
+		 */
+		public function transaction() {
+			return $this->statement->transaction();
+		}
+	}
 ?>

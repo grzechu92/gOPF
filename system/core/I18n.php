@@ -1,6 +1,6 @@
 <?php
 	namespace System;
-    use \System\I18n\Selected;
+	use \System\I18n\Selected;
 	
 	/**
 	 * Internationalization module of framework
@@ -8,7 +8,7 @@
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-     *
+	 *
 	 */
 	class I18n extends Singleton {
 		/**
@@ -29,11 +29,11 @@
 		 */
 		const APC_PREFIX = 'gOPF-I18N-';
 
-        /**
-         * Session I18n identifier
-         * @var string
-         */
-        const SESSION = '__I18N';
+		/**
+		 * Session I18n identifier
+		 * @var string
+		 */
+		const SESSION = '__I18N';
 		
 		/**
 		 * Array of available language strings
@@ -58,23 +58,23 @@
 		 */
 		protected function __construct() {
 			$this->config = Config::factory('i18n.ini', Config::APPLICATION);
-            $this->selected = Session::get(self::SESSION);
+			$this->selected = Session::get(self::SESSION);
 
-            if (!($this->selected instanceof Selected)) {
-                $this->selected = new Selected($this->config->system, $this->config->application);
+			if (!($this->selected instanceof Selected)) {
+				$this->selected = new Selected($this->config->system, $this->config->application);
 
-                if ($this->config->preference) {
-                    $this->setPreferredLanguage();
-                }
-            }
+				if ($this->config->preference) {
+					$this->setPreferredLanguage();
+				}
+			}
 		}
 
-        /**
-         * Save selected language to session
-         */
-        public function __destruct() {
-            Session::set(self::SESSION, $this->selected);
-        }
+		/**
+		 * Save selected language to session
+		 */
+		public function __destruct() {
+			Session::set(self::SESSION, $this->selected);
+		}
 		
 		/**
 		 * Static wrapper for I18n::get() method
@@ -112,89 +112,89 @@
 			return $string;
 		}
 
-        /**
-         * Set selected by user language for application
-         *
-         * @param string $language Selected application language
-         */
-        public function set($language) {
-            if ($this->selected->application != $language) {
-                $this->selected->application = $language;
-                $this->load();
-            }
-        }
+		/**
+		 * Set selected by user language for application
+		 *
+		 * @param string $language Selected application language
+		 */
+		public function set($language) {
+			if ($this->selected->application != $language) {
+				$this->selected->application = $language;
+				$this->load();
+			}
+		}
 
-        /**
-         * Return selected language object
-         *
-         * @return \System\I18n\Selected
-         */
-        public function selected() {
-            return $this->selected;
-        }
+		/**
+		 * Return selected language object
+		 *
+		 * @return \System\I18n\Selected
+		 */
+		public function selected() {
+			return $this->selected;
+		}
 		
-        /**
-         * Load selected language strings
-         */
-        private function load() {
-            $this->strings = array();
+		/**
+		 * Load selected language strings
+		 */
+		private function load() {
+			$this->strings = array();
 
-            foreach ($this->selected as $type => $language) {
-                $path = (($type == 'system') ? __SYSTEM_PATH : __APPLICATION_PATH).'/i18n/'.$language.'.json';
-                $id = sha1(self::APC_PREFIX.__ID.$path);
+			foreach ($this->selected as $type => $language) {
+				$path = (($type == 'system') ? __SYSTEM_PATH : __APPLICATION_PATH).'/i18n/'.$language.'.json';
+				$id = sha1(self::APC_PREFIX.__ID.$path);
 
-                if (self::APC) {
-                    if ($cached = apc_fetch($id)) {
-                        $this->strings = array_merge($this->strings, $cached);
-                        continue;
-                    }
-                }
+				if (self::APC) {
+					if ($cached = apc_fetch($id)) {
+						$this->strings = array_merge($this->strings, $cached);
+						continue;
+					}
+				}
 
-                $strings = (array) json_decode(Filesystem::read($path, true));
+				$strings = (array) json_decode(Filesystem::read($path, true));
 
-                if (self::APC) {
-                    apc_store($id, $strings, self::APC_LIFETIME);
-                }
+				if (self::APC) {
+					apc_store($id, $strings, self::APC_LIFETIME);
+				}
 
-                $this->strings = array_merge($this->strings, $strings);
-            }
-        }
+				$this->strings = array_merge($this->strings, $strings);
+			}
+		}
 
-        /**
-         * Select available and most preferred application language for user
-         */
-        private function setPreferredLanguage() {
-            $preferred = $this->getPreferredLanguages();
+		/**
+		 * Select available and most preferred application language for user
+		 */
+		private function setPreferredLanguage() {
+			$preferred = $this->getPreferredLanguages();
 
-            if (count($preferred) > 0) {
-                foreach ($preferred as $language) {
-                    if ($this->isLanguageAvailable($language)) {
-                        $this->set($language);
-                        break;
-                    }
-                }
-            }
-        }
+			if (count($preferred) > 0) {
+				foreach ($preferred as $language) {
+					if ($this->isLanguageAvailable($language)) {
+						$this->set($language);
+						break;
+					}
+				}
+			}
+		}
 
-        /**
-         * Getting languages preferred by user
-         *
-         * @return array Languages preferred by user
-         */
-        private function getPreferredLanguages() {
-            preg_match_all('/[a-z]{2}/i', ((isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']) : ''), $preferred);
+		/**
+		 * Getting languages preferred by user
+		 *
+		 * @return array Languages preferred by user
+		 */
+		private function getPreferredLanguages() {
+			preg_match_all('/[a-z]{2}/i', ((isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']) : ''), $preferred);
 
-            return array_unique($preferred[0]);
-        }
+			return array_unique($preferred[0]);
+		}
 
-        /**
-         * Is language available?
-         *
-         * @param string $language Language code
-         * @return bool Is language available?
-         */
-        private function isLanguageAvailable($language) {
-            return Filesystem::checkFile(__APPLICATION_PATH.'/i18n/'.$language.'.json');
-        }
+		/**
+		 * Is language available?
+		 *
+		 * @param string $language Language code
+		 * @return bool Is language available?
+		 */
+		private function isLanguageAvailable($language) {
+			return Filesystem::checkFile(__APPLICATION_PATH.'/i18n/'.$language.'.json');
+		}
 	}
 ?>

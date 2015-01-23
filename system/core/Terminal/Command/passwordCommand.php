@@ -93,7 +93,7 @@
 			$error = false;
 			$config = Config::factory('terminal.ini', Config::APPLICATION, true);
 
-            $users = $config->getArrayValue('users', $user);
+			$users = $config->getArrayValue('users', $user);
 
 			if (empty($users)) {
 				$error = true;

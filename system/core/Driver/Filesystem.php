@@ -22,23 +22,23 @@
 		 */
 		protected $filename;
 
-        /**
-         * Filesystem directory
-         * @var
-         */
-        private $path;
+		/**
+		 * Filesystem directory
+		 * @var
+		 */
+		private $path;
 		
 		/**
 		 * @see \System\Drivers\DriverInterface::__construct()
 		 */
-        public function __construct($name, $lifetime = 0, $user = false) {
-            $this->name = $name;
-            $this->lifetime = $lifetime;
-            $this->user = $user;
+		public function __construct($name, $lifetime = 0, $user = false) {
+			$this->name = $name;
+			$this->lifetime = $lifetime;
+			$this->user = $user;
 
-            $this->path = __VARIABLE_PATH.DIRECTORY_SEPARATOR;
-            $this->filename = $this->path.$this->UID();
-        }
+			$this->path = __VARIABLE_PATH.DIRECTORY_SEPARATOR;
+			$this->filename = $this->path.$this->UID();
+		}
 
 		/**
 		 * @see \System\Drivers\DriverInterface::set()

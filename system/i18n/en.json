@@ -43,5 +43,5 @@
 	"ENTITY_PARAMETERS": "Entity parameters cannot be empty",
 	
 	"ROUTE_NOT_VALIDABLE": "Class $1 does not implements ValidateInterface interface",
-    "ROUTE_I18N_NOT_FOUND": "Internationalized route not found for key: $1"
+	"ROUTE_I18N_NOT_FOUND": "Internationalized route not found for key: $1"
 }

@@ -10,11 +10,11 @@
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Cron extends Context implements ContextInterface {
-        /**
-         * Cron config filename
-         * @var string
-         */
-        const FILENAME = 'cron.ini';
+		/**
+		 * Cron config filename
+		 * @var string
+		 */
+		const FILENAME = 'cron.ini';
 
 		/**
 		 * @see System\Dispatcher\ContextInterface::process()

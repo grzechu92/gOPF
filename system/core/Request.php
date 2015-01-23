@@ -21,17 +21,17 @@
 		 */
 		public static $action;
 
-        /**
-         * Request language
-         * @var string
-         */
-        public static $language;
+		/**
+		 * Request language
+		 * @var string
+		 */
+		public static $language;
 
-        /**
-         * Internationalized request ID
-         * @var string
-         */
-        public static $i18n;
+		/**
+		 * Internationalized request ID
+		 * @var string
+		 */
+		public static $i18n;
 		
 		/**
 		 * Requested URL parameters parsed by router
@@ -138,12 +138,12 @@
 			}
 		}
 
-        /**
-         * Parse request URL
-         *
-         * @return string Parsed URL
-         */
-        private function parseURL() {
+		/**
+		 * Parse request URL
+		 *
+		 * @return string Parsed URL
+		 */
+		private function parseURL() {
 			$url = explode('?', $_SERVER['REQUEST_URI']);
 			
 			return substr($url[0], 1);

@@ -27,11 +27,11 @@
 		 */
 		private $connection;
 
-        /**
-         * Database engine
-         * @var \System\Database\EngineInterface
-         */
-        private $engine;
+		/**
+		 * Database engine
+		 * @var \System\Database\EngineInterface
+		 */
+		private $engine;
 
 		/**
 		 * Constructor of database module
@@ -66,25 +66,25 @@
 			return $this->connection;
 		}
 
-        /**
-         * Returns database engine
-         *
-         * @return \System\Database\EngineInterface Database engine
-         */
-        public function engine() {
-            if (!$this->connected) {
-                $this->connect();
-            }
+		/**
+		 * Returns database engine
+		 *
+		 * @return \System\Database\EngineInterface Database engine
+		 */
+		public function engine() {
+			if (!$this->connected) {
+				$this->connect();
+			}
 
-            return $this->engine;
-        }
+			return $this->engine;
+		}
 		
 		/**
 		 * Loads required database engine
 		 */
 		private function loadEngine() {
 			try {
-                $this->engine = $engine = new $this->config->engine($this->config->connection);
+				$this->engine = $engine = new $this->config->engine($this->config->connection);
 
 				if ($engine instanceof \System\Database\EngineInterface) {
 					$engine->connect();

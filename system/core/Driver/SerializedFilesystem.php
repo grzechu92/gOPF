@@ -29,7 +29,7 @@
 				$lifetime = substr($content, 0, self::PAD_SIZE);
 				$data = substr($content, self::PAD_SIZE);
 
-                if ($lifetime == 0 || $lifetime >= time() && !empty($data)) {
+				if ($lifetime == 0 || $lifetime >= time() && !empty($data)) {
 					return unserialize($data);
 				}
 

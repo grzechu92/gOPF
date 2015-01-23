@@ -132,7 +132,7 @@
 		 */
 		public static function synchronize() {
 			$session = self::instance();
-            $session->sync = true;
+			$session->sync = true;
 
 			$data = array();
 

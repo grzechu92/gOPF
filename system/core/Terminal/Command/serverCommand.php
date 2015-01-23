@@ -2,7 +2,7 @@
 	namespace System\Terminal\Command;
 	use \System\Terminal\Help\Line;
 	use \gOPF\gSSP;
-    use \gOPF\gSSP\Slot;
+	use \gOPF\gSSP\Slot;
 	
 	/**
 	 * Terminal command: server (read information about server)
@@ -97,17 +97,17 @@
 				$return .= $line."\n";
 			}
 
-            $return .= "\n";
-            $stats = $parser->getSlotStats();
+			$return .= "\n";
+			$stats = $parser->getSlotStats();
 
-            $return .= '<bold>[';
-            $return .= '<red>'.str_repeat('-', $stats->get(Slot::READING)).'</red>';
-            $return .= '<red>'.str_repeat('-', $stats->get(Slot::SENDING)).'</red>';
-            $return .= '<yellow>'.str_repeat('-', $stats->get(Slot::CLOSING)).'</yellow>';
-            $return .= '<yellow>'.str_repeat('-', $stats->get(Slot::ALIVE)).'</yellow>';
-            $return .= '<green>'.str_repeat('-', $stats->get(Slot::OPENED)).'</green>';
-            $return .= str_repeat('-', $stats->get(Slot::CLOSED));
-            $return .= ']</bold>';
+			$return .= '<bold>[';
+			$return .= '<red>'.str_repeat('-', $stats->get(Slot::READING)).'</red>';
+			$return .= '<red>'.str_repeat('-', $stats->get(Slot::SENDING)).'</red>';
+			$return .= '<yellow>'.str_repeat('-', $stats->get(Slot::CLOSING)).'</yellow>';
+			$return .= '<yellow>'.str_repeat('-', $stats->get(Slot::ALIVE)).'</yellow>';
+			$return .= '<green>'.str_repeat('-', $stats->get(Slot::OPENED)).'</green>';
+			$return .= str_repeat('-', $stats->get(Slot::CLOSED));
+			$return .= ']</bold>';
 
 			return $return;
 		}

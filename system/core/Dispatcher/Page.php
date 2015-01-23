@@ -14,13 +14,13 @@
 		 * @see \System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
-            $view = \System\View::instance();
-            $view->setFrame(__APPLICATION_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'default.php');
+			$view = \System\View::instance();
+			$view->setFrame(__APPLICATION_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'default.php');
 
-            $this->isAccessible(Request::$controller, Request::$action);
-            $this->callAction(Request::$controller, Request::$action);
+			$this->isAccessible(Request::$controller, Request::$action);
+			$this->callAction(Request::$controller, Request::$action);
 
-            $view->render();
-        }
+			$view->render();
+		}
 	}
 ?>

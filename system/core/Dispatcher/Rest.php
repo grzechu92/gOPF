@@ -14,8 +14,8 @@
 		 * @see \System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
-            $this->isAccessible(Request::$controller, Request::$action.'Rest');
-            $data = $this->callAction(Request::$controller, Request::$action.'Rest');
+			$this->isAccessible(Request::$controller, Request::$action.'Rest');
+			$data = $this->callAction(Request::$controller, Request::$action.'Rest');
 
 			$this->toJSON($data);
 		}

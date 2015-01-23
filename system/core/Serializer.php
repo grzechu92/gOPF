@@ -56,8 +56,8 @@
 				try {
 					return self::unserialize(Filesystem::read($path, true));
 				} catch (\System\Filesystem\Exception $exception) {
-                    usleep(1000 * $interval);
-                    continue;
+					usleep(1000 * $interval);
+					continue;
 				}
 			}
 			

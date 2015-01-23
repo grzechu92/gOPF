@@ -163,16 +163,16 @@
 			$this->sendRequest('/logout');
 		}
 
-        /**
-         * Sends request to Kwejk
-         *
-         * @param string $url Path to page (for example: /login)
-         * @param array $variables Variables to post (key => value)
-         * @param array $opts Custom CURLOPT's (CURLOPT_* => value)
-         * @param string|bool $customURL Custom request URL
-         * @throws \gOPF\Kwejk\Exception
-         * @return string Requested content with HTTP Headers
-         */
+		/**
+		 * Sends request to Kwejk
+		 *
+		 * @param string $url Path to page (for example: /login)
+		 * @param array $variables Variables to post (key => value)
+		 * @param array $opts Custom CURLOPT's (CURLOPT_* => value)
+		 * @param string|bool $customURL Custom request URL
+		 * @throws \gOPF\Kwejk\Exception
+		 * @return string Requested content with HTTP Headers
+		 */
 		public function sendRequest($url, $variables = array(), $opts = array(), $customURL = false) {
 			$c = curl_init();
 			curl_setopt($c, CURLOPT_URL, !$customURL ? self::URL.$url : $customURL);
