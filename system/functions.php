@@ -3,7 +3,7 @@
 	 * Functions which are available in whole system and application
 	 * 
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */	
 
@@ -36,10 +36,10 @@
 		return \System\I18n::translate($index, $vars, false);
 	}
 
-    /**
-     * @see \System\Router::generate()
-     */
-    function ___($controller, $action = 'main') {
-        return \System\Router::generate($controller, $action);
-    }
+	/**
+	 * @see \System\Router::generate()
+	 */
+	function ___($controller, $action = 'main') {
+		return \System\Router::generate($controller, $action);
+	}
 ?>

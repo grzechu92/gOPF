@@ -7,7 +7,7 @@
 	 * reCAPTCHA gOPF API class
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class reCaptcha {
@@ -68,13 +68,13 @@
 			return self::RECAPTCHA_API_SERVER.self::IMAGE_PATH.$challenge;
 		}
 
-        /**
-         * Generate captcha challenge for selected key
-         *
-         * @param bool|false|string $key Public key
-         * @throws \reCaptcha\reCaptcha\Exception
-         * @return string Captcha challenge
-         */
+		/**
+		 * Generate captcha challenge for selected key
+		 *
+		 * @param bool|false|string $key Public key
+		 * @throws \reCaptcha\reCaptcha\Exception
+		 * @return string Captcha challenge
+		 */
 		public static function getCaptchaChallenge($key = false) {
 			if (!$key) {
 				$key = self::$publicKey;

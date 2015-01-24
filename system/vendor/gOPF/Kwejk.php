@@ -8,7 +8,7 @@
 	 * Kwejk API class
 	 * 
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Kwejk {
@@ -163,16 +163,16 @@
 			$this->sendRequest('/logout');
 		}
 
-        /**
-         * Sends request to Kwejk
-         *
-         * @param string $url Path to page (for example: /login)
-         * @param array $variables Variables to post (key => value)
-         * @param array $opts Custom CURLOPT's (CURLOPT_* => value)
-         * @param string|bool $customURL Custom request URL
-         * @throws \gOPF\Kwejk\Exception
-         * @return string Requested content with HTTP Headers
-         */
+		/**
+		 * Sends request to Kwejk
+		 *
+		 * @param string $url Path to page (for example: /login)
+		 * @param array $variables Variables to post (key => value)
+		 * @param array $opts Custom CURLOPT's (CURLOPT_* => value)
+		 * @param string|bool $customURL Custom request URL
+		 * @throws \gOPF\Kwejk\Exception
+		 * @return string Requested content with HTTP Headers
+		 */
 		public function sendRequest($url, $variables = array(), $opts = array(), $customURL = false) {
 			$c = curl_init();
 			curl_setopt($c, CURLOPT_URL, !$customURL ? self::URL.$url : $customURL);

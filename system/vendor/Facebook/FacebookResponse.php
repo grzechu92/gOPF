@@ -68,11 +68,11 @@ class FacebookResponse
    */
   public function __construct($request, $responseData, $rawResponse, $etagHit = false, $etag = null)
   {
-    $this->request = $request;
-    $this->responseData = $responseData;
-    $this->rawResponse = $rawResponse;
-    $this->etagHit = $etagHit;
-    $this->etag = $etag;
+	$this->request = $request;
+	$this->responseData = $responseData;
+	$this->rawResponse = $rawResponse;
+	$this->etagHit = $etagHit;
+	$this->etag = $etag;
   }
 
   /**
@@ -82,7 +82,7 @@ class FacebookResponse
    */
   public function getRequest()
   {
-    return $this->request;
+	return $this->request;
   }
 
   /**
@@ -92,7 +92,7 @@ class FacebookResponse
    */
   public function getResponse()
   {
-    return $this->responseData;
+	return $this->responseData;
   }
 
   /**
@@ -102,7 +102,7 @@ class FacebookResponse
    */
   public function getRawResponse()
   {
-    return $this->rawResponse;
+	return $this->rawResponse;
   }
 
   /**
@@ -112,7 +112,7 @@ class FacebookResponse
    */
   public function isETagHit()
   {
-    return $this->etagHit;
+	return $this->etagHit;
   }
 
   /**
@@ -122,7 +122,7 @@ class FacebookResponse
    */
   public function getETag()
   {
-    return $this->etag;
+	return $this->etag;
   }
 
   /**
@@ -134,7 +134,7 @@ class FacebookResponse
    * @return mixed
    */
   public function getGraphObject($type = 'Facebook\GraphObject') {
-    return (new GraphObject($this->responseData))->cast($type);
+	return (new GraphObject($this->responseData))->cast($type);
   }
 
   /**
@@ -146,12 +146,12 @@ class FacebookResponse
    * @return mixed
    */
   public function getGraphObjectList($type = 'Facebook\GraphObject') {
-    $out = array();
-    $data = $this->responseData->data;
-    for ($i = 0; $i < count($data); $i++) {
-      $out[] = (new GraphObject($data[$i]))->cast($type);
-    }
-    return $out;
+	$out = array();
+	$data = $this->responseData->data;
+	for ($i = 0; $i < count($data); $i++) {
+	  $out[] = (new GraphObject($data[$i]))->cast($type);
+	}
+	return $out;
   }
 
   /**
@@ -162,7 +162,7 @@ class FacebookResponse
    */
   public function getRequestForNextPage()
   {
-    return $this->handlePagination('next');
+	return $this->handlePagination('next');
   }
 
   /**
@@ -173,7 +173,7 @@ class FacebookResponse
    */
   public function getRequestForPreviousPage()
   {
-    return $this->handlePagination('previous');
+	return $this->handlePagination('previous');
   }
 
   /**
@@ -184,19 +184,19 @@ class FacebookResponse
    * @return FacebookRequest|null
    */
   private function handlePagination($direction) {
-    if (isset($this->responseData->paging->$direction)) {
-      $url = parse_url($this->responseData->paging->$direction);
-      parse_str($url['query'], $params);
+	if (isset($this->responseData->paging->$direction)) {
+	  $url = parse_url($this->responseData->paging->$direction);
+	  parse_str($url['query'], $params);
 
-      return new FacebookRequest(
-        $this->request->getSession(),
-        $this->request->getMethod(),
-        $this->request->getPath(),
-        $params
-      );
-    } else {
-      return null;
-    }
+	  return new FacebookRequest(
+		$this->request->getSession(),
+		$this->request->getMethod(),
+		$this->request->getPath(),
+		$params
+	  );
+	} else {
+	  return null;
+	}
   }
 
 }

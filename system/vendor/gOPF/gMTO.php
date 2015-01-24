@@ -8,7 +8,7 @@
 	 * gMTO - gMTO Multi Thread Operator
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class gMTO {
@@ -151,7 +151,7 @@
 		/**
 		 * Returns synchronized data from thread
 		 * @param string $id Thread ID
-         * @return mixed Unserialized data
+		 * @return mixed Unserialized data
 		 */
 		private function getThread($id) {
 			Storage::read($id);

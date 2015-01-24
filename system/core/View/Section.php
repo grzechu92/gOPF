@@ -6,7 +6,7 @@
 	 * View section class
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Section extends \System\Container {
@@ -176,7 +176,7 @@
 		 * Renders section and returns content
 		 *
 		 * @return string Rendered section content
-         * @throws \System\View\Exception
+		 * @throws \System\View\Exception
 		 */
 		private function render() {
 			if (\System\Core::STAGE == __DEVELOPMENT) {

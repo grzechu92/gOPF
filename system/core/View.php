@@ -6,7 +6,7 @@
 	 * View module of framework
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class View extends Singleton {
@@ -34,7 +34,7 @@
 		 * 
 		 * @param string $name Section name
 		 * @param string $action Action in controller to call
-         * @return bool Section rendering status
+		 * @return bool Section rendering status
 		 */
 		public static function sectionSlot($name, $action = 'main') {
 			if (empty(self::instance()->sections[$name])) {
@@ -50,9 +50,9 @@
 			}
 			
 			if (count(self::instance()->sections[$name]) > 0) {
-                /** @var $section \System\View\Section */
-                foreach (self::instance()->sections[$name] as $section) {
-                    echo $section->getContent();
+				/** @var $section \System\View\Section */
+				foreach (self::instance()->sections[$name] as $section) {
+					echo $section->getContent();
 				}
 			}
 		}

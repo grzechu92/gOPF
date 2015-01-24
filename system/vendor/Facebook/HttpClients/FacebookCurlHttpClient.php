@@ -82,7 +82,7 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function __construct(FacebookCurl $facebookCurl = null)
   {
-    self::$facebookCurl = $facebookCurl ?: new FacebookCurl();
+	self::$facebookCurl = $facebookCurl ?: new FacebookCurl();
   }
 
   /**
@@ -93,7 +93,7 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function addRequestHeader($key, $value)
   {
-    $this->requestHeaders[$key] = $value;
+	$this->requestHeaders[$key] = $value;
   }
 
   /**
@@ -103,7 +103,7 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function getResponseHeaders()
   {
-    return $this->responseHeaders;
+	return $this->responseHeaders;
   }
 
   /**
@@ -113,7 +113,7 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function getResponseHttpStatusCode()
   {
-    return $this->responseHttpStatusCode;
+	return $this->responseHttpStatusCode;
   }
 
   /**
@@ -129,27 +129,27 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function send($url, $method = 'GET', $parameters = array())
   {
-    $this->openConnection($url, $method, $parameters);
-    $this->tryToSendRequest();
+	$this->openConnection($url, $method, $parameters);
+	$this->tryToSendRequest();
 
-    // Need to verify the peer
-    if ($this->curlErrorCode == 60 || $this->curlErrorCode == 77) {
-      $this->addBundledCert();
-      $this->tryToSendRequest();
-    }
+	// Need to verify the peer
+	if ($this->curlErrorCode == 60 || $this->curlErrorCode == 77) {
+	  $this->addBundledCert();
+	  $this->tryToSendRequest();
+	}
 
-    if ($this->curlErrorCode) {
-      throw new FacebookSDKException($this->curlErrorMessage, $this->curlErrorCode);
-    }
+	if ($this->curlErrorCode) {
+	  throw new FacebookSDKException($this->curlErrorMessage, $this->curlErrorCode);
+	}
 
-    // Separate the raw headers from the raw body
-    list($rawHeaders, $rawBody) = $this->extractResponseHeadersAndBody();
+	// Separate the raw headers from the raw body
+	list($rawHeaders, $rawBody) = $this->extractResponseHeadersAndBody();
 
-    $this->responseHeaders = self::headersToArray($rawHeaders);
+	$this->responseHeaders = self::headersToArray($rawHeaders);
 
-    $this->closeConnection();
+	$this->closeConnection();
 
-    return $rawBody;
+	return $rawBody;
   }
 
   /**
@@ -161,27 +161,27 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function openConnection($url, $method = 'GET', $parameters = array())
   {
-    $options = array(
-      CURLOPT_URL            => $url,
-      CURLOPT_CONNECTTIMEOUT => 10,
-      CURLOPT_TIMEOUT        => 60,
-      CURLOPT_RETURNTRANSFER => true, // Follow 301 redirects
-      CURLOPT_HEADER         => true, // Enable header processing
-    );
+	$options = array(
+	  CURLOPT_URL            => $url,
+	  CURLOPT_CONNECTTIMEOUT => 10,
+	  CURLOPT_TIMEOUT        => 60,
+	  CURLOPT_RETURNTRANSFER => true, // Follow 301 redirects
+	  CURLOPT_HEADER         => true, // Enable header processing
+	);
 
-    if ($method !== "GET") {
-      $options[CURLOPT_POSTFIELDS] = $parameters;
-    }
-    if ($method === 'DELETE' || $method === 'PUT') {
-      $options[CURLOPT_CUSTOMREQUEST] = $method;
-    }
+	if ($method !== "GET") {
+	  $options[CURLOPT_POSTFIELDS] = $parameters;
+	}
+	if ($method === 'DELETE' || $method === 'PUT') {
+	  $options[CURLOPT_CUSTOMREQUEST] = $method;
+	}
 
-    if (!empty($this->requestHeaders)) {
-      $options[CURLOPT_HTTPHEADER] = $this->compileRequestHeaders();
-    }
+	if (!empty($this->requestHeaders)) {
+	  $options[CURLOPT_HTTPHEADER] = $this->compileRequestHeaders();
+	}
 
-    self::$facebookCurl->init();
-    self::$facebookCurl->setopt_array($options);
+	self::$facebookCurl->init();
+	self::$facebookCurl->setopt_array($options);
   }
 
   /**
@@ -189,8 +189,8 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function addBundledCert()
   {
-    self::$facebookCurl->setopt(CURLOPT_CAINFO,
-      dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fb_ca_chain_bundle.crt');
+	self::$facebookCurl->setopt(CURLOPT_CAINFO,
+	  dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fb_ca_chain_bundle.crt');
   }
 
   /**
@@ -198,7 +198,7 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function closeConnection()
   {
-    self::$facebookCurl->close();
+	self::$facebookCurl->close();
   }
 
   /**
@@ -206,10 +206,10 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function tryToSendRequest()
   {
-    $this->sendRequest();
-    $this->curlErrorMessage = self::$facebookCurl->error();
-    $this->curlErrorCode = self::$facebookCurl->errno();
-    $this->responseHttpStatusCode = self::$facebookCurl->getinfo(CURLINFO_HTTP_CODE);
+	$this->sendRequest();
+	$this->curlErrorMessage = self::$facebookCurl->error();
+	$this->curlErrorCode = self::$facebookCurl->errno();
+	$this->responseHttpStatusCode = self::$facebookCurl->getinfo(CURLINFO_HTTP_CODE);
   }
 
   /**
@@ -217,7 +217,7 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function sendRequest()
   {
-    $this->rawResponse = self::$facebookCurl->exec();
+	$this->rawResponse = self::$facebookCurl->exec();
   }
 
   /**
@@ -227,13 +227,13 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function compileRequestHeaders()
   {
-    $return = array();
+	$return = array();
 
-    foreach ($this->requestHeaders as $key => $value) {
-      $return[] = $key . ': ' . $value;
-    }
+	foreach ($this->requestHeaders as $key => $value) {
+	  $return[] = $key . ': ' . $value;
+	}
 
-    return $return;
+	return $return;
   }
 
   /**
@@ -243,12 +243,12 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public function extractResponseHeadersAndBody()
   {
-    $headerSize = self::getHeaderSize();
+	$headerSize = self::getHeaderSize();
 
-    $rawHeaders = mb_substr($this->rawResponse, 0, $headerSize);
-    $rawBody = mb_substr($this->rawResponse, $headerSize);
+	$rawHeaders = mb_substr($this->rawResponse, 0, $headerSize);
+	$rawBody = mb_substr($this->rawResponse, $headerSize);
 
-    return array(trim($rawHeaders), trim($rawBody));
+	return array(trim($rawHeaders), trim($rawBody));
   }
 
   /**
@@ -260,28 +260,28 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   public static function headersToArray($rawHeaders)
   {
-    $headers = array();
+	$headers = array();
 
-    // Normalize line breaks
-    $rawHeaders = str_replace("\r\n", "\n", $rawHeaders);
+	// Normalize line breaks
+	$rawHeaders = str_replace("\r\n", "\n", $rawHeaders);
 
-    // There will be multiple headers if a 301 was followed
-    // or a proxy was followed, etc
-    $headerCollection = explode("\n\n", trim($rawHeaders));
-    // We just want the last response (at the end)
-    $rawHeader = array_pop($headerCollection);
+	// There will be multiple headers if a 301 was followed
+	// or a proxy was followed, etc
+	$headerCollection = explode("\n\n", trim($rawHeaders));
+	// We just want the last response (at the end)
+	$rawHeader = array_pop($headerCollection);
 
-    $headerComponents = explode("\n", $rawHeader);
-    foreach ($headerComponents as $line) {
-      if (strpos($line, ': ') === false) {
-        $headers['http_code'] = $line;
-      } else {
-        list ($key, $value) = explode(': ', $line);
-        $headers[$key] = $value;
-      }
-    }
+	$headerComponents = explode("\n", $rawHeader);
+	foreach ($headerComponents as $line) {
+	  if (strpos($line, ': ') === false) {
+		$headers['http_code'] = $line;
+	  } else {
+		list ($key, $value) = explode(': ', $line);
+		$headers[$key] = $value;
+	  }
+	}
 
-    return $headers;
+	return $headers;
   }
 
   /**
@@ -291,19 +291,19 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   private function getHeaderSize()
   {
-    $headerSize = self::$facebookCurl->getinfo(CURLINFO_HEADER_SIZE);
-    // This corrects a Curl bug where header size does not account
-    // for additional Proxy headers.
-    if ( self::needsCurlProxyFix() ) {
-      // Additional way to calculate the request body size.
-      if (preg_match('/Content-Length: (\d+)/', $this->rawResponse, $m)) {
-          $headerSize = mb_strlen($this->rawResponse) - $m[1];
-      } elseif (stripos($this->rawResponse, self::CONNECTION_ESTABLISHED) !== false) {
-          $headerSize += mb_strlen(self::CONNECTION_ESTABLISHED);
-      }
-    }
+	$headerSize = self::$facebookCurl->getinfo(CURLINFO_HEADER_SIZE);
+	// This corrects a Curl bug where header size does not account
+	// for additional Proxy headers.
+	if ( self::needsCurlProxyFix() ) {
+	  // Additional way to calculate the request body size.
+	  if (preg_match('/Content-Length: (\d+)/', $this->rawResponse, $m)) {
+		  $headerSize = mb_strlen($this->rawResponse) - $m[1];
+	  } elseif (stripos($this->rawResponse, self::CONNECTION_ESTABLISHED) !== false) {
+		  $headerSize += mb_strlen(self::CONNECTION_ESTABLISHED);
+	  }
+	}
 
-    return $headerSize;
+	return $headerSize;
   }
 
   /**
@@ -314,10 +314,10 @@ class FacebookCurlHttpClient implements FacebookHttpable
    */
   private static function needsCurlProxyFix()
   {
-    $ver = self::$facebookCurl->version();
-    $version = $ver['version_number'];
+	$ver = self::$facebookCurl->version();
+	$version = $ver['version_number'];
 
-    return $version < self::CURL_PROXY_QUIRK_VER;
+	return $version < self::CURL_PROXY_QUIRK_VER;
   }
 
 }

@@ -26,7 +26,7 @@
  * Version 1.2
  *
  * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
- * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
  */
 
@@ -77,26 +77,26 @@ Terminal = {
 		}
 	},
 
-    push: new gPAE("/terminal/connection"),
+	push: new gPAE("/terminal/connection"),
 	
 	position: 0,
 		
 	init: function() {
 		Terminal.push.connect();
 
-        Terminal.push.events.on("onConnect", function() {
-            Terminal.push.send("initialize");
-        });
+		Terminal.push.events.on("onConnect", function() {
+			Terminal.push.send("initialize");
+		});
 
-        Terminal.push.events.on("onDisconnect", function() {
-            Terminal.push.connect();
-        });
+		Terminal.push.events.on("onDisconnect", function() {
+			Terminal.push.connect();
+		});
 
-        Terminal.push.events.on("stream", function(data) {
-            Terminal.status = data.value;
-            Terminal.check(data.value);
-            Terminal.update(data.value);
-        });
+		Terminal.push.events.on("stream", function(data) {
+			Terminal.status = data.value;
+			Terminal.check(data.value);
+			Terminal.update(data.value);
+		});
 
 		setInterval(Terminal.uploader.upload, 500);
 	},
@@ -105,21 +105,21 @@ Terminal = {
 		if (!Terminal.status.processing) {
 			command = (Terminal.status.prefix == null) ? command : Terminal.status.prefix + command;
 
-            Terminal.push.send("command", {command: command, secret: !($("#command").prop("type") == "text")});
+			Terminal.push.send("command", {command: command, secret: !($("#command").prop("type") == "text")});
 			Terminal.lock();
 		}
 	},
 	
 	abort: function() {
-        Terminal.push.send("abort");
+		Terminal.push.send("abort");
 	},
 
 	debug: function() {
-        Terminal.push.send("debug");
+		Terminal.push.send("debug");
 	},
 	
 	reset: function() {
-        Terminal.push.send("reset");
+		Terminal.push.send("reset");
 	},
 	
 	complete: function(command) {
@@ -127,7 +127,7 @@ Terminal = {
 			var value = command.val();
 			
 			if (value != "") {
-                Terminal.push.send("complete", {command: value, position: command.get(0).selectionStart});
+				Terminal.push.send("complete", {command: value, position: command.get(0).selectionStart});
 			}
 		}
 	},
@@ -197,7 +197,7 @@ Terminal = {
 	
 	print: function(content) {
 		$("#console").append(content);
-        $("#command").focus();
+		$("#command").focus();
 	},
 	
 	clear: function() {
@@ -205,7 +205,7 @@ Terminal = {
 	},
 	
 	upload: function(id, name, content) {
-        Terminal.push.send("upload", {id: id, name: name, content: content});
+		Terminal.push.send("upload", {id: id, name: name, content: content});
 	}
 };
 
@@ -306,7 +306,7 @@ $(document).ready(function() {
 				};
 				
 				reader.readAsDataURL(file);
-		    })(files[i]);
+			})(files[i]);
 		}
 		
 		e.stopPropagation();

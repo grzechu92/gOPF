@@ -5,7 +5,7 @@
 	 * gODI Statement handler
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Handler {
@@ -63,14 +63,14 @@
 			return new Update($this->PDO, $table);
 		}
 
-        /**
-         * Returns transaction component
-         *
-         * @return \gOPF\gODI\Transaction
-         */
-        public function transaction() {
-            return new Transaction($this->PDO);
-        }
+		/**
+		 * Returns transaction component
+		 *
+		 * @return \gOPF\gODI\Transaction
+		 */
+		public function transaction() {
+			return new Transaction($this->PDO);
+		}
 		
 		/**
 		 * Returns raw PDO connection

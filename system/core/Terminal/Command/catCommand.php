@@ -6,7 +6,7 @@
 	 * Terminal command: cat (displays file content)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class catCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
@@ -50,7 +50,7 @@
 		 * 
 		 * @param string $file Filename
 		 * @param \System\Terminal\Session $session Current terminal session
-         * @return string Built path
+		 * @return string Built path
 		 */
 		private function buildPath($file, \System\Terminal\Session $session) {
 			return str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, __ROOT_PATH . $session->pull()->path . $file);

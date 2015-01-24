@@ -5,7 +5,7 @@
 	 * gSSP Slot class
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Slot {
@@ -33,11 +33,11 @@
 		 */
 		const SENDING = 'W';
 
-        /**
-         * Status for closing slot - closing slot
-         * @var string
-         */
-        const CLOSING = 'C';
+		/**
+		 * Status for closing slot - closing slot
+		 * @var string
+		 */
+		const CLOSING = 'C';
 		
 		/**
 		 * Status for keepalive slot - waiting for another client request
@@ -169,7 +169,7 @@
 				self::READING => 'READING',
 				self::SENDING => 'SENDING',
 				self::ALIVE => 'ALIVE',
-                self::CLOSING => 'CLOSING'
+				self::CLOSING => 'CLOSING'
 			);
 			
 			if (isset($list[$status])) {

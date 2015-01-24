@@ -2,13 +2,13 @@
 	namespace System\Terminal\Command;
 	use \System\Terminal\Help\Line;
 	use \gOPF\gSSP;
-    use \gOPF\gSSP\Slot;
+	use \gOPF\gSSP\Slot;
 	
 	/**
 	 * Terminal command: server (read information about server)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class serverCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
@@ -97,17 +97,17 @@
 				$return .= $line."\n";
 			}
 
-            $return .= "\n";
-            $stats = $parser->getSlotStats();
+			$return .= "\n";
+			$stats = $parser->getSlotStats();
 
-            $return .= '<bold>[';
-            $return .= '<red>'.str_repeat('-', $stats->get(Slot::READING)).'</red>';
-            $return .= '<red>'.str_repeat('-', $stats->get(Slot::SENDING)).'</red>';
-            $return .= '<yellow>'.str_repeat('-', $stats->get(Slot::CLOSING)).'</yellow>';
-            $return .= '<yellow>'.str_repeat('-', $stats->get(Slot::ALIVE)).'</yellow>';
-            $return .= '<green>'.str_repeat('-', $stats->get(Slot::OPENED)).'</green>';
-            $return .= str_repeat('-', $stats->get(Slot::CLOSED));
-            $return .= ']</bold>';
+			$return .= '<bold>[';
+			$return .= '<red>'.str_repeat('-', $stats->get(Slot::READING)).'</red>';
+			$return .= '<red>'.str_repeat('-', $stats->get(Slot::SENDING)).'</red>';
+			$return .= '<yellow>'.str_repeat('-', $stats->get(Slot::CLOSING)).'</yellow>';
+			$return .= '<yellow>'.str_repeat('-', $stats->get(Slot::ALIVE)).'</yellow>';
+			$return .= '<green>'.str_repeat('-', $stats->get(Slot::OPENED)).'</green>';
+			$return .= str_repeat('-', $stats->get(Slot::CLOSED));
+			$return .= ']</bold>';
 
 			return $return;
 		}

@@ -7,7 +7,7 @@
 	 * Base terminal command object
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Command {
@@ -139,15 +139,15 @@
 		 */
 		public function onUninstall() {}
 
-        /**
-         * @see \System\Terminal\CommandInterface::getName();
-         */
-        public function getName() {
-            $clean = str_replace(\System\Terminal::COMMAND_SUFFIX, '', get_called_class());
-            $exploded = explode('\\', $clean);
+		/**
+		 * @see \System\Terminal\CommandInterface::getName();
+		 */
+		public function getName() {
+			$clean = str_replace(\System\Terminal::COMMAND_SUFFIX, '', get_called_class());
+			$exploded = explode('\\', $clean);
 
-            return $exploded[count($exploded) - 1];
-        }
+			return $exploded[count($exploded) - 1];
+		}
 		
 		/**
 		 * Checks if parameter has been passed with command

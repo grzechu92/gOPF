@@ -5,7 +5,7 @@
 	 * Terminal command: ls (lists current directory)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class lsCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
@@ -51,8 +51,8 @@
 			$files = $dirs = array();
 			
 			foreach (new \DirectoryIterator(__ROOT_PATH.$path) as $element) {
-                /** @var $element \DirectoryIterator */
-                if ($element->isDot()) continue;
+				/** @var $element \DirectoryIterator */
+				if ($element->isDot()) continue;
 			
 				if ($element->isFile()) {
 					$files[$element->getFilename()] = clone($element);

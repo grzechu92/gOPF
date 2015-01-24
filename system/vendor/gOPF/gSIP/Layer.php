@@ -6,7 +6,7 @@
 	 * gSIP Layer class
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Layer {
@@ -323,7 +323,7 @@
 		 * @param \gOPF\gSIP\Color $color Color of text
 		 * @param string $fontFile Path to TTF font file
 		 * @param int $angle Angle of text
-         * @return \gOPF\gSIP\Layer Fluid interface
+		 * @return \gOPF\gSIP\Layer Fluid interface
 		 */
 		public function putText($text, Position $position, $size = 5, Color $color, $fontFile = '', $angle = 0) {
 			$color = $this->allocateColor($color);

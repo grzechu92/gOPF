@@ -5,7 +5,7 @@
 	 * Holds all variables from user
 	 * 
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Request extends Singleton {
@@ -21,17 +21,17 @@
 		 */
 		public static $action;
 
-        /**
-         * Request language
-         * @var string
-         */
-        public static $language;
+		/**
+		 * Request language
+		 * @var string
+		 */
+		public static $language;
 
-        /**
-         * Internationalized request ID
-         * @var string
-         */
-        public static $i18n;
+		/**
+		 * Internationalized request ID
+		 * @var string
+		 */
+		public static $i18n;
 		
 		/**
 		 * Requested URL parameters parsed by router
@@ -138,12 +138,12 @@
 			}
 		}
 
-        /**
-         * Parse request URL
-         *
-         * @return string Parsed URL
-         */
-        private function parseURL() {
+		/**
+		 * Parse request URL
+		 *
+		 * @return string Parsed URL
+		 */
+		private function parseURL() {
 			$url = explode('?', $_SERVER['REQUEST_URI']);
 			
 			return substr($url[0], 1);

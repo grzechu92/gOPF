@@ -6,7 +6,7 @@
 	 * Queue class, allows to create list which can be modified in order
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class Queue implements \Countable, \ArrayAccess, \IteratorAggregate {
@@ -210,42 +210,42 @@
 		 */
 		public function offsetSet($name, $value) {
 			$this->set(new Element($name, $value));
-	    }
-	    
-	    /**
+		}
+
+		/**
 		 * Array wrapper for get() method
 		 * 
 		 * @param string $name Element name
 		 * @return mixed Element value
 		 */
 	 	public function offsetGet($name) {
-	        return $this->get($name);
-	    }
-	    
-	    /**
-	     * Checks if any element with specified name exists in queue
-	     * 
-	     * @param string $name Element name
-	     * @return bool Element exist?
-	     */
-	    public function offsetExists($name) {
-	        return $this->exist($name);
-	    }
-	    
-	    /**
-	     * Deletes specified element from queue
-	     * 
-	     * @param string $name Element name
-	     */
-	    public function offsetUnset($name) {
-	        $this->remove($name);
-	    }
-	    
-	    /**
-	     * @see \IteratorAggregate::getIterator()
-	     */
-	    public function getIterator() {
-	    	return new \ArrayIterator($this->elements);
-	    }
+			return $this->get($name);
+		}
+
+		/**
+		 * Checks if any element with specified name exists in queue
+		 *
+		 * @param string $name Element name
+		 * @return bool Element exist?
+		 */
+		public function offsetExists($name) {
+			return $this->exist($name);
+		}
+
+		/**
+		 * Deletes specified element from queue
+		 *
+		 * @param string $name Element name
+		 */
+		public function offsetUnset($name) {
+			$this->remove($name);
+		}
+
+		/**
+		 * @see \IteratorAggregate::getIterator()
+		 */
+		public function getIterator() {
+			return new \ArrayIterator($this->elements);
+		}
 	}
 ?>

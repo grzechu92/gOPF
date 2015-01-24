@@ -8,7 +8,7 @@
 	 * Terminal command: manager (allows to install custom commands)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
 	class managerCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
@@ -58,13 +58,13 @@
 			}
 
 			if ($this->getParameter('install')) {
-                $class = trim($this->getParameter('install'));
+				$class = trim($this->getParameter('install'));
 
 				$output = $this->installCommand($config, $class);
 			}
 
 			if ($this->getParameter('uninstall')) {
-                $command = trim($this->getParameter('uninstall'));
+				$command = trim($this->getParameter('uninstall'));
 
 				$output = $this->uninstallCommand($config, $command);
 			}
@@ -106,7 +106,7 @@
 				}
 				
 				$object->onInstall();
-                $config->setArrayValue('commands', $object->getName(), $class);
+				$config->setArrayValue('commands', $object->getName(), $class);
 			} catch (\System\Loader\Exception $e) {
 				return self::WRONG_CLASS;
 			}
@@ -130,8 +130,8 @@
 				return self::COMMAND_NOT_EXISTS;
 			}
 
-            /** @var $object \System\Terminal\CommandInterface */
-            $object = new $class();
+			/** @var $object \System\Terminal\CommandInterface */
+			$object = new $class();
 			$object->onUninstall();
 			
 			$config->removeFromArray('commands', $command);
