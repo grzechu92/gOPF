@@ -10,6 +10,18 @@
      */
     class Config {
         /**
+         * Normal socket type
+         * @var int
+         */
+        const SOCKET = 0;
+
+        /**
+         * WebSocket type
+         * @var int
+         */
+        const WEBSOCKET = 1;
+
+        /**
          * Server host
          * @var string
          */
@@ -32,5 +44,11 @@
          * @var int
          */
         public $refresh = 100000;
+
+        /**
+         * Socket server type
+         * @var int
+         */
+        public $type = self::WEBSOCKET;
     }
 ?>

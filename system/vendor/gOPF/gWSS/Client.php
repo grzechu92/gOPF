@@ -1,5 +1,6 @@
 <?php
     namespace gOPF\gWSS;
+    use \gOPF\gWSS;
 
     /**
      * gWSS Client class
@@ -47,7 +48,7 @@
 
         /**
          * Last data from client
-         * @var \stdClass
+         * @var \stdClass|string
          */
         public $data;
 
@@ -70,7 +71,7 @@
          * @param \gOPF\gWSS\Config $config WebSocket server config
          * @param resource $socket Socket resource
          */
-        public function __construct(\gOPF\gWSS $server, Config $config, $socket) {
+        public function __construct(gWSS $server, Config $config, $socket) {
             $this->id = uniqid();
             $this->container = new \System\Container();
 
@@ -102,7 +103,7 @@
 
             $data = $this->read();
 
-            if (!$this->handshake) {
+            if (!$this->handshake && $this->config->type == Config::WEBSOCKET) {
                 $this->handshake(new Headers($data));
 
                 if ($this->handshake) {
@@ -113,11 +114,16 @@
             } else {
                 $this->server->console('Receiving data...', $this);
 
-                $data = (object) json_decode(Encoder::decodeWebSocket($data));
+                if ($this->config->type == Config::WEBSOCKET) {
+                    $data = (object) json_decode(Encoder::decodeWebSocket($data));
 
-                if (isset($data->event)) {
-                    $this->data = $data->data;
-                    $this->server->events->client->call($data->event, $this);
+                    if (isset($data->event)) {
+                        $this->data = $data->data;
+                        $this->server->events->client->call($data->event, $this);
+                    }
+                } else {
+                    $this->data = $data;
+                    $this->server->events->client->call(gWSS::ON_DATA_RECEIVE, $this);
                 }
             }
         }

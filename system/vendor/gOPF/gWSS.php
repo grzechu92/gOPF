@@ -5,13 +5,18 @@
     use \gOPF\gWSS\Events;
 
     /**
-     * gWSS - gWSS WebSocket Service
+     * gWSS - gWSS WebSocket Server
      *
      * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
      * @copyright Copyright (C) 2011-2014, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
      * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
      */
     class gWSS  {
+        /**
+         * Event on receive for normal socket
+         */
+        const ON_DATA_RECEIVE = 1;
+
         /**
          * Events for client and server
          * @var \gOPF\gWSS\Events
