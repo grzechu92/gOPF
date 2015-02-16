@@ -23,7 +23,7 @@
 				'SET '.implode($this->values, ', '),
 				(!empty($this->search) ? 'WHERE '.implode(' ', $this->search) : ''),
 				(!empty($this->orderBy) ? 'ORDER BY '.implode(' ', array($this->orderBy, $this->orderType)) : ''),
-				(($this->limitable > 0) ? 'LIMIT :_offset, :_limit' : '')
+				(($this->limitable) ? 'LIMIT :_offset, :_limit' : '')
 			);
 			
 			return trim(implode(' ', $parts));
