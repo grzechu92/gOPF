@@ -11,24 +11,29 @@
 	interface EntityInterface {
 		/**
 		 * Initializes Entity with selected data
-		 * 
-		 * @param \stdClass $data Data to initialize in entity
+		 *
+		 * @param mixed $data Data to initialize in entity
 		 */
-		public function initialize(\stdClass $data);
-		
-		/**
-		 * Removes entity from database
-		 */
-		public function remove();
-		
+		public function initialize($data);
+
 		/**
 		 * Creates entity with specified data in database
 		 */
 		public function create();
-		
+
+		/**
+		 * Reads entity data from database
+		 */
+		public function read();
+
 		/**
 		 * Updates entity data in database
 		 */
 		public function update();
+
+		/**
+		 * Delete entity from database
+		 */
+		public function delete();
 	}
 ?>

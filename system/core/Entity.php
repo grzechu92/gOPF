@@ -2,9 +2,9 @@
 	namespace System;
 	use \System\Entity\EntityInterface;
 	use \System\Entity\Exception;
-	use \System\Entity\Identifiers;
 	use \stdClass;
-	
+	use \System\Entity\Field;
+
 	/**
 	 * Database Entity framework engine 
 	 * 
@@ -14,45 +14,41 @@
 	 */
 	abstract class Entity implements EntityInterface {
 		/**
-		 * Unique entity index keys with values
-		 * @var \System\Entity\Identifiers
-		 */
-		public $identifiers;
-
-		/**
-		 * Unique entity specified index keys
-		 * @var array
-		 */
-		protected $keys = array();
-
-		/**
 		 * Entity initialization flag
 		 * @var bool
 		 */
-		protected $initialized = false;
+		private $initialized = false;
 		
 		/**
 		 * Entity initialized data checksum
 		 * @var string
 		 */
-		protected $checksum;
-		
+		private $checksum;
+
+		/**
+		 * Entity fields cache
+		 * @var \System\Entity\Field[]
+		 */
+		private $fields = array();
+
 		/**
 		 * Creates new entity of specified type
 		 * 
 		 * @param string $entity Entity class without namespace
-		 * @param \stdClass $data Entity initialization data
+		 * @param mixed $data Entity initialization data
 		 * @throws \System\Entity\Exception
 		 * @return \System\Entity Initialized Entity object
 		 */
-		final public static function factory($entity, stdClass $data = null) {
+		final public static function factory($entity, $data = null) {
 			$class = '\\Entities\\'.$entity;
 		
 			try {
 				$entity = new $class();
 				
-				if ($entity instanceof Entity) {
-					$entity->initialize($data);
+				if ($entity instanceof EntityInterface) {
+					if ($data instanceof stdClass) {
+						$entity->initialize($data);
+					}
 
 					return $entity;
 				}
@@ -60,7 +56,42 @@
 				throw new Exception(I18n::translate('ENTITY_DOESNT_EXISTS', array($entity)));
 			}
 		}
-		
+
+		/**
+		 * @see \System\Entity\EntityInterface::initialize()
+		 */
+		final public function initialize($data = null) {
+			if (empty($data)) {
+				throw new Exception('NOT FOUND');
+			}
+
+			if ($data instanceof stdClass) {
+				foreach ($data as $name=>$value) {
+					if (!property_exists($this, $name)) {
+						$found = false;
+
+						foreach ($this->getFields() as $field) {
+							if ($field->getDatabaseFieldName() == $name) {
+								$found = true;
+
+								$name = $field->getPropertyName();
+								break;
+							}
+						}
+
+						if (!$found) {
+							throw new Exception(I18n::translate('UNKNOWN_ENTITY_FIELD', array($name, __CLASS__)));
+						}
+					}
+
+					$this->{$name} = $value;
+				}
+			}
+
+			$this->initialized = true;
+			$this->checksum = $this->generateChecksum();
+		}
+
 		/**
 		 * If object is initialized and modified, updates it
 		 */
@@ -69,39 +100,7 @@
 				$this->update();
 			}
 		}
-		
-		/**
-		 * @see \System\Entity\EntityInterface::initialize()
-		 */
-		final public function initialize(stdClass $data = null) {
-			if ($this->initialized) {
-				return;
-			}
 
-			$this->identifiers = new Identifiers();
-
-			if ($data instanceof stdClass) {
-				foreach ($data as $name=>$value) {
-					if (!in_array($name, $this->keys)) {
-						if (!property_exists($this, $name)) {
-							throw new Exception(I18n::translate('UNKNOWN_ENTITY_FIELD', array($name, __CLASS__)));
-						}
-
-						$this->{$name} = $value;
-					} else {
-						$this->identifiers->{$name} = $value;
-
-						if (property_exists($this, $name)) {
-							$this->{$name} = $value;
-						}
-					}
-				}
-			}
-
-			$this->initialized = true;
-			$this->checksum = $this->generateChecksum();
-		}
-		
 		/**
 		 * Generates checksum of Entity data
 		 * 
@@ -122,6 +121,42 @@
 			}
 			
 			return sha1($string);
+		}
+
+		/**
+		 * Return database property fields
+		 *
+		 * @return \System\Entity\Field[]
+		 */
+		final protected function getFields() {
+			if (empty($this->fields)) {
+				$reflection = new \ReflectionClass($this);
+
+				foreach ($reflection->getProperties() as $property) {
+					if ($property->isPublic()) {
+						$this->fields[] = new Field($property);
+					}
+				}
+			}
+
+			return $this->fields;
+		}
+
+		/**
+		 * Return database unique fields
+		 *
+		 * @return \System\Entity\Field[]
+		 */
+		final protected function getUniqueFields() {
+			$unique = array();
+
+			foreach ($this->getFields() as $field) {
+				if ($field->isUnique()) {
+					$unique[] = $field;
+				}
+			}
+
+			return $unique;
 		}
 	}
 ?>

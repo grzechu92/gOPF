@@ -2,6 +2,7 @@
 	"LOADER_UNABLE": "Nie odnaleziono klasy $1",
 
 	"DATABASE_ERROR": "Podczas łączenia się z bazą danych $1",
+    "WRONG_DATABASE_ENGINE": "Wybrano nieodpowiedni silnik bazy danych",
 	
 	"CONFIG_NOT_FOUND": "Nie odnaleziono wymaganego pliku konfiguracyjnego $1",
 	"CONFIG_EDIT": "Próba edycji pliku konfiguracyjnego zabezpieczonego przed zapisem",
@@ -38,10 +39,10 @@
 	"AN_ERROR_OCCURED": "WYSTĄPIŁ BŁĄD",
 	"WHILE_EXECUTING": "Podczas wykonywania:",
 	
-	"UNKNOWN_ENTITY_FIELD": "Pole $1 encji $2 nie istnieje",
-	"ENTITY_DOESNT_EXISTS": "Encja $1 nie istnieje",
-	"ENTITY_PARAMETERS": "Parametry encji nie mogą być puste",
-	
 	"ROUTE_NOT_VALIDABLE": "Klasa $1 nie implementuje interfejsu ValidateInterface",
-	"ROUTE_I18N_NOT_FOUND": "Nie odnaleziono zinternacjonalizowanej trasy dla klucza: $1"
+	"ROUTE_I18N_NOT_FOUND": "Nie odnaleziono zinternacjonalizowanej trasy dla klucza: $1",
+
+    "DATABASE_TABLE_IS_NOT_SET": "Tabela nie została ustalona",
+    "UNKNOWN_ENTITY_TYPE": "Nieznany typ $2 na polu $1 encji",
+    "ENTITY_UNIQUE_FIELD_EMPTY": "Pole $1 identyfikujące encję nie może być puste"
 }

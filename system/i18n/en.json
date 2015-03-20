@@ -2,6 +2,7 @@
 	"LOADER_UNABLE": "Unable to find class $1",
 
 	"DATABASE_ERROR": "While connecting to database $1",
+    "WRONG_DATABASE_ENGINE": "Wrong database engine selected",
 	
 	"CONFIG_NOT_FOUND": "Requested config file $1 has been not found",
 	"CONFIG_EDIT": "Trying to edit config file without permission",
@@ -38,10 +39,10 @@
 	"AN_ERROR_OCCURED": "AN ERROR OCCURED",
 	"WHILE_EXECUTING": "While executing:",
 	
-	"UNKNOWN_ENTITY_FIELD": "Field $1 of entity $2 does not exists",
-	"ENTITY_DOESNT_EXISTS": "Entity $1 does not exists",
-	"ENTITY_PARAMETERS": "Entity parameters cannot be empty",
-	
 	"ROUTE_NOT_VALIDABLE": "Class $1 does not implements ValidateInterface interface",
-	"ROUTE_I18N_NOT_FOUND": "Internationalized route not found for key: $1"
+	"ROUTE_I18N_NOT_FOUND": "Internationalized route not found for key: $1",
+
+    "DATABASE_TABLE_IS_NOT_SET": "Database table is not set",
+    "UNKNOWN_ENTITY_TYPE": "Unknown type $2 of field $1 in entity",
+    "ENTITY_UNIQUE_FIELD_EMPTY": "Field $1 is entity identifier and cannot be empty"
 }
