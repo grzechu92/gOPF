@@ -193,7 +193,8 @@
 				$answer = Storage::get(self::ANSWER_CONTAINER_NAME);
 
 				if (!empty($answer)) {
-					Storage::delete(self::ANSWER_CONTAINER_NAME);
+                    Storage::delete(self::ANSWER_CONTAINER_NAME);
+                    Storage::write();
 
 					$status = $session->pull();
 					$status->processing = true;
