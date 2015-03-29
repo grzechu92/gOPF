@@ -100,7 +100,7 @@
 				$this->load();
 			}
 			
-			$string = isset($this->strings[$index]) ? $this->strings[$index] : '???';
+			$string = isset($this->strings[$index]) ? $this->strings[$index] : '??? '.$index.' ???';
 			
 			if (count($vars) > 0) {
 				foreach ($vars as $id=>$var) {
