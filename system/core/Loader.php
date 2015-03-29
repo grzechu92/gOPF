@@ -60,7 +60,7 @@
 			$reserved = array();
 
 			$reserved[] = new NS('Controllers', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'controllers');
-			$reserved[] = new NS('Models', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'models');
+			$reserved[] = new NS('Repositories', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'repositories');
 			$reserved[] = new NS('Application', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'classes');
 			$reserved[] = new NS('Entities', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'entities');
 			$reserved[] = new NS('Commands', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'commands');

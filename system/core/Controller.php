@@ -15,7 +15,7 @@
 		 * @gOPF-Access guest
 		 * @gOPF-State dynamic
 		 */
-		public function mainAction() {}
+		public function main() {}
 		
 		/**
 		 * Returns object of requested controller
@@ -23,7 +23,7 @@
 		 * @param string $name Controller name
 		 * @return \System\Controller Requested controller object
 		 */
-		public static function factory($name) {
+		final public static function factory($name) {
 			return Core::instance()->context->getController($name);
 		}
 
@@ -32,7 +32,7 @@
 		 *
 		 * @return \System\Dispatcher\ContextInterface
 		 */
-		protected static function context() {
+		final protected static function context() {
 			return Core::instance()->context;
 		}
 	}

@@ -76,6 +76,10 @@
 			foreach (array('i18n', 'language', 'context', 'controller', 'action') as $variable) {
 				Request::$$variable = (isset($route->values->{$variable})) ? $route->values->{$variable} : null;
 				unset($route->values->{$variable});
+
+                if ($variable == 'controller') {
+                    Request::$$variable = ucfirst(Request::$$variable);
+                }
 			}
 
 			Request::$parameters = new \System\ArrayContainer((array) $route->values);

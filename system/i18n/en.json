@@ -12,8 +12,8 @@
 	"STATIC_CONTROLLER": "Called controller $1 is static",
 	"CONTROLLER_NOT_FOUND": "Requested controller $1 has been not found",
 	"ACTION_NOT_FOUND": "Requested action $1 has been not found",
-	"MODEL_NOT_FOUND": "Requested model $1 has been not found",
-	"MODEL_METHOD_NOT_EXISTS": "Method $2 has been not found in model $1",
+	"REPOSITORY_NOT_FOUND": "Requested repository $1 has been not found",
+	"REPOSITORY_METHOD_NOT_EXISTS": "Method $2 has been not found in repository $1",
 	"ACCESS_DENIED": "Access denied",
 	
 	"FILESYSTEM_UNABLE_OPEN": "Unable to open file $1",

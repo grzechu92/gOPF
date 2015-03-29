@@ -15,10 +15,10 @@
 	 */
 	abstract class Context {
 		/**
-		 * Models namespace
+		 * Repositories namespace
 		 * @var string
 		 */
-		const MODELS_NAMESPACE = '\\Models\\';
+		const REPOSITORIES_NAMESPACE = '\\Repositories\\';
 
 		/**
 		 * Controllers namespace
@@ -33,10 +33,10 @@
 		private $controllers = array();
 		
 		/**
-		 * Array of loaded models
-		 * @var \System\Model[]
+		 * Array of loaded repositories
+		 * @var \System\Repository[]
 		 */
-		private $models = array();
+		private $repositories = array();
 
 		/**
 		 * Array of reflections
@@ -48,8 +48,6 @@
 		 * @see \System\Dispatcher\ContextInterface::getController()
 		 */
 		final public function getController($name) {
-			$name .= 'Controller';
-
 			if (!isset($this->controllers[$name])) {
 				$this->loadController($name);
 			}
@@ -58,24 +56,22 @@
 		}
 
 		/**
-		 * @see \System\Dispatcher\ContextInterface::getModel()
+		 * @see \System\Dispatcher\ContextInterface::getRepository()
 		 */
-		final public function getModel($name) {
-			$name .= 'Model';
-
-			if (!isset($this->models[$name])) {
-				$this->loadModel($name);
+		final public function getRepository($name) {
+			if (!isset($this->repositories[$name])) {
+				$this->loadRepository($name);
 			}
 
-			return $this->models[$name];
+			return $this->repositories[$name];
 		}
 
 		/**
 		 * @see \System\Dispatcher\ContextInterface::isAccessible()
 		 */
 		final public function isAccessible($controller, $action) {
-			$reflection = $this->getReflection(self::CONTROLLERS_NAMESPACE.$controller.'Controller');
-			$annotation = new Annotation($reflection->getMethod($action.'Action')->getDocComment());
+			$reflection = $this->getReflection(self::CONTROLLERS_NAMESPACE.$controller);
+			$annotation = new Annotation($reflection->getMethod($action)->getDocComment());
 
 			$acl = $annotation->get(Annotation::ACL);
 
@@ -100,9 +96,7 @@
 		 * @see \System\Dispatcher\ContextInterface::callAction()
 		 */
 		final public function callAction($controller, $action) {
-			$action .= 'Action';
-
-			$reflection = $this->getReflection(self::CONTROLLERS_NAMESPACE.$controller.'Controller');
+			$reflection = $this->getReflection(self::CONTROLLERS_NAMESPACE.$controller);
 			$params = array();
 
 			if (!$reflection->hasMethod($action)) {
@@ -161,17 +155,17 @@
 		}
 
 		/**
-		 * Loads requested model into registry
+		 * Loads requested repository into registry
 		 *
-		 * @param string $name Model name
+		 * @param string $name Repository name
 		 * @throws \System\Dispatcher\Exception
 		 */
-		final private function loadModel($name) {
+		final private function loadRepository($name) {
 			try {
-				$class = self::MODELS_NAMESPACE.$name;
-				$this->models[$name] = new $class();
+				$class = self::REPOSITORIES_NAMESPACE.$name;
+				$this->repositories[$name] = new $class();
 			} catch (LoaderException $e) {
-				throw new Exception(I18n::translate('MODEL_NOT_FOUND', array($name)), 404);
+				throw new Exception(I18n::translate('REPOSITORY_NOT_FOUND', array($name)), 404);
 			}
 		}
 

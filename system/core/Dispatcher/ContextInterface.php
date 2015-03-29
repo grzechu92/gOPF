@@ -18,12 +18,12 @@
 		public function getController($name);
 		
 		/**
-		 * Returns model instance
+		 * Returns repository instance
 		 * 
-		 * @param string $name Model name
-		 * @return \System\Model Requested model
+		 * @param string $name Repository name
+		 * @return \System\Repository Requested repository
 		 */
-		public function getModel($name);
+		public function getRepository($name);
 
 		/**
 		 * Check if controller and action is accessible to current user
