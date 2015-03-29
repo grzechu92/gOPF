@@ -1,6 +1,7 @@
 <?php
 	namespace System\Dispatcher;
 	use \System\Request;
+    use \System\I18n;
 	
 	/**
 	 * Page request processing context
@@ -18,6 +19,11 @@
 			$view->setFrame(__APPLICATION_PATH.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'default.php');
 
 			$this->isAccessible(Request::$controller, Request::$action);
+
+            if ($this->isRestAware(Request::$controller, Request::$action)) {
+                throw new Exception(I18n::translate('CONTEXT_MISMATCH'), 500);
+            }
+
 			$this->callAction(Request::$controller, Request::$action);
 
 			$view->render();

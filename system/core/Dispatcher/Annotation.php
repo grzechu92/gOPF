@@ -21,6 +21,12 @@
 		 */
 		const STATE = 'gOPF-State';
 
+        /**
+         * Annotation for defining REST aware method in controller
+         * @var string
+         */
+        const REST = 'gOPF-REST';
+
 		/**
 		 * Parsed values
 		 * @var array

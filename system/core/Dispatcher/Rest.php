@@ -1,6 +1,7 @@
 <?php
 	namespace System\Dispatcher;
-	use System\Request;
+	use \System\Request;
+    use \System\I18n;
 	
 	/**
 	 * REST request processing context
@@ -14,8 +15,13 @@
 		 * @see \System\Dispatcher\ContextInterface::process()
 		 */
 		public function process() {
-			$this->isAccessible(Request::$controller, Request::$action.'Rest');
-			$data = $this->callAction(Request::$controller, Request::$action.'Rest');
+			$this->isAccessible(Request::$controller, Request::$action);
+
+            if (!$this->isRestAware(Request::$controller, Request::$action)) {
+                throw new Exception(I18n::translate('CONTEXT_MISMATCH'), 500);
+            }
+
+			$data = $this->callAction(Request::$controller, Request::$action);
 
 			$this->toJSON($data);
 		}

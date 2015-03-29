@@ -15,6 +15,7 @@
 	"REPOSITORY_NOT_FOUND": "Żądany repository $1 nie został odnaleziony",
 	"REPOSITORY_METHOD_NOT_EXISTS": "Metoda $2 nie została odnaleziona w repository $1",
 	"ACCESS_DENIED": "Odmowa dostępu",
+    "CONTEXT_MISMATCH": "Błąd podczas przetwarzania akcji w wybranym kontekście",
 
 	"FILESYSTEM_UNABLE_OPEN": "Nie można było otworzyć pliku $1",
 	"FILESYSTEM_UNABLE_CLOSE": "Nie można było zamknąć pliku $1",

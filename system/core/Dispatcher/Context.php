@@ -70,9 +70,7 @@
 		 * @see \System\Dispatcher\ContextInterface::isAccessible()
 		 */
 		final public function isAccessible($controller, $action) {
-			$reflection = $this->getReflection(self::CONTROLLERS_NAMESPACE.$controller);
-			$annotation = new Annotation($reflection->getMethod($action)->getDocComment());
-
+            $annotation = $this->getAnnotation($controller, $action);
 			$acl = $annotation->get(Annotation::ACL);
 
 			if ($annotation->get(Annotation::STATE == 'static')) {
@@ -91,6 +89,13 @@
 				throw new Exception(I18n::translate('ACCESS_DENIED'), 401);
 			}
 		}
+
+        /**
+         * @see \System\Dispatcher\ContextInterface::isRestAware()
+         */
+        final public function isRestAware($controller, $action) {
+            return $this->getAnnotation($controller, $action)->get(Annotation::REST);
+        }
 		
 		/**
 		 * @see \System\Dispatcher\ContextInterface::callAction()
@@ -139,6 +144,19 @@
 		final protected function toJSON($data) {
 			echo json_encode($data);
 		}
+
+        /**
+         * Returns annotations from method in controller
+         *
+         * @param string $controller Controller name
+         * @param string $action Action name
+         * @return \System\Dispatcher\Annotation
+         */
+        final protected function getAnnotation($controller, $action) {
+            $reflection = $this->getReflection(self::CONTROLLERS_NAMESPACE.$controller);
+
+            return new Annotation($reflection->getMethod($action)->getDocComment());
+        }
 
 		/**
 		 * Return reflection instance

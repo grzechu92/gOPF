@@ -34,6 +34,15 @@
 		 */
 		public function isAccessible($controller, $action);
 
+        /**
+         * Check if action is REST aware
+         *
+         * @param string $controller Controller name
+         * @param string $action Action name in controller
+         * @return bool Is REST aware
+         */
+        public function isRestAware($controller, $action);
+
 		/**
 		 * Call action with parameter binding
 		 *

@@ -15,6 +15,7 @@
 	"REPOSITORY_NOT_FOUND": "Requested repository $1 has been not found",
 	"REPOSITORY_METHOD_NOT_EXISTS": "Method $2 has been not found in repository $1",
 	"ACCESS_DENIED": "Access denied",
+    "CONTEXT_MISMATCH": "Error while processing action in selected context",
 	
 	"FILESYSTEM_UNABLE_OPEN": "Unable to open file $1",
 	"FILESYSTEM_UNABLE_CLOSE": "Unable to close file $1",
