@@ -2,15 +2,22 @@
 	namespace System\Terminal;
 	use \System\Config;
 	use \System\Storage;
-	
-	/**
+    use \System\Terminal;
+
+    /**
 	 * Base terminal command object
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class Command {
+	abstract class Command implements \System\Terminal\CommandInterface {
+        /**
+         * Default command namespace
+         * @var string
+         */
+        const DEFAULT_NAMESPACE = '\\System\\Terminal\\Command\\';
+
 		/**
 		 * Storage key for terminal asking service
 		 * @var string
@@ -21,112 +28,66 @@
 		 * Terminal instance
 		 * @var \System\Terminal
 		 */
-		public static $terminal;
+		private static $terminal;
 		
 		/**
 		 * Terminal session instance
 		 * @var \System\Terminal\Session
 		 */
-		public static $session;
-		
-		/**
-		 * Raw command
-		 * @var string
-		 */
-		public $command;
-		
-		/**
-		 * Parsed command name
-		 * @var string
-		 */
-		public $name;
-		
-		/**
-		 * Parsed command value
-		 * @var string
-		 */
-		public $value;
-		
-		/**
-		 * Parsed command parameters
-		 * @var array
-		 */
-		public $parameters = array();
-		
-		/**
-		 * Creates Command object from parsed data, and returns it
-		 * 
-		 * @param \System\Terminal\Command $parsed Parsed command data
-		 * @return \System\Terminal\CommandInterface Command ready to execute
-		 * @throws \System\Terminal\Exception
-		 */
-		public static function factory(Command $parsed) {
+		private static $session;
+
+        /**
+         * Command data
+         * @var \System\Terminal\Data
+         */
+        private $data;
+
+        /**
+         * @see \System\Terminal\CommandInterface::initialize()
+         */
+        final public function initialize(Data $data) {
+            $this->data = $data;
+        }
+
+        /**
+         * Create command instance from command string
+         *
+         * @param string $raw Command string
+         * @param \System\Terminal $terminal Terminal instance
+         * @return \System\Terminal\CommandInterface
+         * @throws \System\Terminal\Exception
+         */
+		final public static function factory($raw, Terminal $terminal = null) {
+            if ($terminal instanceof Terminal) {
+                self::$terminal = $terminal;
+                self::$session = $terminal->getSession();
+            }
+
 			$config = Config::factory('terminal.ini', Config::APPLICATION);
 			$commands = $config->get('commands');
-			
-			if ($parsed->name[0] != '\\') {
-				if (array_key_exists($parsed->name, $commands)) {
-					$class = $commands[$parsed->name];
+
+            $data = new Data($raw);
+            $command = $data->getCommand();
+
+			if ($command[0] != '\\') {
+				if (array_key_exists($command, $commands)) {
+					$class = $commands[$command];
 				} else {
-					$class = '\\System\\Terminal\\Command\\'.$parsed->name.'Command';
+					$class = self::DEFAULT_NAMESPACE.ucfirst($command);
 				}
 			} else {
-				$class = $parsed->name;
+				$class = $command;
 			}
 			
-			$command = new $class();
+			$instance = new $class();
 			
-			if ($command instanceof CommandInterface && $command instanceof Command) {
-				$command->command = $parsed->command;
-				$command->name = $parsed->name;
-				$command->value = $parsed->value;
-				$command->parameters = $parsed->parameters;
-				
-				return $command;
+			if ($instance instanceof CommandInterface && $instance instanceof self) {
+                $instance->initialize($data);
+
+				return $instance;
 			} else {
-				throw new Exception();
+				throw new Exception('IS NOT A VALID COMMAND');
 			}
-		}
-		
-		/**
-		 * Parses command string and returns Command object filled with parsed data
-		 * 
-		 * @param string $command Raw command
-		 * @return \System\Terminal\Command Parsed command data
-		 */
-		public static function parse($command) {
-			$parsed = new Command();
-			
-			$parsed->command = $command;
-			$sections = explode(' -', $command);
-			$base = explode(' ', $sections[0]);
-			
-			if (count($base) == 1) {
-				$parsed->name = $base[0];
-			} else {
-				list($parsed->name, $parsed->value) = $base;
-			}
-			
-			if (count($sections) > 1) {
-				$first = true;
-				
-				foreach ($sections as $section) {
-					if ($first) {
-						$first = false;
-						continue;
-					}
-					
-					$parameter = explode(' ', $section, 2);
-					
-					if (count($parameter) == 1) {
-						$parsed->parameters[$parameter[0]] = null;
-					} else {
-						$parsed->parameters[$parameter[0]] = $parameter[1];
-					}
-				}
-			}
-			
-			return $parsed;
 		}
 		
 		/**
@@ -139,36 +100,38 @@
 		 */
 		public function onUninstall() {}
 
-		/**
-		 * @see \System\Terminal\CommandInterface::getName();
-		 */
-		public function getName() {
-			$clean = str_replace(\System\Terminal::COMMAND_SUFFIX, '', get_called_class());
-			$exploded = explode('\\', $clean);
+        /**
+         * @see \System\Terminal\CommandInterface::getName()
+         */
+		final public function getName() {
+			$exploded = explode('\\', get_called_class());
 
-			return $exploded[count($exploded) - 1];
+			return strtolower($exploded[count($exploded) - 1]);
 		}
-		
-		/**
-		 * Checks if parameter has been passed with command
-		 * If is passed, but empty, returns true
-		 * If is passed and has value, returns value
-		 * If isn't passed, returns false
-		 * 
-		 * @param string $name Parameter name 
-		 * @return mixed Parameter data
-		 */
-		protected function getParameter($name) {
-			if (array_key_exists($name, $this->parameters)) {
-				if (empty($this->parameters[$name])) {
+
+        /**
+         * @see \System\Terminal\CommandInterface::getParameter()
+         */
+		final public function getParameter($name) {
+			if (isset($this->data->getParameters()[$name])) {
+                $parameter = $this->data->getParameters()[$name];
+
+				if (empty($parameter->getValue())) {
 					return true;
 				} else {
-					return $this->parameters[$name];
+					return $parameter->getValue();
 				}
 			} else {
 				return false;
 			}
 		}
+
+        /**
+         * @see \System\Terminal\CommandInterface::getValue()
+         */
+        final public function getValue() {
+            return $this->data->getValue();
+        }
 
 		/**
 		 * Ask client with a question and receive his answer
@@ -177,8 +140,8 @@
 		 * @param array $answers Possible answers
 		 * @return string Client answer
 		 */
-		protected function ask($question, array $answers = array()) {
-			$session = self::$session;
+		final protected function ask($question, array $answers = array()) {
+			$session = $this->getSession();
 
 			$status = $session->pull();
 			$status->prompt = $question.' '.(!empty($answers) ? '['.implode('/', $answers).'] ' : '');
@@ -210,5 +173,32 @@
 				usleep(100000);
 			}
 		}
+
+        /**
+         * Return terminal instance
+         *
+         * @return \System\Terminal
+         */
+        final protected function getTerminal() {
+            return self::$terminal;
+        }
+
+        /**
+         * Return terminal session instance
+         *
+         * @return \System\Terminal\Session
+         */
+        final protected function getSession() {
+            return self::$session;
+        }
+
+        /**
+         * Buffer some content to terminal output
+         *
+         * @param string $content Content to print
+         */
+        final protected function buffer($content) {
+            $this->getSession()->buffer($content);
+        }
 	}
 ?>

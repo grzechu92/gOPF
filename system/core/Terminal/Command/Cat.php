@@ -9,7 +9,7 @@
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class catCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+	class Cat extends \System\Terminal\Command {
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
@@ -24,9 +24,9 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = self::$session;
+			$session = $this->getSession();
 			
-			$path = $this->buildPath($this->value, $session);
+			$path = $this->buildPath($this->getValue(), $session);
 			
 			if (!$this->checkFile($path)) {
 				$session->buffer('Requested file doesn\'t exists!');

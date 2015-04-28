@@ -1,33 +1,29 @@
-<?php
+<?php 
 	namespace System\Terminal\Command;
+	use \System\Terminal\Help;
 	
 	/**
-	 * Terminal command: buffer (fills terminal buffer until command processing is aborted)
+	 * Terminal command: test (print test command parameters)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class bufferCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+	class Test extends \System\Terminal\Command {
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
 		public function help() {
-			return new \System\Terminal\Help('Does nothing special, just fills buffer with random content');
+			$help = new Help(Help::INTERNAL);
+		
+			return $help;
 		}
 		
 		/**
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = self::$session;
-			$status = $session->pull();
-			
-			while (!$status->abort) {
-				$session->buffer(sha1(rand()));
-				usleep(100000);
-				$status = $session->pull();
-			}
+			$this->buffer(print_r($this, true));
 		}
 	}
 ?>

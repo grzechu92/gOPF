@@ -10,14 +10,14 @@
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class cdCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+	class Cd extends \System\Terminal\Command {
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
 		public function help() {
 			$help = new \System\Terminal\Help('Change directory');
 			$help->add(new \System\Terminal\Help\Line('cd [path]', 'change directory to pointed path'));
-				
+
 			return $help;
 		}
 		
@@ -25,18 +25,17 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = self::$session;
-			
-			if (empty($this->value)) {
-				$session->buffer(__ROOT_PATH.$session->path);
-				return;
-			}
-			
-			$status = $session->pull();
-			
-			if ($this->value == '..') {
+			$session = $this->getSession();
+            $status = $session->pull();
+
+            if (empty($this->getValue())) {
+                $this->buffer(__ROOT_PATH.$status->path);
+                return;
+            }
+
+            if ($this->getValue() == '..') {
 				$status = $this->moveUp($status);
-			} elseif ($this->value[0] == '/') {
+			} elseif ($this->getValue()[0] == '/') {
 				$status = $this->absoluteMoveTo($status);
 			} else {
 				$status = $this->relativeMoveTo($status);				
@@ -53,7 +52,7 @@
 		 * @return \System\Terminal\Status Updated terminal status
 		 */
 		private function relativeMoveTo(Status $status) {
-			$path = $status->path . $this->value;
+			$path = $status->path . $this->getValue();
 			
 			if ($this->checkDirectory($path)) {
 				$status->path = $this->buildPath($path);
@@ -72,8 +71,8 @@
 		 * @return \System\Terminal\Status Updated terminal status
 		 */
 		private function absoluteMoveTo(Status $status) {
-			if ($this->checkDirectory($this->value)) {
-				$status->path = $this->buildPath($this->value);
+			if ($this->checkDirectory($this->getValue())) {
+				$status->path = $this->buildPath($this->getValue());
 
 				return $status;
 			} else {

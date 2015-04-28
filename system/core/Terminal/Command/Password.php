@@ -12,7 +12,7 @@
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class passwordCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+	class Password extends \System\Terminal\Command {
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
@@ -34,7 +34,7 @@
 		public function execute() {
 			$initialized = false;
 			
-			$session = self::$session;
+			$session = $this->getSession();
 			$status = $session->pull();
 			
 			if (!isset($status->storage['user'])) {

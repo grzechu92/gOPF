@@ -5,8 +5,9 @@
 	use \gOPF\gPAE;
 	use \System\Filesystem;
 	use \System\Terminal\Command;
-	use \System\Terminal\Parser;
+	use \System\Terminal\Renderer;
 	use \System\Terminal\Status;
+    use \System\Terminal\Session;
 
 	/**
 	 * Terminal main initialization and router object
@@ -15,30 +16,18 @@
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class Terminal {
-		/**
-		 * Terminal command suffix
-		 * @var string
-		 */
-		const COMMAND_SUFFIX = 'Command';
-
-		/**
-		 * Terminal instance handler
-		 * @var \System\Terminal
-		 */
-		public static $instance;
-
+	class Terminal extends Singleton {
 		/**
 		 * Terminal session handler
 		 * @var \System\Terminal\Session
 		 */
-		public static $session;
+		private $session;
 
 		/**
-		 * Terminal output parser
-		 * @var \System\Terminal\Parser
+		 * Terminal output renderer
+		 * @var \System\Terminal\Renderer
 		 */
-		private $parser;
+		private $renderer;
 
 		/**
 		 * gPAE push engine handler
@@ -51,14 +40,9 @@
 		 *
 		 * @return \gOPF\gPAE\Response gPAE result
 		 */
-		public function connection() {
-			self::$instance = $this;
-			self::$session = new \System\Terminal\Session();
-
-			Command::$terminal = self::$instance;
-			Command::$session = self::$session;
-
-			$this->parser = new Parser();
+		public function handler() {
+			$this->session = new Session();
+			$this->renderer = new Renderer();
 
 			$this->engine = new gPAE();
 			$this->registerEvents();
@@ -66,12 +50,21 @@
 			return $this->engine->run();
 		}
 
+        /**
+         * Return Terminal session object
+         *
+         * @return \System\Terminal\Session
+         */
+        public function getSession() {
+            return $this->session;
+        }
+
 		/**
 		 * Registers terminal events
 		 */
 		private function registerEvents() {
 			$this->engine->events->client->on('initialize', function(Client $client) {
-				$session = Terminal::$session;
+				$session = $this->getSession();
 				$status = $session->pull();
 
 				if ($status->initialized) {
@@ -89,12 +82,12 @@
 			});
 
 			$this->engine->events->server->on('stream', function(Client $client) {
-				$session = Terminal::$session;
+                $session = $this->getSession();
 				$status = $session->pull();
 
 				if ($status->updated != $client->container->session) {
 					$value = clone($status);
-					$value->buffer = $this->parser->parse($value->buffer);
+					$value->buffer = $this->renderer->render($value->buffer);
 
 					$status->buffer = '';
 					$status->command = '';
@@ -116,14 +109,14 @@
 			});
 
 			$this->engine->events->client->on('reset', function(Client $client) {
-				$session = Terminal::$session;
+                $session = $this->getSession();
 				$session->push(new Status());
 
 				$this->execute('login -initialize');
 			});
 
 			$this->engine->events->client->on('abort', function(Client $client) {
-				$session = Terminal::$session;
+                $session = $this->getSession();
 				$status = $session->pull();
 
 				if ($status->processing) {
@@ -134,7 +127,7 @@
 			});
 
 			$this->engine->events->client->on('debug', function(Client $client) {
-				$session = Terminal::$session;
+                $session = $this->getSession();
 
 				$session->buffer(print_r($session->pull(), true));
 			});
@@ -142,7 +135,7 @@
 			$this->engine->events->client->on('upload', function(Client $client) {
 				sleep(1);
 
-				$session = Terminal::$session;
+                $session = $this->getSession();
 				$status = $session->pull();
 
 				if ($status->logged) {
@@ -168,7 +161,7 @@
 			});
 
 			$this->engine->events->client->on('complete', function(Client $client) {
-				$session = Terminal::$session;
+                $session = $this->getSession();
 				$status = $session->pull();
 
 				if (!$status->logged) {
@@ -238,38 +231,41 @@
 		/**
 		 * Executes command request
 		 *
-		 * @param string $command Command content
+		 * @param string $name Command content
 		 * @param bool $history If command has secret data, don't save it to history
 		 * @param bool $silent If silent, data won't be send to client
 		 */
-		private function execute($command, $history = false, $silent = false) {
-			$session = Terminal::$session;
+		private function execute($name, $history = false, $silent = false) {
+            $session = $this->getSession();
 			$status = $session->pull();
-
-			$parsed = Command::parse($command);
 
 			$status->processing = true;
 			$session->push($status);
 
-			if (!$status->logged && $parsed->name != 'login') {
-				$this->execute('login -initialize');
-				return;
-			}
+//			if (!$status->logged && $commandName != 'login -initialize') {
+//				$this->execute('login -initialize');
+//				return;
+//			}
 
 			try {
-				if ($status->logged && $history && empty($status->prefix)) {
-					$session->history($command);
-				}
+				$command = Command::factory($name, $this);
 
-				$command = Command::factory($parsed);
+                if (!$status->logged && $command->getName() != 'login') {
+                    $this->execute('login -initialize');
+                    return;
+                }
 
-				if (array_key_exists('help', $parsed->parameters)) {
+                if ($status->logged && $history && empty($status->prefix)) {
+                    $session->history($name);
+                }
+
+				if ($command->getParameter('help')) {
 					$session->buffer($command->help()->build());
 				} else {
 					$command->execute();
 				}
 			} catch (\System\Loader\Exception $e) {
-				$session->buffer('Unknown command: '.$parsed->name);
+				$session->buffer('Unknown command: '.$commandName);
 			} catch (\System\Terminal\Exception $e) {
 				$session->buffer($e->getMessage());
 			} catch (\System\Core\Exception $e) {

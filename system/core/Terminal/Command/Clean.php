@@ -8,7 +8,7 @@
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class cleanCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+	class Clean extends \System\Terminal\Command {
 		/**
 		 * Array with ignored filenames
 		 * @var array
@@ -39,12 +39,10 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = self::$session;
-
 			$force = $this->getParameter('force');
 			
 			foreach ($this->directories as $directory) {
-				$session->buffer('Cleaning directory '.$directory);
+				$this->buffer('Cleaning directory '.$directory);
 				
 				foreach (new \RecursiveDirectoryIterator(__ROOT_PATH . $directory) as $file) {
 					/** @var $file \RecursiveDirectoryIterator */
@@ -54,7 +52,7 @@
 
 					if ($force || $this->ask('Remove '.$file.'?', ['y', 'n']) == 'y') {
 						\System\Filesystem::remove($file, $file->isDir());
-						$session->buffer(' - '.$file);
+						$this->buffer(' - '.$file);
 					}
 				}
 

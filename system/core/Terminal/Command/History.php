@@ -1,20 +1,21 @@
 <?php
 	namespace System\Terminal\Command;
-
+	use \System\Terminal;
+	
 	/**
-	 * Terminal command: logout (loggs out current user)
+	 * Terminal command: history (shows terminal commands history)
 	 *
 	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class logoutCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+	class History extends \System\Terminal\Command {
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
 		public function help() {
-			$help = new \System\Terminal\Help('It\'s easy, just read again left column');
-		
+			$help = new \System\Terminal\Help('Commands history');
+			
 			return $help;
 		}
 		
@@ -22,13 +23,15 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$status = new \System\Terminal\Status();
-			$status->clear = true;
-			$status->buffer('Bye!');
-			$status->prompt = '';
-			$status->update();
-			
-			self::$session->push($status);
+			$session = $this->getSession();
+			$status = $session->pull();
+
+			$history = array();
+			foreach ($status->history as $command) {
+				$history[] = $command;
+			}
+				
+			$session->buffer(implode("\n", $history));
 		}
 	}
 ?>

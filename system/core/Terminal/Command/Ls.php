@@ -8,7 +8,7 @@
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class lsCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+	class Ls extends \System\Terminal\Command {
 		/**
 		 * @see \System\Terminal\CommandInterface::help()
 		 */
@@ -28,17 +28,19 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = self::$session;
+			$session = $this->getSession();
+            $status = $session->pull();
 			$buffer = '';
-			
-			foreach ($this->getElements($session->path) as $element) {
+
+            /** @var \SplFileObject $element */
+            foreach ($this->getElements($status->path) as $element) {
 				$name = ($element->isDir()) ? '<strong>'.$element->getFilename().'</strong>' : $element->getFilename();
 				$size = ($element->isDir()) ? '' : convertBytes($element->getSize());
 				
 				$buffer .= str_pad($name, $this->length+10, ' ', STR_PAD_RIGHT).$size."\n";
 			}
 			
-			$session->buffer($buffer);
+			$this->buffer($buffer);
 		}
 		
 		/**

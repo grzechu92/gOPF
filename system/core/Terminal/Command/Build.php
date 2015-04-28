@@ -12,7 +12,7 @@
 	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
 	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
 	 */
-	class buildCommand extends \System\Terminal\Command implements \System\Terminal\CommandInterface {
+	class Build extends \System\Terminal\Command {
 		/**
 		 * Array with ignored filenames
 		 * @var array
@@ -46,7 +46,7 @@
 		 * @see \System\Terminal\CommandInterface::execute()
 		 */
 		public function execute() {
-			$session = self::$session;
+			$session = $this->getSession();
 			
 			$this->output = $this->getParameter('output');
 			$build = date('ymdhis');
