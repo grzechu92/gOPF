@@ -1,169 +1,197 @@
 <?php
-	namespace gOPF\gODI\Statement;
-	use \gOPF\gODI\Statement;
 
-	/**
-	 * Condition statement
-	 *
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	class Condition {
-		/**
-		 * Statement prefix (AND, OR)
-		 * @var string
-		 */
-		private $prefix;
+namespace gOPF\gODI\Statement;
 
-		/**
-		 * Field name
-		 * @var string
-		 */
-		private $field;
+use gOPF\gODI\Statement;
 
-		/**
-		 * Compare operator
-		 * @var string
-		 */
-		private $operator;
+/**
+ * Condition statement.
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+class Condition
+{
+    /**
+     * Statement prefix (AND, OR).
+     *
+     * @var string
+     */
+    private $prefix;
 
-		/**
-		 * Bind value object
-		 * @var \gOPF\gODI\Statement\Bind
-		 */
-		private $bind;
+    /**
+     * Field name.
+     *
+     * @var string
+     */
+    private $field;
 
-		/**
-		 * Parent statement object
-		 * @var \gOPF\gODI\Statement
-		 */
-		private $statement;
+    /**
+     * Compare operator.
+     *
+     * @var string
+     */
+    private $operator;
 
-		/**
-		 * Initiates compare statement
-		 *
-		 * @param \gOPF\gODI\Statement $statement Parent statement
-		 * @param string $field Field name
-		 * @param string $prefix Statement prefix (AND, OR)
-		 */
-		public function __construct(Statement $statement, $field, $prefix = null) {
-			$this->statement = $statement;
-			$this->field = $field;
-			$this->prefix = $prefix;
-		}
+    /**
+     * Bind value object.
+     *
+     * @var \gOPF\gODI\Statement\Bind
+     */
+    private $bind;
 
-		/**
-		 * Creates compare string
-		 * @return string Where string
-		 */
-		public function __toString() {
-			return trim(implode(' ', array($this->prefix, $this->field, $this->operator, $this->bind->name)));
-		}
+    /**
+     * Parent statement object.
+     *
+     * @var \gOPF\gODI\Statement
+     */
+    private $statement;
 
-		/**
-		 * =
-		 *
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		public function eq($value, $type = Statement::INT) {
-			return $this->set('=', $value, $type);
-		}
+    /**
+     * Initiates compare statement.
+     *
+     * @param \gOPF\gODI\Statement $statement Parent statement
+     * @param string               $field     Field name
+     * @param string               $prefix    Statement prefix (AND, OR)
+     */
+    public function __construct(Statement $statement, $field, $prefix = null)
+    {
+        $this->statement = $statement;
+        $this->field = $field;
+        $this->prefix = $prefix;
+    }
 
-		/**
-		 * <>
-		 *
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		public function not($value, $type = Statement::INT) {
-			return $this->set('<>', $value, $type);
-		}
+    /**
+     * Creates compare string.
+     *
+     * @return string Where string
+     */
+    public function __toString()
+    {
+        return trim(implode(' ', array($this->prefix, $this->field, $this->operator, $this->bind->name)));
+    }
 
-		/**
-		 * >
-		 *
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		public function gt($value, $type = Statement::INT) {
-			return $this->set('>', $value, $type);
-		}
+    /**
+     * =.
+     *
+     * @param mixed $value Compare to value
+     * @param int   $type  Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    public function eq($value, $type = Statement::INT)
+    {
+        return $this->set('=', $value, $type);
+    }
 
-		/**
-		 * <
-		 *
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		public function lt($value, $type = Statement::INT) {
-			return $this->set('<', $value, $type);
-		}
+    /**
+     * <>.
+     *
+     * @param mixed $value Compare to value
+     * @param int   $type  Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    public function not($value, $type = Statement::INT)
+    {
+        return $this->set('<>', $value, $type);
+    }
 
-		/**
-		 * >=
-		 *
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		public function gte($value, $type = Statement::INT) {
-			return $this->set('>=', $value, $type);
-		}
+    /**
+     * >.
+     *
+     * @param mixed $value Compare to value
+     * @param int   $type  Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    public function gt($value, $type = Statement::INT)
+    {
+        return $this->set('>', $value, $type);
+    }
 
-		/**
-		 * <=
-		 *
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		public function lte($value, $type = Statement::INT) {
-			return $this->set('<=', $value, $type);
-		}
+    /**
+     * <.
+     *
+     * @param mixed $value Compare to value
+     * @param int   $type  Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    public function lt($value, $type = Statement::INT)
+    {
+        return $this->set('<', $value, $type);
+    }
 
-		/**
-		 * LIKE
-		 *
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		public function like($value, $type = Statement::STRING) {
-			return $this->set('LIKE', $value, $type);
-		}
+    /**
+     * >=.
+     *
+     * @param mixed $value Compare to value
+     * @param int   $type  Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    public function gte($value, $type = Statement::INT)
+    {
+        return $this->set('>=', $value, $type);
+    }
 
-		/**
-		 * IS
-		 *
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		public function is($value, $type = Statement::STRING) {
-			return $this->set('IS', $value, $type);
-		}
+    /**
+     * <=.
+     *
+     * @param mixed $value Compare to value
+     * @param int   $type  Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    public function lte($value, $type = Statement::INT)
+    {
+        return $this->set('<=', $value, $type);
+    }
 
-		/**
-		 * Set statement parameters
-		 *
-		 * @param string $operator Compare type
-		 * @param mixed $value Compare to value
-		 * @param int $type Compare value type
-		 * @return \gOPF\gODI\Statement Fluid interface
-		 */
-		private function set($operator, $value, $type) {
-			$this->operator = $operator;
+    /**
+     * LIKE.
+     *
+     * @param mixed $value Compare to value
+     * @param int   $type  Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    public function like($value, $type = Statement::STRING)
+    {
+        return $this->set('LIKE', $value, $type);
+    }
 
-			$this->bind = new Bind($value, $type);
-			$this->statement->bind($this->bind);
+    /**
+     * IS.
+     *
+     * @param mixed $value Compare to value
+     * @param int   $type  Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    public function is($value, $type = Statement::STRING)
+    {
+        return $this->set('IS', $value, $type);
+    }
 
-			return $this->statement;
-		}
-	}
-	?>
+    /**
+     * Set statement parameters.
+     *
+     * @param string $operator Compare type
+     * @param mixed  $value    Compare to value
+     * @param int    $type     Compare value type
+     *
+     * @return \gOPF\gODI\Statement Fluid interface
+     */
+    private function set($operator, $value, $type)
+    {
+        $this->operator = $operator;
+
+        $this->bind = new Bind($value, $type);
+        $this->statement->bind($this->bind);
+
+        return $this->statement;
+    }
+}

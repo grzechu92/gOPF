@@ -1,63 +1,72 @@
 <?php
-	namespace System;
 
-	/**
-	 * Framework driver manager
-	 *
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	class Driver {
-		/**
-		 * APC based driver
-		 * @var string
-		 */
-		const APC = 'APC';
+namespace System;
 
-		/**
-		 * Session based driver
-		 * @var string
-		 */
-		const SESSION = 'Session';
+/**
+ * Framework driver manager.
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+class Driver
+{
+    /**
+     * APC based driver.
+     *
+     * @var string
+     */
+    const APC = 'APC';
 
-		/**
-		 * Filesystem based driver
-		 * @var string
-		 */
-		const FILESYSTEM = 'Filesystem';
+    /**
+     * Session based driver.
+     *
+     * @var string
+     */
+    const SESSION = 'Session';
 
-		/**
-		 * Memcached based driver
-		 * @var string
-		 */
-		const MEMCACHED = 'Memcached';
+    /**
+     * Filesystem based driver.
+     *
+     * @var string
+     */
+    const FILESYSTEM = 'Filesystem';
 
-		/**
-		 * Serialized filesystem based driver
-		 * @var string
-		 */
-		const SERIALIZED_FILESYSTEM = 'SerializedFilesystem';
+    /**
+     * Memcached based driver.
+     *
+     * @var string
+     */
+    const MEMCACHED = 'Memcached';
 
-		/**
-		 * Database based driver
-		 * @var string
-		 */
-		const DATABASE = 'Database';
+    /**
+     * Serialized filesystem based driver.
+     *
+     * @var string
+     */
+    const SERIALIZED_FILESYSTEM = 'SerializedFilesystem';
 
-		/**
-		 * Create specified driver instance
-		 *
-		 * @param string $type Driver type (Driver::APC, Driver::SESSION, Driver::FILESYSTEM, Driver::MEMCACHED, Driver::SERIALIZED_FILESYSTEM)
-		 * @param string $name Driver container name
-		 * @param int $lifetime Driver container lifetime
-		 * @param bool $user Is driver user unique?
-		 * @return \System\Driver\DriverInterface Specified driver instance
-		 */
-		public static function factory($type, $name, $lifetime = 0, $user = false) {
-			$driver = '\\System\\Driver\\'.$type;
+    /**
+     * Database based driver.
+     *
+     * @var string
+     */
+    const DATABASE = 'Database';
 
-			return new $driver($name, $lifetime, $user);
-		}
-	}
-?>
+    /**
+     * Create specified driver instance.
+     *
+     * @param string $type     Driver type (Driver::APC, Driver::SESSION, Driver::FILESYSTEM, Driver::MEMCACHED, Driver::SERIALIZED_FILESYSTEM)
+     * @param string $name     Driver container name
+     * @param int    $lifetime Driver container lifetime
+     * @param bool   $user     Is driver user unique?
+     *
+     * @return \System\Driver\DriverInterface Specified driver instance
+     */
+    public static function factory($type, $name, $lifetime = 0, $user = false)
+    {
+        $driver = '\\System\\Driver\\' . $type;
+
+        return new $driver($name, $lifetime, $user);
+    }
+}

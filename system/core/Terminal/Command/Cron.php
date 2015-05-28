@@ -1,70 +1,74 @@
 <?php
-	namespace System\Terminal\Command;
-	use \System\Config;
-	use \System\Dispatcher\Cron as CronContext;
-	use \System\Terminal\Help\Line;
 
-	/**
-	 * Terminal command: cron (execute cron job)
-	 *
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	class Cron extends \System\Terminal\Command {
-		/**
-		 * @see \System\Terminal\CommandInterface::help()
-		 */
-		public function help() {
-			$lines = array();
-			$help = new \System\Terminal\Help('Execute CRON job');
+namespace System\Terminal\Command;
 
-			$lines[] = new Line('cron', 'execute CRON job for current time');
-			$lines[] = new Line('cron -time [HH:MM]', 'execute CRON job for specified time');
-			$lines[] = new Line('cron -list', 'shows all CRON entries');
-				
-			$help->addLines($lines);
-		
-			return $help;
-		}
+use System\Config;
+use System\Dispatcher\Cron as CronContext;
+use System\Terminal\Help\Line;
 
-		/**
-		 * @see \System\Terminal\CommandInterface::execute()
-		 */
-		public function execute() {
-			$cron = new CronContext();
+/**
+ * Terminal command: cron (execute cron job).
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+class Cron extends \System\Terminal\Command
+{
+    /**
+     * @see \System\Terminal\CommandInterface::help()
+     */
+    public function help()
+    {
+        $lines = array();
+        $help = new \System\Terminal\Help('Execute CRON job');
 
-			if (!$this->getParameter('list')) {
-				$time = $this->getParameter('time');
+        $lines[] = new Line('cron', 'execute CRON job for current time');
+        $lines[] = new Line('cron -time [HH:MM]', 'execute CRON job for specified time');
+        $lines[] = new Line('cron -list', 'shows all CRON entries');
 
-				if (empty($time)) {
-					$time = date('H:i');
-				}
+        $help->addLines($lines);
 
-				$cron->execute($time);
-			} else {
-				$application = Config::factory(CronContext::FILENAME, Config::APPLICATION);
-				$system = Config::factory(CronContext::FILENAME, Config::SYSTEM);
-				$buffer = '';
+        return $help;
+    }
 
-				foreach (array_merge_recursive($application->getContent(), $system->getContent()) as $hour => $jobs) {
-					$list = array();
+    /**
+     * @see \System\Terminal\CommandInterface::execute()
+     */
+    public function execute()
+    {
+        $cron = new CronContext();
 
-					foreach ($jobs as $job) {
-						foreach (explode(',', $job) as $exploded) {
-							$exploded = trim($exploded);
+        if (!$this->getParameter('list')) {
+            $time = $this->getParameter('time');
 
-							if (!empty($exploded)) {
-								$list[] = $exploded;
-							}
-						}
-					}
+            if (empty($time)) {
+                $time = date('H:i');
+            }
 
-					$buffer .= $hour.' = '.implode("\n        ", $list)."\n\n";
-				}
+            $cron->execute($time);
+        } else {
+            $application = Config::factory(CronContext::FILENAME, Config::APPLICATION);
+            $system = Config::factory(CronContext::FILENAME, Config::SYSTEM);
+            $buffer = '';
 
-				$this->buffer($buffer);
-			}
-		}
-	}
-?>
+            foreach (array_merge_recursive($application->getContent(), $system->getContent()) as $hour => $jobs) {
+                $list = array();
+
+                foreach ($jobs as $job) {
+                    foreach (explode(',', $job) as $exploded) {
+                        $exploded = trim($exploded);
+
+                        if (!empty($exploded)) {
+                            $list[] = $exploded;
+                        }
+                    }
+                }
+
+                $buffer .= $hour . ' = ' . implode("\n        ", $list) . "\n\n";
+            }
+
+            $this->buffer($buffer);
+        }
+    }
+}

@@ -1,87 +1,94 @@
 <?php
-	namespace System;
-	use \System\Events\Event;
 
-	/**
-	 * Framework events manager
-	 *
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	class Events {
-		/**
-		 * Array of events
-		 * @var array[]
-		 */
-		private $list = array();
+namespace System;
 
-		/**
-		 * Adds event to list
-		 *
-		 * @param string $names Event name, or names separated by space
-		 * @param \Closure $closure Action to do
-		 * @param bool $once Call event once?
-		 */
-		public function on($names, \Closure $closure, $once = false) {
-			$names = explode(' ', $names);
+use System\Events\Event;
 
-			foreach ($names as $name) {
-				if (!isset($this->list[$name])) {
-					$this->list[$name] = array();
-				}
+/**
+ * Framework events manager.
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+class Events
+{
+    /**
+     * Array of events.
+     *
+     * @var array[]
+     */
+    private $list = array();
 
-				$this->list[$name][] = new Event($name, $closure, $once);
-			}
-		}
+    /**
+     * Adds event to list.
+     *
+     * @param string   $names   Event name, or names separated by space
+     * @param \Closure $closure Action to do
+     * @param bool     $once    Call event once?
+     */
+    public function on($names, \Closure $closure, $once = false)
+    {
+        $names = explode(' ', $names);
 
-		/**
-		 * Call event by name
-		 *
-		 * @param string $name Event name
-		 * @param mixed $data Event data (default: null)
-		 */
-		public function call($name, $data = null) {
-			if (isset($this->list[$name])) {
-				/** @var $event \System\Events\Event */
-				foreach ($this->list[$name] as $id=>$event) {
-					$event->closure($data);
+        foreach ($names as $name) {
+            if (!isset($this->list[$name])) {
+                $this->list[$name] = array();
+            }
 
-					if ($event->once) {
-						unset($this->list[$name][$id]);
-					}
-				}
-			}
-		}
+            $this->list[$name][] = new Event($name, $closure, $once);
+        }
+    }
 
-		/**
-		 * Remove event by name
-		 *
-		 * @param string $names Event name
-		 */
-		public function remove($names) {
-			$names = explode(' ', $names);
+    /**
+     * Call event by name.
+     *
+     * @param string $name Event name
+     * @param mixed  $data Event data (default: null)
+     */
+    public function call($name, $data = null)
+    {
+        if (isset($this->list[$name])) {
+            /** @var $event \System\Events\Event */
+            foreach ($this->list[$name] as $id => $event) {
+                $event->closure($data);
 
-			foreach ($names as $name) {
-				unset($this->list[$name]);
-			}
-		}
+                if ($event->once) {
+                    unset($this->list[$name][$id]);
+                }
+            }
+        }
+    }
 
-		/**
-		 * Return all events
-		 *
-		 * @return \System\Events\Event[]
-		 */
-		public function get() {
-			$output = array();
+    /**
+     * Remove event by name.
+     *
+     * @param string $names Event name
+     */
+    public function remove($names)
+    {
+        $names = explode(' ', $names);
 
-			foreach ($this->list as $events) {
-				foreach ($events as $event) {
-					$output[] = $event;
-				}
-			}
+        foreach ($names as $name) {
+            unset($this->list[$name]);
+        }
+    }
 
-			return $output;
-		}
-	}
-?>
+    /**
+     * Return all events.
+     *
+     * @return \System\Events\Event[]
+     */
+    public function get()
+    {
+        $output = array();
+
+        foreach ($this->list as $events) {
+            foreach ($events as $event) {
+                $output[] = $event;
+            }
+        }
+
+        return $output;
+    }
+}

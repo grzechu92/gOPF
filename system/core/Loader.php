@@ -1,133 +1,145 @@
 <?php
-	namespace System;
-	use \System\Filesystem;
-	use \System\Loader\NS;
 
-	/**
-	 * Framework libraries loader, based on personalized PSR-0 implementation
-	 * 
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	class Loader {
-		/**
-		 * APC internationalized file caching, hidden feature
-		 * @var bool
-		 */
-		const APC = __TURBO_MODE;
+namespace System;
 
-		/**
-		 * APC internationalized file caching lifetime, in seconds
-		 * @var int
-		 */
-		const APC_LIFETIME = 600;
+use System\Filesystem;
+use System\Loader\NS;
 
-		/**
-		 * APC internationalized file caching prefix
-		 * @var string
-		 */
-		const APC_PREFIX = 'gOPF-LOADER-';
+/**
+ * Framework libraries loader, based on personalized PSR-0 implementation.
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+class Loader
+{
+    /**
+     * APC internationalized file caching, hidden feature.
+     *
+     * @var bool
+     */
+    const APC = __TURBO_MODE;
 
-		/**
-		 * Reserved namespaces
-		 * @var \System\Loader\NS[]
-		 */
-		private static $namespaces = array();
+    /**
+     * APC internationalized file caching lifetime, in seconds.
+     *
+     * @var int
+     */
+    const APC_LIFETIME = 600;
 
-		/**
-		 * Registers framework loader in PHP loaders registry
-		 */
-		public function __construct() {
-			self::registerCoreNamespaces();
+    /**
+     * APC internationalized file caching prefix.
+     *
+     * @var string
+     */
+    const APC_PREFIX = 'gOPF-LOADER-';
 
-			spl_autoload_register(array($this, 'load'));
-		}
+    /**
+     * Reserved namespaces.
+     *
+     * @var \System\Loader\NS[]
+     */
+    private static $namespaces = array();
 
-		/**
-		 * Register custom reserved namespace
-		 *
-		 * @param NS $ns Reserved namespace data object
-		 */
-		public static function registerReservedNamespace(NS $ns) {
-			self::$namespaces[$ns->name] = $ns;
-		}
+    /**
+     * Registers framework loader in PHP loaders registry.
+     */
+    public function __construct()
+    {
+        self::registerCoreNamespaces();
 
-		/**
-		 * Register core reserved namespaces
-		 */
-		private static function registerCoreNamespaces() {
-			$reserved = array();
+        spl_autoload_register(array($this, 'load'));
+    }
 
-			$reserved[] = new NS('Controllers', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'controllers');
-			$reserved[] = new NS('Repositories', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'repositories');
-			$reserved[] = new NS('Application', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'classes');
-			$reserved[] = new NS('Entities', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'entities');
-			$reserved[] = new NS('Commands', __APPLICATION_PATH.DIRECTORY_SEPARATOR.'commands');
+    /**
+     * Register custom reserved namespace.
+     *
+     * @param NS $ns Reserved namespace data object
+     */
+    public static function registerReservedNamespace(NS $ns)
+    {
+        self::$namespaces[$ns->name] = $ns;
+    }
 
-			foreach ($reserved as $ns) {
-				self::registerReservedNamespace($ns);
-			}
-		}
-		
-		/**
-		 * Loads required class in PSR-0 pattern
-		 * 
-		 * @param string $class Class name to load
-		 * @throws \System\Loader\Exception
-		 */
-		public function load($class) {
-			if (self::APC) {
-				$cache = sha1(self::APC_PREFIX.__ID.$class);
+    /**
+     * Register core reserved namespaces.
+     */
+    private static function registerCoreNamespaces()
+    {
+        $reserved = array();
 
-				if ($cached = apc_fetch($cache)) {
-					require $cached;
-					return;
-				}
-			}
+        $reserved[] = new NS('Controllers', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'controllers');
+        $reserved[] = new NS('Repositories', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'repositories');
+        $reserved[] = new NS('Application', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'classes');
+        $reserved[] = new NS('Entities', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'entities');
+        $reserved[] = new NS('Commands', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'commands');
 
-			$class = ltrim($class, '\\');
-			$path = '';
-			
-			if ($separator = strripos($class, '\\')) {
-				$namespace = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $separator));
-	  	 		$file = str_replace('_', DIRECTORY_SEPARATOR, substr($class, $separator + 1)).'.php';
-			} else {
-				$namespace = '';
-				$file = '';
-			}
+        foreach ($reserved as $ns) {
+            self::registerReservedNamespace($ns);
+        }
+    }
 
-			$exploded = explode('/', $namespace);
-			$parsed = substr($namespace, strlen($exploded[0]));
+    /**
+     * Loads required class in PSR-0 pattern.
+     *
+     * @param string $class Class name to load
+     *
+     * @throws \System\Loader\Exception
+     */
+    public function load($class)
+    {
+        if (self::APC) {
+            $cache = sha1(self::APC_PREFIX . __ID . $class);
 
-			if ($exploded[0] == 'System') {
-				$path = __CORE_PATH.$parsed.DIRECTORY_SEPARATOR.$file;
-			}
+            if ($cached = apc_fetch($cache)) {
+                require $cached;
 
-			if (empty($path)) {
-				foreach (self::$namespaces as $ns) {
-					if ($exploded[0] == $ns->name) {
-						$path = $ns->build($parsed, $file);
-						break;
-					}
-				}
-			}
+                return;
+            }
+        }
 
-			if (empty($path)) {
-				$path = __VENDOR_PATH.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR.$file;
-			}
+        $class = ltrim($class, '\\');
+        $path = '';
 
-			$path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
+        if ($separator = strripos($class, '\\')) {
+            $namespace = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $separator));
+            $file = str_replace('_', DIRECTORY_SEPARATOR, substr($class, $separator + 1)) . '.php';
+        } else {
+            $namespace = '';
+            $file = '';
+        }
 
-			if (__STAGE == __PRODUCTION || Filesystem::checkFile($path)) {
-				if (self::APC) {
-					apc_store($cache, $path, self::APC_LIFETIME);
-				}
+        $exploded = explode('/', $namespace);
+        $parsed = substr($namespace, strlen($exploded[0]));
 
-				require $path;
-			} else {
-				throw new \System\Loader\Exception(\System\I18n::translate('LOADER_UNABLE', array($path)));
-			}
-		}
-	}
-?>
+        if ($exploded[0] == 'System') {
+            $path = __CORE_PATH . $parsed . DIRECTORY_SEPARATOR . $file;
+        }
+
+        if (empty($path)) {
+            foreach (self::$namespaces as $ns) {
+                if ($exploded[0] == $ns->name) {
+                    $path = $ns->build($parsed, $file);
+                    break;
+                }
+            }
+        }
+
+        if (empty($path)) {
+            $path = __VENDOR_PATH . DIRECTORY_SEPARATOR . $namespace . DIRECTORY_SEPARATOR . $file;
+        }
+
+        $path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
+
+        if (__STAGE == __PRODUCTION || Filesystem::checkFile($path)) {
+            if (self::APC) {
+                apc_store($cache, $path, self::APC_LIFETIME);
+            }
+
+            require $path;
+        } else {
+            throw new \System\Loader\Exception(\System\I18n::translate('LOADER_UNABLE', array($path)));
+        }
+    }
+}

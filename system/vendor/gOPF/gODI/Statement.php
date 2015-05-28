@@ -1,194 +1,217 @@
 <?php
-	namespace gOPF\gODI;
-	use \PDO;
-	use \System\Cache;
-	
-	/**
-	 * gODI Statement abstract class
-	 *
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	abstract class Statement {
-		/**
-		 * Integer variable type
-		 * @var int
-		 */
-		const INT = PDO::PARAM_INT;
-		
-		/**
-		 * String variable type
-		 * @var int
-		 */
-		const STRING = PDO::PARAM_STR;
-		
-		/**
-		 * Boolean variable type
-		 * @var int
-		 */
-		const BOOL = PDO::PARAM_BOOL;
-		
-		/**
-		 * Ascending order
-		 * @var string
-		 */
-		const ASC = 'ASC';
-		
-		/**
-		 * Descending order
-		 * @var string
-		 */
-		const DESC = 'DESC';
 
-		/**
-		 * Inner join
-		 * @var string
-		 */
-		const INNER_JOIN = 'INNER JOIN';
+namespace gOPF\gODI;
 
-		/**
-		 * Left join
-		 * @var string
-		 */
-		const LEFT_JOIN = 'LEFT JOIN';
+use PDO;
+use System\Cache;
 
-		/**
-		 * Right join
-		 * @var string
-		 */
-		const RIGHT_JOIN = 'RIGHT JOIN';
+/**
+ * gODI Statement abstract class.
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+abstract class Statement
+{
+    /**
+     * Integer variable type.
+     *
+     * @var int
+     */
+    const INT = PDO::PARAM_INT;
 
-		/**
-		 * Natural join
-		 * @var string
-		 */
-		const NATURAL_JOIN = 'NATURAL JOIN';
+    /**
+     * String variable type.
+     *
+     * @var int
+     */
+    const STRING = PDO::PARAM_STR;
 
-		/**
-		 * Return number of modified rows
-		 * @var int
-		 */
-		const RETURN_ROWS = 0;
+    /**
+     * Boolean variable type.
+     *
+     * @var int
+     */
+    const BOOL = PDO::PARAM_BOOL;
 
-		/**
-		 * Return insert ID
-		 * @var int
-		 */
-		const RETURN_ID = 1;
+    /**
+     * Ascending order.
+     *
+     * @var string
+     */
+    const ASC = 'ASC';
 
-		/**
-		 * Return row data
-		 * @var int
-		 */
-		const RETURN_DATA = 3;
+    /**
+     * Descending order.
+     *
+     * @var string
+     */
+    const DESC = 'DESC';
 
-		/**
-		 * @see \System\Cache::USER
-		 */
-		const USER = Cache::USER;
+    /**
+     * Inner join.
+     *
+     * @var string
+     */
+    const INNER_JOIN = 'INNER JOIN';
 
-		/**
-		 * @see \System\Cache::COMMON
-		 */
-		const COMMON = Cache::COMMON;
+    /**
+     * Left join.
+     *
+     * @var string
+     */
+    const LEFT_JOIN = 'LEFT JOIN';
 
-		/**
-		 * @see \System\Cache::RUNTIME
-		 */
-		const RUNTIME = Cache::RUNTIME;
+    /**
+     * Right join.
+     *
+     * @var string
+     */
+    const RIGHT_JOIN = 'RIGHT JOIN';
 
-		/**
-		 * PDO connector
-		 * @var \PDO
-		 */
-		private $PDO;
-		
-		/**
-		 * Bind values
-		 * @var \gOPF\gODI\Statement\Bind[]
-		 */
-		private $bind = array();
+    /**
+     * Natural join.
+     *
+     * @var string
+     */
+    const NATURAL_JOIN = 'NATURAL JOIN';
 
-		/**
-		 * Table name
-		 * @var string
-		 */
-		protected $table;
+    /**
+     * Return number of modified rows.
+     *
+     * @var int
+     */
+    const RETURN_ROWS = 0;
 
-		/**
-		 * Initializes statement
-		 *
-		 * @param \PDO $PDO PDO connector
-		 * @param string $table Table name
-		 */
-		final public function __construct(PDO $PDO, $table) {
-			$this->PDO = $PDO;
-			$this->table = $table;
-		}
+    /**
+     * Return insert ID.
+     *
+     * @var int
+     */
+    const RETURN_ID = 1;
 
-		/**
-		 * Builds statement
-		 *
-		 * @return string Statement
-		 */
-		final public function __toString() {
-			return $this->build();
-		}
+    /**
+     * Return row data.
+     *
+     * @var int
+     */
+    const RETURN_DATA = 3;
 
-		/**
-		 * Adds parameter to bind statement
-		 *
-		 * @param \gOPF\gODI\Statement\Bind $bind Filled bind object
-		 */
-		final public function bind(\gOPF\gODI\Statement\Bind $bind) {
-			$this->bind[] = $bind;
-		}
+    /**
+     * @see \System\Cache::USER
+     */
+    const USER = Cache::USER;
 
-		/**
-		 * Generates query checksum depends on query body and query bindable values
-		 *
-		 * @return string Query checksum
-		 */
-		final protected function checksum() {
-			return sha1($this->build().implode($this->bind));
-		}
+    /**
+     * @see \System\Cache::COMMON
+     */
+    const COMMON = Cache::COMMON;
 
-		/**
-		 * Executes statement
-		 *
-		 * @param int|bool $mode Return mode (Statement::RETURN_ROWS, Statement::RETURN_ID, Statement::RETURN_DATA, false)
-		 * @return array|int|\stdClass|null Array of results, affected rows, ID or data object
-		 */
-		final protected function execute($mode = false) {
-			$query = $this->PDO->prepare($this->build());
+    /**
+     * @see \System\Cache::RUNTIME
+     */
+    const RUNTIME = Cache::RUNTIME;
 
-			foreach ($this->bind as $bind) {
-				$query->bindValue($bind->name, $bind->value, $bind->type);
-			}
+    /**
+     * PDO connector.
+     *
+     * @var \PDO
+     */
+    private $PDO;
 
-			$query->execute();
+    /**
+     * Bind values.
+     *
+     * @var \gOPF\gODI\Statement\Bind[]
+     */
+    private $bind = array();
 
-			switch ($mode) {
-				case self::RETURN_DATA:
-					return $query->fetchAll(PDO::FETCH_OBJ);
+    /**
+     * Table name.
+     *
+     * @var string
+     */
+    protected $table;
 
-				case self::RETURN_ID:
-					return $this->PDO->lastInsertId();
+    /**
+     * Initializes statement.
+     *
+     * @param \PDO   $PDO   PDO connector
+     * @param string $table Table name
+     */
+    final public function __construct(PDO $PDO, $table)
+    {
+        $this->PDO = $PDO;
+        $this->table = $table;
+    }
 
-				case self::RETURN_ROWS:
-					return $query->rowCount();
+    /**
+     * Builds statement.
+     *
+     * @return string Statement
+     */
+    final public function __toString()
+    {
+        return $this->build();
+    }
 
-				default:
-					return null;
-			}
-		}
+    /**
+     * Adds parameter to bind statement.
+     *
+     * @param \gOPF\gODI\Statement\Bind $bind Filled bind object
+     */
+    final public function bind(\gOPF\gODI\Statement\Bind $bind)
+    {
+        $this->bind[] = $bind;
+    }
 
-		/**
-		 * Build query body
-		 *
-		 * @return string Query body
-		 */
-		abstract public function build();
-	}
-?>
+    /**
+     * Generates query checksum depends on query body and query bindable values.
+     *
+     * @return string Query checksum
+     */
+    final protected function checksum()
+    {
+        return sha1($this->build() . implode($this->bind));
+    }
+
+    /**
+     * Executes statement.
+     *
+     * @param int|bool $mode Return mode (Statement::RETURN_ROWS, Statement::RETURN_ID, Statement::RETURN_DATA, false)
+     *
+     * @return array|int|\stdClass|null Array of results, affected rows, ID or data object
+     */
+    final protected function execute($mode = false)
+    {
+        $query = $this->PDO->prepare($this->build());
+
+        foreach ($this->bind as $bind) {
+            $query->bindValue($bind->name, $bind->value, $bind->type);
+        }
+
+        $query->execute();
+
+        switch ($mode) {
+            case self::RETURN_DATA:
+                return $query->fetchAll(PDO::FETCH_OBJ);
+
+            case self::RETURN_ID:
+                return $this->PDO->lastInsertId();
+
+            case self::RETURN_ROWS:
+                return $query->rowCount();
+
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Build query body.
+     *
+     * @return string Query body
+     */
+    abstract public function build();
+}

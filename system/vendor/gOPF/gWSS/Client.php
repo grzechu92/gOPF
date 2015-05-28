@@ -1,237 +1,250 @@
 <?php
-	namespace gOPF\gWSS;
-	use \gOPF\gWSS;
 
-	/**
-	 * gWSS Client class
-	 *
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	class Client {
-		/*
-		 * Unique client id
-		 * @var string
-		 */
-		public $id;
+namespace gOPF\gWSS;
 
-		/**
-		 * Is client alive?
-		 * @var bool
-		 */
-		public $alive = true;
+use gOPF\gWSS;
 
-		/**
-		 * Client socket
-		 * @var resource
-		 */
-		public $socket;
+/**
+ * gWSS Client class.
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+class Client
+{
+    /*
+     * Unique client id
+     * @var string
+     */
+    public $id;
 
-		/**
-		 * Is client initialized?
-		 * @var bool
-		 */
-		public $handshake = false;
+    /**
+     * Is client alive?
+     *
+     * @var bool
+     */
+    public $alive = true;
 
-		/**
-		 * Client process PID
-		 * @var resource
-		 */
-		public $pid = null;
+    /**
+     * Client socket.
+     *
+     * @var resource
+     */
+    public $socket;
 
-		/**
-		 * Client session data container
-		 * @var \System\Container
-		 */
-		public $container;
+    /**
+     * Is client initialized?
+     *
+     * @var bool
+     */
+    public $handshake = false;
 
-		/**
-		 * Last data from client
-		 * @var \stdClass|string
-		 */
-		public $data;
+    /**
+     * Client process PID.
+     *
+     * @var resource
+     */
+    public $pid = null;
 
-		/**
-		 * WebSocket server
-		 * @var \gOPF\gWSS
-		 */
-		private $server;
+    /**
+     * Client session data container.
+     *
+     * @var \System\Container
+     */
+    public $container;
 
-		/**
-		 * WebSocket server configuration
-		 * @var \gOPF\gWSS\Config
-		 */
-		private $config;
+    /**
+     * Last data from client.
+     *
+     * @var \stdClass|string
+     */
+    public $data;
 
-		/**
-		 * Initializes client object
-		 *
-		 * @param \gOPF\gWSS $server WebSocket server
-		 * @param \gOPF\gWSS\Config $config WebSocket server config
-		 * @param resource $socket Socket resource
-		 */
-		public function __construct(gWSS $server, Config $config, $socket) {
-			$this->id = uniqid();
-			$this->container = new \System\Container();
+    /**
+     * WebSocket server.
+     *
+     * @var \gOPF\gWSS
+     */
+    private $server;
 
+    /**
+     * WebSocket server configuration.
+     *
+     * @var \gOPF\gWSS\Config
+     */
+    private $config;
 
-			$this->socket = $socket;
-			$this->server = $server;
-			$this->config = $config;
+    /**
+     * Initializes client object.
+     *
+     * @param \gOPF\gWSS        $server WebSocket server
+     * @param \gOPF\gWSS\Config $config WebSocket server config
+     * @param resource          $socket Socket resource
+     */
+    public function __construct(gWSS $server, Config $config, $socket)
+    {
+        $this->id = uniqid();
+        $this->container = new \System\Container();
 
-			$this->server->console('Client created!', $this);
-		}
+        $this->socket = $socket;
+        $this->server = $server;
+        $this->config = $config;
 
-		/**
-		 * Kill socket client
-		 */
-		public function kill() {
-			@socket_shutdown($this->socket);
-			@socket_close($this->socket);
+        $this->server->console('Client created!', $this);
+    }
 
-			$this->alive = false;
+    /**
+     * Kill socket client.
+     */
+    public function kill()
+    {
+        @socket_shutdown($this->socket);
+        @socket_close($this->socket);
 
-			$this->server->console('Client killed', $this);
-		}
+        $this->alive = false;
 
-		/**
-		 * Update client data and status
-		 */
-		public function update() {
-			$this->server->console('Updating data...', $this);
+        $this->server->console('Client killed', $this);
+    }
 
-			$data = $this->read();
+    /**
+     * Update client data and status.
+     */
+    public function update()
+    {
+        $this->server->console('Updating data...', $this);
 
-			if (!$this->handshake && $this->config->type == Config::WEBSOCKET) {
-				$this->handshake(new Headers($data));
+        $data = $this->read();
 
-				if ($this->handshake) {
-					$this->loop();
-				} else {
-					$this->kill();
-				}
-			} else {
-				$this->server->console('Receiving data...', $this);
+        if (!$this->handshake && $this->config->type == Config::WEBSOCKET) {
+            $this->handshake(new Headers($data));
 
-				if ($this->config->type == Config::WEBSOCKET) {
-					$data = (object) json_decode(Encoder::decodeWebSocket($data));
+            if ($this->handshake) {
+                $this->loop();
+            } else {
+                $this->kill();
+            }
+        } else {
+            $this->server->console('Receiving data...', $this);
 
-					if (isset($data->event)) {
-						$this->data = $data->data;
-						$this->server->events->client->call($data->event, $this);
-					}
-				} else {
-					$this->data = $data;
-					$this->server->events->client->call(gWSS::ON_DATA_RECEIVE, $this);
-				}
-			}
-		}
+            if ($this->config->type == Config::WEBSOCKET) {
+                $data = (object)json_decode(Encoder::decodeWebSocket($data));
 
-		/**
-		 * Send data to client
-		 *
-		 * @param \gOPF\gWSS\Response|string $data String with data for client
-		 */
-		public function send($data) {
-			$this->server->console('Sending data...', $this);
+                if (isset($data->event)) {
+                    $this->data = $data->data;
+                    $this->server->events->client->call($data->event, $this);
+                }
+            } else {
+                $this->data = $data;
+                $this->server->events->client->call(gWSS::ON_DATA_RECEIVE, $this);
+            }
+        }
+    }
 
-			if ($data instanceof Response) {
-				$data = Encoder::encodeWebSocket($data->build());
-			}
+    /**
+     * Send data to client.
+     *
+     * @param \gOPF\gWSS\Response|string $data String with data for client
+     */
+    public function send($data)
+    {
+        $this->server->console('Sending data...', $this);
 
-			if (@socket_write($this->socket, $data, strlen($data)) === false) {
-				$this->server->console('Sending data failed', $this);
-				$this->kill();
-			}
-		}
+        if ($data instanceof Response) {
+            $data = Encoder::encodeWebSocket($data->build());
+        }
 
-		/**
-		 * Read data from socket
-		 *
-		 * @return string Data from socket
-		 */
-		private function read() {
-			$data = null;
-			while ($bytes = @socket_recv($this->socket, $reading, 2048, MSG_DONTWAIT)) {
-				$data .= $reading;
-			}
+        if (@socket_write($this->socket, $data, strlen($data)) === false) {
+            $this->server->console('Sending data failed', $this);
+            $this->kill();
+        }
+    }
 
-			if ($bytes === 0) {
-				$this->kill();
-			}
+    /**
+     * Read data from socket.
+     *
+     * @return string Data from socket
+     */
+    private function read()
+    {
+        $data = null;
+        while ($bytes = @socket_recv($this->socket, $reading, 2048, MSG_DONTWAIT)) {
+            $data .= $reading;
+        }
 
-			return $data;
-		}
+        if ($bytes === 0) {
+            $this->kill();
+        }
 
-		/**
-		 * Create handshake with client
-		 *
-		 * @param \gOPF\gWSS\Headers $headers Request headers
-		 */
-		private function handshake(Headers $headers) {
-			$this->server->console('Handshaking...', $this);
+        return $data;
+    }
 
-			$version = $headers->getWebSocketVersion();
+    /**
+     * Create handshake with client.
+     *
+     * @param \gOPF\gWSS\Headers $headers Request headers
+     */
+    private function handshake(Headers $headers)
+    {
+        $this->server->console('Handshaking...', $this);
 
-			if (!$version) {
-				$this->server->console('Client doesn\'t support WebSocket!');
-				return;
-			}
+        $version = $headers->getWebSocketVersion();
 
-			if ($version != 13) {
-				$this->server->console('WebSocket version 13 required (client version '.$version.')');
-				return;
-			}
+        if (!$version) {
+            $this->server->console('Client doesn\'t support WebSocket!');
 
-			$accept = Encoder::generateAcceptToken($headers->getWebSocketKey());
+            return;
+        }
 
-			$upgrade =
-				'HTTP/1.1 101 Switching Protocols'."\r\n".
-				'Upgrade: websocket'."\r\n".
-				'Connection: Upgrade'."\r\n".
-				'Sec-WebSocket-Accept: '.$accept."\r\n".
-				"\r\n";
+        if ($version != 13) {
+            $this->server->console('WebSocket version 13 required (client version ' . $version . ')');
 
-			$this->send($upgrade);
+            return;
+        }
 
-			$this->handshake = true;
-			$this->server->console('Handshaking done!', $this);
-		}
+        $accept = Encoder::generateAcceptToken($headers->getWebSocketKey());
 
-		/**
-		 * Server events loop
-		 */
-		private function loop() {
-			$pid = pcntl_fork();
+        $upgrade = 'HTTP/1.1 101 Switching Protocols' . "\r\n" . 'Upgrade: websocket' . "\r\n" . 'Connection: Upgrade' . "\r\n" . 'Sec-WebSocket-Accept: ' . $accept . "\r\n" . "\r\n";
 
-			if ($pid == -1) {
-				$this->server->console('Fork create failed!', $this);
-			} elseif ($pid) {
-				$this->pid = $pid;
-				$this->server->console('Fork created!', $this);
-			} else {
-				while (true) {
-					$events = $this->server->events->server->get();
+        $this->send($upgrade);
 
-					if (count($events) > 0) {
-						foreach($events as $event) {
-							$result = $event->closure($this);
+        $this->handshake = true;
+        $this->server->console('Handshaking done!', $this);
+    }
 
-							if ($result instanceof Response) {
-								$this->send($result);
-							}
-						}
-					}
+    /**
+     * Server events loop.
+     */
+    private function loop()
+    {
+        $pid = pcntl_fork();
 
-					if (!$this->alive) {
-						$this->server->console('Fork killed!', $this);
-						die();
-					} else {
-						usleep($this->config->refresh);
-					}
-				}
-			}
-		}
-	}
-?>
+        if ($pid == -1) {
+            $this->server->console('Fork create failed!', $this);
+        } elseif ($pid) {
+            $this->pid = $pid;
+            $this->server->console('Fork created!', $this);
+        } else {
+            while (true) {
+                $events = $this->server->events->server->get();
+
+                if (count($events) > 0) {
+                    foreach ($events as $event) {
+                        $result = $event->closure($this);
+
+                        if ($result instanceof Response) {
+                            $this->send($result);
+                        }
+                    }
+                }
+
+                if (!$this->alive) {
+                    $this->server->console('Fork killed!', $this);
+                    die();
+                } else {
+                    usleep($this->config->refresh);
+                }
+            }
+        }
+    }
+}

@@ -1,38 +1,39 @@
 <?php
-	namespace gOPF\gDMT;
 
-	/**
-	 * Interface for user migrations
-	 *
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	interface MigrationInterface {
-		/**
-		 * Initializes Migration object with database
-		 *
-		 * @param mixed $database Database handler
-		 */
-		public function __construct($database);
+namespace gOPF\gDMT;
 
-		/**
-		 * Returns user migration description
-		 *
-		 * @return string Migration description
-		 */
-		public function getDescription();
+/**
+ * Interface for user migrations.
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+interface MigrationInterface
+{
+    /**
+     * Initializes Migration object with database.
+     *
+     * @param mixed $database Database handler
+     */
+    public function __construct($database);
 
-		/**
-		 * Returns migration number
-		 *
-		 * @return int Migration number
-		 */
-		public function getMigrationNumber();
+    /**
+     * Returns user migration description.
+     *
+     * @return string Migration description
+     */
+    public function getDescription();
 
-		/**
-		 * Executes migration content
-		 */
-		public function execute();
-	}
-?>
+    /**
+     * Returns migration number.
+     *
+     * @return int Migration number
+     */
+    public function getMigrationNumber();
+
+    /**
+     * Executes migration content.
+     */
+    public function execute();
+}

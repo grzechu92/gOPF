@@ -1,83 +1,93 @@
 <?php
-	namespace gOPF\gODI\Statement;
 
-	/**
-	 * gODI cache statement
-	 *
-	 * @author Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
-	 * @license The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
-	 */
-	class Cache {
-		/**
-		 * gODI cache name prefix
-		 * @var string
-		 */
-		const PREFIX = 'gODI-';
+namespace gOPF\gODI\Statement;
 
-		/**
-		 * Query expire time
-		 * @var int
-		 */
-		private $expires;
+/**
+ * gODI cache statement.
+ *
+ * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
+ * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
+ */
+class Cache
+{
+    /**
+     * gODI cache name prefix.
+     *
+     * @var string
+     */
+    const PREFIX = 'gODI-';
 
-		/**
-		 * Cache type
-		 * @var int
-		 */
-		private $type;
+    /**
+     * Query expire time.
+     *
+     * @var int
+     */
+    private $expires;
 
-		/**
-		 * Query checksum
-		 * @var string
-		 */
-		private $checksum;
+    /**
+     * Cache type.
+     *
+     * @var int
+     */
+    private $type;
 
-		/**
-		 * Initializes cache statement
-		 *
-		 * @param int $expires Cache expire time (in seconds)
-		 * @param int $type Cache type (Statement::COMMON, Statement::USER, Statement::RUNTIME)
-		 */
-		public function __construct($expires, $type) {
-			$this->expires = $expires;
-			$this->type = $type;
-		}
+    /**
+     * Query checksum.
+     *
+     * @var string
+     */
+    private $checksum;
 
-		/**
-		 * Set query checksum
-		 *
-		 * @param string $checksum Query checksum
-		 */
-		public function checksum($checksum) {
-			$this->checksum = $checksum;
-		}
+    /**
+     * Initializes cache statement.
+     *
+     * @param int $expires Cache expire time (in seconds)
+     * @param int $type    Cache type (Statement::COMMON, Statement::USER, Statement::RUNTIME)
+     */
+    public function __construct($expires, $type)
+    {
+        $this->expires = $expires;
+        $this->type = $type;
+    }
 
-		/**
-		 * Is query cache valid?
-		 *
-		 * @return bool Is valid?
-		 */
-		public function isValid() {
-			return \System\Cache::isValid(self::PREFIX.$this->checksum,  $this->type);
-		}
+    /**
+     * Set query checksum.
+     *
+     * @param string $checksum Query checksum
+     */
+    public function checksum($checksum)
+    {
+        $this->checksum = $checksum;
+    }
 
-		/**
-		 * Get value of query cache
-		 *
-		 * @return mixed Query value from cache
-		 */
-		public function get() {
-			return \System\Cache::get(self::PREFIX.$this->checksum,  $this->type);
-		}
+    /**
+     * Is query cache valid?
+     *
+     * @return bool Is valid?
+     */
+    public function isValid()
+    {
+        return \System\Cache::isValid(self::PREFIX . $this->checksum, $this->type);
+    }
 
-		/**
-		 * Set value to query cache
-		 *
-		 * @param mixed $value Value to cache
-		 */
-		public function set($value) {
-			\System\Cache::set(self::PREFIX.$this->checksum, $value, $this->expires, $this->type);
-		}
-	}
-?>
+    /**
+     * Get value of query cache.
+     *
+     * @return mixed Query value from cache
+     */
+    public function get()
+    {
+        return \System\Cache::get(self::PREFIX . $this->checksum, $this->type);
+    }
+
+    /**
+     * Set value to query cache.
+     *
+     * @param mixed $value Value to cache
+     */
+    public function set($value)
+    {
+        \System\Cache::set(self::PREFIX . $this->checksum, $value, $this->expires, $this->type);
+    }
+}
