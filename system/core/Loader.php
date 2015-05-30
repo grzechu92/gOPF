@@ -4,9 +4,10 @@ namespace System;
 
 use System\Filesystem;
 use System\Loader\NS;
+use System\Loader\File;
 
 /**
- * Framework libraries loader, based on personalized PSR-0 implementation.
+ * Framework class loader.
  *
  * @author    Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
@@ -15,25 +16,25 @@ use System\Loader\NS;
 class Loader
 {
     /**
-     * APC internationalized file caching, hidden feature.
-     *
-     * @var bool
-     */
-    const APC = __TURBO_MODE;
-
-    /**
-     * APC internationalized file caching lifetime, in seconds.
+     * File caching lifetime, in seconds.
      *
      * @var int
      */
-    const APC_LIFETIME = 600;
+    const CACHE_LIFETIME = 600;
 
     /**
-     * APC internationalized file caching prefix.
+     * File cache container prefix.
      *
      * @var string
      */
-    const APC_PREFIX = 'gOPF-LOADER-';
+    const CACHE_PREFIX = 'gOPF-LOADER-';
+
+    /**
+     * Is cache enabled?
+     *
+     * @var bool
+     */
+    private $cache = false;
 
     /**
      * Reserved namespaces.
@@ -43,13 +44,39 @@ class Loader
     private static $namespaces = array();
 
     /**
+     * Class name to path container.
+     *
+     * @var string[]
+     */
+    private static $cached = array();
+
+    /**
      * Registers framework loader in PHP loaders registry.
      */
     public function __construct()
     {
-        self::registerCoreNamespaces();
+        $this->cache = function_exists('apc_store');
 
-        spl_autoload_register(array($this, 'load'));
+        self::$namespaces[] = new NS('Controllers', [__APPLICATION_PATH, 'controllers']);
+        self::$namespaces[] = new NS('Repositories', [__APPLICATION_PATH, 'repositories']);
+        self::$namespaces[] = new NS('Application', [__APPLICATION_PATH, 'classes']);
+        self::$namespaces[] = new NS('Entities', [__APPLICATION_PATH, 'entities']);
+        self::$namespaces[] = new NS('Commands', [__APPLICATION_PATH, 'commands']);
+
+        if ($this->cache) {
+            self::$cached = apc_fetch(self::CACHE_PREFIX . __ID);
+        }
+
+        spl_autoload_register([$this, 'load']);
+    }
+
+    /**
+     * Save cached data if any
+     */
+    public function __destruct() {
+        if ($this->cache && count(self::$cached) > 0) {
+            apc_store(self::CACHE_PREFIX . __ID, self::$cached, self::CACHE_LIFETIME);
+        }
     }
 
     /**
@@ -59,29 +86,11 @@ class Loader
      */
     public static function registerReservedNamespace(NS $ns)
     {
-        self::$namespaces[$ns->name] = $ns;
+        self::$namespaces[] = $ns;
     }
 
     /**
-     * Register core reserved namespaces.
-     */
-    private static function registerCoreNamespaces()
-    {
-        $reserved = array();
-
-        $reserved[] = new NS('Controllers', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'controllers');
-        $reserved[] = new NS('Repositories', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'repositories');
-        $reserved[] = new NS('Application', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'classes');
-        $reserved[] = new NS('Entities', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'entities');
-        $reserved[] = new NS('Commands', __APPLICATION_PATH . DIRECTORY_SEPARATOR . 'commands');
-
-        foreach ($reserved as $ns) {
-            self::registerReservedNamespace($ns);
-        }
-    }
-
-    /**
-     * Loads required class in PSR-0 pattern.
+     * Loads required class.
      *
      * @param string $class Class name to load
      *
@@ -89,57 +98,72 @@ class Loader
      */
     public function load($class)
     {
-        if (self::APC) {
-            $cache = sha1(self::APC_PREFIX . __ID . $class);
-
-            if ($cached = apc_fetch($cache)) {
-                require $cached;
-
-                return;
-            }
+        if (isset(self::$cached[$class])) {
+            $this->requirePath(self::$cached[$class]);
+            return;
         }
 
-        $class = ltrim($class, '\\');
-        $path = '';
+        $file = new File($class);
 
-        if ($separator = strripos($class, '\\')) {
-            $namespace = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $separator));
-            $file = str_replace('_', DIRECTORY_SEPARATOR, substr($class, $separator + 1)) . '.php';
-        } else {
-            $namespace = '';
-            $file = '';
-        }
+        $parts = $this->findFile($file);
+        $path = $this->buildPath($parts);
 
-        $exploded = explode('/', $namespace);
-        $parsed = substr($namespace, strlen($exploded[0]));
-
-        if ($exploded[0] == 'System') {
-            $path = __CORE_PATH . $parsed . DIRECTORY_SEPARATOR . $file;
-        }
-
-        if (empty($path)) {
-            foreach (self::$namespaces as $ns) {
-                if ($exploded[0] == $ns->name) {
-                    $path = $ns->build($parsed, $file);
-                    break;
-                }
-            }
-        }
-
-        if (empty($path)) {
-            $path = __VENDOR_PATH . DIRECTORY_SEPARATOR . $namespace . DIRECTORY_SEPARATOR . $file;
-        }
-
-        $path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
-
-        if (__STAGE == __PRODUCTION || Filesystem::checkFile($path)) {
-            if (self::APC) {
-                apc_store($cache, $path, self::APC_LIFETIME);
+        if (__STAGE == __PRODUCTION || is_file($path)) {
+            if ($this->cache) {
+                self::$cached[$class] = $path;
             }
 
-            require $path;
+            $this->requirePath($path);
         } else {
             throw new \System\Loader\Exception(\System\I18n::translate('LOADER_UNABLE', array($path)));
         }
+    }
+
+    /**
+     * Require selected file.
+     *
+     * @param string $path Path to required file
+     */
+    private function requirePath($path)
+    {
+        require $path;
+    }
+
+    /**
+     * Find file in framework filesystem.
+     *
+     * @param \System\Loader\File $file File to find
+     *
+     * @return string[] Path parts to merge
+     */
+    private function findFile(File $file)
+    {
+        if ($file->getFirstNamespaceLevel() == 'System') {
+            $namespace = $file->getNamespaceWithoutFirstLevel();
+
+            if ($namespace == '') {
+                return [__CORE_PATH, $file->getFile()];
+            } else {
+                return [__CORE_PATH, $namespace, $file->getFile()];
+            }
+        }
+
+        foreach (self::$namespaces as $ns) {
+            if ($ns->match($file)) {
+                return $ns->build($file);
+            }
+        }
+    }
+
+    /**
+     * Build path from path parts.
+     *
+     * @param string[] $path Path parts
+     *
+     * @return string Build paths
+     */
+    private function buildPath($path = array())
+    {
+        return str_replace('\\', DIRECTORY_SEPARATOR, implode(DIRECTORY_SEPARATOR, $path));
     }
 }

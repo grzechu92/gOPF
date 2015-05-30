@@ -19,17 +19,17 @@ class NS
     public $name;
 
     /**
-     * Namespace target directory.
+     * Namespace target directory path parts.
      *
-     * @var string
+     * @var string[]
      */
-    public $directory;
+    public $directory = array();
 
     /**
      * Initialzies namespace object.
      *
-     * @param string $name      Namespace name
-     * @param string $directory Namespace target directory
+     * @param string   $name      Namespace name
+     * @param string[] $directory Namespace target directory parts
      */
     public function __construct($name, $directory)
     {
@@ -40,13 +40,24 @@ class NS
     /**
      * Build target file path.
      *
-     * @param string $namespace Parsed namespace
-     * @param string $file      Class filename
+     * @param \System\Loader\File $file File to build
      *
-     * @return string Target file path
+     * @return string[] Target file path parts
      */
-    public function build($namespace, $file)
+    public function build($file)
     {
-        return $this->directory . $namespace . DIRECTORY_SEPARATOR . $file;
+        return array_merge($this->directory, [$file->getNamespaceWithoutFirstLevel(), $file->getFile()]);
+    }
+
+    /**
+     * Check if file is matching to namespace?
+     *
+     * @param \System\Loader\File $file File to check
+     *
+     * @return bool Is file matching namespace?
+     */
+    public function match(File $file)
+    {
+        return $this->name == $file->getFirstNamespaceLevel();
     }
 }

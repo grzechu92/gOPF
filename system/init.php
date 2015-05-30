@@ -17,9 +17,9 @@ require __SYSTEM_PATH . '/functions.php';
 /**
  * Initialize framework PSR-0 loader.
  */
-require __CORE_PATH . '/Filesystem.php';
 require __CORE_PATH . '/Loader.php';
 require __CORE_PATH . '/Loader/NS.php';
+require __CORE_PATH . '/Loader/File.php';
 new Loader();
 
 /*
