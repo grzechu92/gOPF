@@ -52,7 +52,7 @@ class Annotation
 
         if (count($parsed[1]) > 0) {
             foreach ($parsed[1] as $line) {
-                $exploded = explode(' ', $line, 2);
+                $exploded = explode(' ', preg_replace('/\s+/', ' ', $line), 2);
 
                 $this->parsed[$exploded[0]] = isset($exploded[1]) ? $exploded[1] : true;
             }
