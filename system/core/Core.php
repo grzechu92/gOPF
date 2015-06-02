@@ -20,14 +20,14 @@ class Core extends Singleton
      *
      * @var string
      */
-    const VERSION = '2.0.0 beta3';
+    const VERSION = '2.0.0 RC';
 
     /**
      * gOPF Core build time.
      *
      * @var string
      */
-    const BUILD = '150426104750';
+    const BUILD = '150602090137';
 
     /**
      * gOPF Core stage (__DEVELOPMENT or __PRODUCTION).
