@@ -27,7 +27,7 @@ class Core extends Singleton
      *
      * @var string
      */
-    const BUILD = '150602090137';
+    const BUILD = '150602090325';
 
     /**
      * gOPF Core stage (__DEVELOPMENT or __PRODUCTION).
