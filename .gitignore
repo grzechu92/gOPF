@@ -2,3 +2,6 @@
 .settings/*
 .idea/*
 .buildpath
+/vendor/*
+!/vendor/.keep
+composer.lock

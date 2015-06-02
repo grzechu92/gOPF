@@ -51,21 +51,23 @@ class File
      *
      * @param string $class Class name with namespace
      */
-    function __construct($class)
+    function __construct($class = '')
     {
-        $class = $this->class = ltrim($class, '\\');
-        $separator = strripos($class, '\\');
+        if (!empty($class)) {
+            $class = $this->class = ltrim($class, '\\');
+            $separator = strripos($class, '\\');
 
-        $this->namespace = substr($class, 0, $separator);
-        $this->className = str_replace('_', DIRECTORY_SEPARATOR, substr($class, $separator + 1));
-        $this->file = $this->className . '.php';
-        $this->exploded = explode('\\', $this->namespace);
+            $this->namespace = substr($class, 0, $separator);
+            $this->className = str_replace('_', DIRECTORY_SEPARATOR, substr($class, $separator + 1));
+            $this->file = $this->className . '.php';
+            $this->exploded = explode('\\', $this->namespace);
+        }
     }
 
     /**
      * Get class name with namespace.
      *
-     * @return string
+     * @return string Class name with namespace
      */
     public function getClass()
     {
@@ -75,7 +77,7 @@ class File
     /**
      * Get class name without namespace.
      *
-     * @return string
+     * @return string Class name without namespace
      */
     public function getClassName()
     {
@@ -85,7 +87,7 @@ class File
     /**
      * Get class file name.
      *
-     * @return string
+     * @return string File name
      */
     public function getFile()
     {
@@ -95,7 +97,7 @@ class File
     /**
      * Get class namespace.
      *
-     * @return string
+     * @return string Class namespace
      */
     public function getNamespace()
     {

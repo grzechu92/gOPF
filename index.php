@@ -90,6 +90,12 @@ define('__VARIABLE_PATH', __SYSTEM_PATH . DIRECTORY_SEPARATOR . 'var');
  */
 define('__WWW_PATH', isset($_SERVER['HTTP_HOST']) ? ((isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST']) : '');
 
+/**
+ * Filesystem path to Composer vendor directory
+ * @var string
+ */
+define('__COMPOSER_PATH', __ROOT_PATH . DIRECTORY_SEPARATOR . 'vendor');
+
 /*
  * Time when generating page has been started, in timestamp miliseconds
  * @var float

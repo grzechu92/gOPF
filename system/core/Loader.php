@@ -2,9 +2,11 @@
 
 namespace System;
 
-use System\Filesystem;
+use System\Loader\Load;
 use System\Loader\NS;
 use System\Loader\File;
+use System\Loader\Composer;
+use System\Loader\Exception;
 
 /**
  * Framework class loader.
@@ -37,6 +39,20 @@ class Loader
     private $cache = false;
 
     /**
+     * Composer module for loader.
+     *
+     * @var \System\Loader\Composer
+     */
+    private $composer;
+
+    /**
+     * Loader path builder
+     *
+     * @var \System\Loader\Load
+     */
+    private $require;
+
+    /**
      * Reserved namespaces.
      *
      * @var \System\Loader\NS[]
@@ -56,6 +72,8 @@ class Loader
     public function __construct()
     {
         $this->cache = function_exists('apc_store');
+        $this->require = new Load();
+        $this->composer = new Composer($this->require);
 
         self::$namespaces[] = new NS('Controllers', [__APPLICATION_PATH, 'controllers']);
         self::$namespaces[] = new NS('Repositories', [__APPLICATION_PATH, 'repositories']);
@@ -99,34 +117,27 @@ class Loader
     public function load($class)
     {
         if (isset(self::$cached[$class])) {
-            $this->requirePath(self::$cached[$class]);
+            $this->require->load(self::$cached[$class]);
             return;
         }
 
         $file = new File($class);
 
-        $parts = $this->findFile($file);
-        $path = $this->buildPath($parts);
+        $path = $this->findFile($file);
+
+        if (is_array($path)) {
+            $path = $this->require->build($path);
+        }
 
         if (__STAGE == __PRODUCTION || is_file($path)) {
             if ($this->cache) {
                 self::$cached[$class] = $path;
             }
 
-            $this->requirePath($path);
+            $this->require->load($path);
         } else {
-            throw new \System\Loader\Exception(\System\I18n::translate('LOADER_UNABLE', array($path)));
+            throw new Exception(\System\I18n::translate('LOADER_UNABLE', array($path)));
         }
-    }
-
-    /**
-     * Require selected file.
-     *
-     * @param string $path Path to required file
-     */
-    private function requirePath($path)
-    {
-        require $path;
     }
 
     /**
@@ -153,17 +164,13 @@ class Loader
                 return $ns->build($file);
             }
         }
-    }
 
-    /**
-     * Build path from path parts.
-     *
-     * @param string[] $path Path parts
-     *
-     * @return string Build paths
-     */
-    private function buildPath($path = array())
-    {
-        return str_replace('\\', DIRECTORY_SEPARATOR, implode(DIRECTORY_SEPARATOR, $path));
+        $composer = $this->composer->findFile($file);
+
+        if ($composer !== false) {
+            return $composer;
+        }
+
+        return [__VENDOR_PATH, $file->getNamespace(), $file->getFile()];
     }
 }

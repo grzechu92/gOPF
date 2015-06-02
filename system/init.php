@@ -20,6 +20,9 @@ require __SYSTEM_PATH . '/functions.php';
 require __CORE_PATH . '/Loader.php';
 require __CORE_PATH . '/Loader/NS.php';
 require __CORE_PATH . '/Loader/File.php';
+require __CORE_PATH . '/Loader/Composer.php';
+require __CORE_PATH . '/Loader/Load.php';
+require __CORE_PATH . '/Loader/Exception.php';
 new Loader();
 
 /*

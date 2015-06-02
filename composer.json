@@ -1,0 +1,11 @@
+{
+    "name": "gopf/gopf-framework",
+    "authors": [
+        {
+            "name": "Grzegorz Borkowski",
+            "email": "mail@grze.ch"
+        }
+    ],
+
+    "require": {}
+}
