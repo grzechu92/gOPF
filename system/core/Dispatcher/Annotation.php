@@ -47,14 +47,13 @@ class Annotation
     public function __construct($block)
     {
         $parsed = array();
-
         preg_match_all('/@(.*)/', $block, $parsed);
 
         if (count($parsed[1]) > 0) {
             foreach ($parsed[1] as $line) {
                 $exploded = explode(' ', preg_replace('/\s+/', ' ', $line), 2);
 
-                $this->parsed[$exploded[0]] = isset($exploded[1]) ? $exploded[1] : true;
+                $this->parsed[$exploded[0]] = (isset($exploded[1]) && !empty($exploded[1])) ? $exploded[1] : true;
             }
         }
     }
