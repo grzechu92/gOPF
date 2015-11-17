@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Main configuration of framework, allows to set main config of framework core.
  *
@@ -21,11 +20,19 @@ define('__PRODUCTION', 1);
  */
 define('__DEVELOPMENT', 2);
 
-/*
- * Selected stage (__PRODUCTION or __DEVELOPMENT)
+/**
+ * Test stage
  * @var int
  */
-define('__STAGE', __DEVELOPMENT);
+define('__TEST', 3);
+
+/*
+ * Selected stage (__PRODUCTION || __DEVELOPMENT || __TEST)
+ * @var int
+ */
+if (!defined('__STAGE')) {
+    define('__STAGE', __DEVELOPMENT);
+}
 
 /*
  * Set error reporting level

@@ -60,7 +60,7 @@ class Composer
      *
      * @var string
      */
-    const AUTOLOAD_FILE = 'autoload_files.php';
+    const AUTOLOAD_FILE = 'autoload.php';
 
     /**
      * Is Composer module initialized?
@@ -101,7 +101,7 @@ class Composer
         $this->installed = $this->isComposerInstalled();
 
         if ($this->installed) {
-            $files = $this->require->file([self::PATH, self::COMPOSER_DIRECTORY, self::AUTOLOAD_FILE]);
+            $files = $this->require->file([self::PATH, self::AUTOLOAD_FILE]);
 
             foreach ($files as $file) {
                 $this->require->file($file);
@@ -135,8 +135,6 @@ class Composer
     private function initialize()
     {
         $this->initialized = true;
-
-        $this->require->file([self::PATH, self::COMPOSER_DIRECTORY, self::LOADER]);
         $this->loader = new ClassLoader();
 
         $load = [
@@ -148,8 +146,12 @@ class Composer
         foreach ($load as $file => $method) {
             $map = $this->require->file([self::PATH, self::COMPOSER_DIRECTORY, $file]);
 
-            foreach ($map as $namespace => $path) {
-                $this->loader->{$method}($namespace, $path);
+            if ($file == self::CLASSMAP_FILE) {
+                $this->loader->{$method}($map);
+            } else {
+                foreach ($map as $namespace => $path) {
+                    $this->loader->{$method}($namespace, $path);
+                }
             }
         }
     }

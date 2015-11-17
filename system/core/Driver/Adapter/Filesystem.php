@@ -1,7 +1,9 @@
 <?php
 
-namespace System\Driver;
+namespace System\Driver\Adapter;
 
+use System\Driver\AbstractAdapter;
+use System\Driver\AdapterInterface;
 use System\Filesystem as FS;
 
 /**
@@ -11,7 +13,7 @@ use System\Filesystem as FS;
  * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
  */
-class Filesystem extends Driver implements DriverInterface
+class Filesystem extends AbstractAdapter implements AdapterInterface
 {
     /**
      * Lifetime metadata pad size.
@@ -35,20 +37,18 @@ class Filesystem extends Driver implements DriverInterface
     private $path;
 
     /**
-     * @see \System\Drivers\DriverInterface::__construct()
+     * @see \System\Drivers\AdapterInterface::__construct()
      */
     public function __construct($name, $lifetime = 0, $user = false)
     {
-        $this->name = $name;
-        $this->lifetime = $lifetime;
-        $this->user = $user;
+        parent::__construct($name, $lifetime, $user);
 
         $this->path = __VARIABLE_PATH . DIRECTORY_SEPARATOR;
         $this->filename = $this->path . $this->UID();
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::set()
+     * @see \System\Drivers\AdapterInterface::set()
      */
     public function set($content)
     {
@@ -57,24 +57,28 @@ class Filesystem extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::get()
+     * @see \System\Drivers\AdapterInterface::get()
      */
     public function get()
     {
-        $content = FS::read($this->filename, true);
+        try {
+            $content = FS::read($this->filename, true);
 
-        $lifetime = substr($content, 0, self::PAD_SIZE);
-        $data = substr($content, self::PAD_SIZE);
+            $lifetime = substr($content, 0, self::PAD_SIZE);
+            $data = substr($content, self::PAD_SIZE);
 
-        if ($lifetime == 0 || $lifetime >= time() && !empty($data)) {
-            return unserialize($data);
+            if ($lifetime == 0 || $lifetime >= time() && !empty($data)) {
+                return unserialize($data);
+            } else {
+                return null;
+            }
+        } catch (\System\Filesystem\Exception $e) {
+            return null;
         }
-
-        return null;
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::remove()
+     * @see \System\Drivers\AdapterInterface::remove()
      */
     public function remove()
     {
@@ -82,7 +86,7 @@ class Filesystem extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::clear()
+     * @see \System\Drivers\AdapterInterface::clear()
      */
     public function clear()
     {

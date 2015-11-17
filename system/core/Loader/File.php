@@ -57,8 +57,14 @@ class File
             $class = $this->class = ltrim($class, '\\');
             $separator = strripos($class, '\\');
 
-            $this->namespace = substr($class, 0, $separator);
-            $this->className = str_replace('_', DIRECTORY_SEPARATOR, substr($class, $separator + 1));
+            if ($separator === false) {
+                $this->namespace = '';
+                $this->className = $class;
+            } else {
+                $this->namespace = substr($class, 0, $separator);
+                $this->className = substr($class, $separator + 1);
+            }
+
             $this->file = $this->className . '.php';
             $this->exploded = explode('\\', $this->namespace);
         }

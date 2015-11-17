@@ -49,7 +49,7 @@ class Container
     /**
      * Container driver.
      *
-     * @var \System\Driver\DriverInterface
+     * @var \System\Driver\AdapterInterface
      */
     private $driver;
 

@@ -1,8 +1,11 @@
 <?php
 
-namespace System\Driver;
+namespace System\Driver\Adapter;
 
+use System\Driver\AbstractAdapter;
+use System\Driver\AdapterInterface;
 use System\Driver\Session\Element;
+use System\Driver\UnsupportedMethodException;
 
 /**
  * Diver based on PHP Sessions.
@@ -11,7 +14,7 @@ use System\Driver\Session\Element;
  * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
  */
-class Session extends Driver implements DriverInterface
+class Session extends AbstractAdapter implements AdapterInterface
 {
     /**
      * Is session initialized?
@@ -21,10 +24,12 @@ class Session extends Driver implements DriverInterface
     private static $initialized = false;
 
     /**
-     * @see \System\Drivers\DriverInterface::__construct()
+     * @see \System\Drivers\AdapterInterface::__construct()
      */
     public function __construct($name, $lifetime = 0, $user = false)
     {
+        parent::__construct($name, $lifetime, $user);
+
         if (!self::$initialized) {
             session_id(\System\Core::$UUID);
             session_start();
@@ -48,7 +53,7 @@ class Session extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::set()
+     * @see \System\Drivers\AdapterInterface::set()
      */
     public function set($content)
     {
@@ -56,7 +61,7 @@ class Session extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::get()
+     * @see \System\Drivers\AdapterInterface::get()
      */
     public function get()
     {
@@ -70,7 +75,7 @@ class Session extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::remove()
+     * @see \System\Drivers\AdapterInterface::remove()
      */
     public function remove()
     {
@@ -78,11 +83,11 @@ class Session extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::clear()
+     * @see \System\Drivers\AdapterInterface::clear()
      */
     public function clear()
     {
-        throw new \System\Core\Exception(\System\I18n::translate('UNSUPPORTED_DRIVER_METHOD', array(__CLASS__, 'clear()')));
+        throw new UnsupportedMethodException(\System\I18n::translate('UNSUPPORTED_DRIVER_METHOD', array(__CLASS__, 'clear()')));
     }
 
     /**

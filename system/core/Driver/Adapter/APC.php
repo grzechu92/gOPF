@@ -1,6 +1,9 @@
 <?php
 
-namespace System\Driver;
+namespace System\Driver\Adapter;
+
+use System\Driver\AbstractAdapter;
+use System\Driver\AdapterInterface;
 
 /**
  * APC driver.
@@ -9,10 +12,10 @@ namespace System\Driver;
  * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
  */
-class APC extends Driver implements DriverInterface
+class APC extends AbstractAdapter implements AdapterInterface
 {
     /**
-     * @see \System\Drivers\DriverInterface::set()
+     * @see \System\Drivers\AdapterInterface::set()
      */
     public function set($content)
     {
@@ -20,15 +23,19 @@ class APC extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::get()
+     * @see \System\Drivers\AdapterInterface::get()
      */
     public function get()
     {
-        return apc_fetch($this->UID());
+        if (apc_exists($this->UID())) {
+            return apc_fetch($this->UID());
+        }
+
+        return null;
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::remove()
+     * @see \System\Drivers\AdapterInterface::remove()
      */
     public function remove()
     {
@@ -36,7 +43,7 @@ class APC extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::clear()
+     * @see \System\Drivers\AdapterInterface::clear()
      */
     public function clear()
     {

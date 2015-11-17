@@ -2,6 +2,9 @@
 
 namespace System\Storage;
 
+use System\Driver\AdapterInterface;
+use System\Driver\DriverInterface;
+
 /**
  * Storage container class.
  *
@@ -28,7 +31,7 @@ class Container
     /**
      * Element driver.
      *
-     * @var \System\Driver\DriverInterface
+     * @var AdapterInterface
      */
     private $driver;
 
@@ -49,11 +52,11 @@ class Container
     /**
      * Initializes container, saves with in requested data.
      *
-     * @param string                         $name   Storage element name
-     * @param mixed                          $value  Storage element value
-     * @param \System\Driver\DriverInterface $driver Storage element driver
+     * @param string           $name   Storage element name
+     * @param mixed            $value  Storage element value
+     * @param DriverInterface  $driver Storage element driver
      */
-    public function __construct($name, $value, \System\Driver\DriverInterface $driver)
+    public function __construct($name, $value, DriverInterface $driver)
     {
         $this->name = $name;
         $this->value = $value;

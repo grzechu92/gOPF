@@ -24,7 +24,7 @@ class Session extends Singleton
     /**
      * Session data store driver.
      *
-     * @var \System\Driver\Driver
+     * @var \System\Driver\AbstractAdapter
      */
     private $driver;
 

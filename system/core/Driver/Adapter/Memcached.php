@@ -1,6 +1,9 @@
 <?php
 
-namespace System\Driver;
+namespace System\Driver\Adapter;
+
+use System\Driver\AbstractAdapter;
+use System\Driver\AdapterInterface;
 
 /**
  * Memcached driver.
@@ -9,7 +12,7 @@ namespace System\Driver;
  * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
  */
-class Memcached extends Driver implements DriverInterface
+class Memcached extends AbstractAdapter implements AdapterInterface
 {
     /**
      * Memcached default port.
@@ -33,20 +36,18 @@ class Memcached extends Driver implements DriverInterface
     protected $memcached;
 
     /**
-     * @see \System\Drivers\DriverInterface::__construct()
+     * @see \System\Drivers\AdapterInterface::__construct()
      */
     public function __construct($name, $lifetime = 0, $user = false)
     {
-        $this->name = $name;
-        $this->lifetime = $lifetime;
-        $this->user = $user;
+        parent::__construct($name, $lifetime, $user);
 
         $this->memcached = new \Memcached();
         $this->memcached->addServer(self::HOST, self::PORT);
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::set()
+     * @see \System\Drivers\AdapterInterface::set()
      */
     public function set($content)
     {
@@ -54,15 +55,21 @@ class Memcached extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::get()
+     * @see \System\Drivers\AdapterInterface::get()
      */
     public function get()
     {
-        return $this->memcached->get($this->UID());
+        $data = $this->memcached->get($this->UID());
+
+        if ($this->memcached->getResultCode() == \Memcached::RES_NOTFOUND) {
+            return null;
+        } else {
+            return $data;
+        }
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::remove()
+     * @see \System\Drivers\AdapterInterface::remove()
      */
     public function remove()
     {
@@ -70,7 +77,7 @@ class Memcached extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::clear()
+     * @see \System\Drivers\AdapterInterface::clear()
      */
     public function clear()
     {

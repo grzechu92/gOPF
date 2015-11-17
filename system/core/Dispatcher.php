@@ -1,5 +1,4 @@
 <?php
-
 namespace System;
 
 /**
@@ -32,6 +31,10 @@ class Dispatcher
             default:
                 $mode = 'Page';
                 break;
+        }
+
+        if(__STAGE == __TEST || Request::$CLI && strpos($_SERVER['argv'][0], 'phpunit') !== false) {
+            return;
         }
 
         $class = '\\System\\Dispatcher\\' . $mode;

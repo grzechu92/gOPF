@@ -1,6 +1,9 @@
 <?php
 
-namespace System\Driver;
+namespace System\Driver\Adapter;
+
+use System\Driver\AbstractAdapter;
+use System\Driver\AdapterInterface;
 
 /**
  * Database driver.
@@ -9,7 +12,7 @@ namespace System\Driver;
  * @copyright Copyright (C) 2011-2015, Grzegorz `Grze_chu` Borkowski <mail@grze.ch>
  * @license   The GNU Lesser General Public License, version 3.0 <http://www.opensource.org/licenses/LGPL-3.0>
  */
-class Database extends Driver implements DriverInterface
+class Database extends AbstractAdapter implements AdapterInterface
 {
     /**
      * Database table name.
@@ -26,7 +29,7 @@ class Database extends Driver implements DriverInterface
     private static $database;
 
     /**
-     * @see \System\Drivers\DriverInterface::set()
+     * @see \System\Drivers\AdapterInterface::set()
      */
     public function set($content)
     {
@@ -42,7 +45,7 @@ class Database extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::get()
+     * @see \System\Drivers\AdapterInterface::get()
      */
     public function get()
     {
@@ -57,7 +60,7 @@ class Database extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::remove()
+     * @see \System\Drivers\AdapterInterface::remove()
      */
     public function remove()
     {
@@ -67,7 +70,7 @@ class Database extends Driver implements DriverInterface
     }
 
     /**
-     * @see \System\Drivers\DriverInterface::clear()
+     * @see \System\Drivers\AdapterInterface::clear()
      */
     public function clear()
     {

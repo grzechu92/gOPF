@@ -161,8 +161,12 @@ class Request extends Singleton
      */
     private function parseURL()
     {
-        $url = explode('?', $_SERVER['REQUEST_URI']);
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $url = explode('?', $_SERVER['REQUEST_URI']);
 
-        return substr($url[0], 1);
+            return substr($url[0], 1);
+        }
+
+        return '';
     }
 }
